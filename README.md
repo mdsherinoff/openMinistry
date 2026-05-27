@@ -22,7 +22,7 @@ statements from newspapers, interviews, press conferences, and public media.
 
 ## Getting Started
 
-See [docs/setup.md](docs/setup.md) for local development instructions.
+See current status of [openMinistry Website](openministry.live).
 
 ## License
 
