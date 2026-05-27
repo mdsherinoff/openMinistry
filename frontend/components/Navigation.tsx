@@ -10,7 +10,6 @@ const navLinks = [
   { href: "/statements", label: "Statements", icon: FileText },
   { href: "/ministers", label: "Ministers", icon: Users },
   { href: "/search", label: "Search", icon: Search },
-  { href: "/admin", label: "Admin", icon: Shield },
 ];
 
 export default function Navigation() {
@@ -43,6 +42,13 @@ export default function Navigation() {
                 {label}
               </Link>
             ))}
+            <Link
+              href="/login"
+              className="ml-4 flex items-center gap-1.5 rounded-md bg-green-700 px-3 py-2 text-sm font-medium text-white hover:bg-green-800 transition-colors"
+            >
+              <Shield size={15} />
+              Login
+            </Link>
           </div>
         </div>
       </div>
