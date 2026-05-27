@@ -11,7 +11,8 @@ from database.config import get_engine, Base
 from dotenv import load_dotenv
 load_dotenv()
 
-# import models here on Day 3 so Alembic can detect them
+# This import is critical — it tells Alembic about all our tables
+import database.models
 
 config = context.config
 fileConfig(config.config_file_name)
