@@ -18,7 +18,7 @@ class Article(Base):
     cleaned_content = Column(Text, nullable=True)
     language = Column(String(10), nullable=True)
     scrape_status = Column(String(50), default="pending")
-    # pending | scraped | failed | skipped
+    # pending | scraped | cleaned | skipped | failed
     scraped_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

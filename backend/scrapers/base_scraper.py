@@ -126,15 +126,25 @@ class BaseScraper(ABC):
 
     def scrape_all(self) -> list[dict]:
         """Main entry point — scrape all articles from this source."""
+        from scrapers.cleaner import ArticleCleaner
+        cleaner = ArticleCleaner()
+
         logger.info(f"Starting scrape: {self.name}")
         urls = self.get_article_urls()
         logger.info(f"Found {len(urls)} article URLs from {self.name}")
 
         articles = []
-        for url in urls[:20]:  # limit to 20 per run initially
+        for url in urls[:20]:
             article = self.scrape_article(url)
             if article:
+                # Clean content immediately after scraping
+                if article.get("raw_content"):
+                    article["cleaned_content"] = cleaner.clean_text(
+                        article["raw_content"]
+                    )
                 articles.append(article)
 
-        logger.info(f"Successfully scraped {len(articles)} articles from {self.name}")
+        logger.info(
+            f"Successfully scraped {len(articles)} articles from {self.name}"
+        )
         return articles
