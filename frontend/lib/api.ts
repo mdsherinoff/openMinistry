@@ -40,8 +40,13 @@ export const api = {
     apiClient.get("/api/statements", { params }),
 
   // Ministers
-  getMinisters: () => apiClient.get("/api/ministers"),
+  getMinisters: (activeOnly: boolean = true) =>
+    apiClient.get("/api/ministers/", { params: { active_only: activeOnly } }),
   getMinister: (id: number) => apiClient.get(`/api/ministers/${id}`),
+  createMinister: (data: Record<string, unknown>) =>
+    apiClient.post("/api/ministers/", data),
+  updateMinister: (id: number, data: Record<string, unknown>) =>
+    apiClient.patch(`/api/ministers/${id}`, data),
 
   // Sources
   getSources: () => apiClient.get("/api/sources/"),
