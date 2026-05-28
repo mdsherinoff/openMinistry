@@ -19,7 +19,7 @@ from database.models.article import Article
 
 
 def test():
-    print("🧹 Testing Article Cleaner\n")
+    print("Testing Article Cleaner\n")
     cleaner = ArticleCleaner()
 
     # Test 1 — Clean a sample HTML snippet

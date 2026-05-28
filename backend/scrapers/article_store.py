@@ -4,29 +4,42 @@ from sqlalchemy.orm import Session
 
 from database.models.article import Article
 from database.models.source import Source
+from scrapers.duplicate_detector import DuplicateDetector
 
 logger = logging.getLogger(__name__)
+detector = DuplicateDetector()
 
 
 def save_articles(articles: list[dict], db: Session) -> dict:
     """
     Save scraped articles to the database.
-    Skips duplicates using URL hash.
-    Returns a summary of what happened.
+    Uses full duplicate detection before saving.
     """
     saved = 0
-    skipped = 0
+    skipped_duplicate = 0
+    skipped_short = 0
     failed = 0
 
     for article_data in articles:
         try:
-            # Check for duplicate by URL hash
-            existing = db.query(Article).filter(
-                Article.url_hash == article_data["url_hash"]
-            ).first()
+            url = article_data.get("url", "")
+            title = article_data.get("title", "")
+            content = article_data.get("raw_content", "")
 
-            if existing:
-                skipped += 1
+            # Run full duplicate check
+            dup_result = detector.check_duplicate(url, title, content, db)
+
+            if dup_result["is_duplicate"]:
+                logger.debug(
+                    f"Duplicate ({dup_result['reason']}): {title[:50]}"
+                )
+                skipped_duplicate += 1
+                continue
+
+            # Skip articles with very little content
+            if content and len(content.split()) < 30:
+                logger.debug(f"Too short, skipping: {title[:50]}")
+                skipped_short += 1
                 continue
 
             # Find the source record
@@ -43,12 +56,12 @@ def save_articles(articles: list[dict], db: Session) -> dict:
 
             article = Article(
                 source_id=source.id,
-                url=article_data["url"],
-                url_hash=article_data["url_hash"],
-                title=article_data.get("title"),
+                url=url,
+                url_hash=dup_result["url_hash"],
+                title=title,
                 author=article_data.get("author"),
                 published_at=article_data.get("published_at"),
-                raw_content=article_data.get("raw_content"),
+                raw_content=content,
                 cleaned_content=article_data.get("cleaned_content"),
                 language=article_data.get("language", "en"),
                 scrape_status="scraped",
@@ -57,11 +70,20 @@ def save_articles(articles: list[dict], db: Session) -> dict:
             db.add(article)
             db.commit()
             saved += 1
-            logger.info(f"Saved article: {article_data['title'][:60]}...")
+            logger.info(f"Saved: {title[:60]}...")
 
         except Exception as e:
             db.rollback()
-            logger.error(f"Failed to save article {article_data.get('url')}: {e}")
+            logger.error(
+                f"Failed to save article {article_data.get('url')}: {e}"
+            )
             failed += 1
 
-    return {"saved": saved, "skipped": skipped, "failed": failed}
+    summary = {
+        "saved": saved,
+        "skipped_duplicate": skipped_duplicate,
+        "skipped_short": skipped_short,
+        "failed": failed,
+    }
+    logger.info(f"Save summary: {summary}")
+    return summary
