@@ -70,3 +70,15 @@ def trigger_detection(
         "message": "Detection task triggered",
         "task_id": str(task.id),
     }
+
+@router.post("/pipeline")
+def trigger_pipeline(
+    _: User = Depends(require_moderator),
+):
+    """Trigger the full statement extraction pipeline."""
+    from workers.tasks import run_statement_pipeline
+    task = run_statement_pipeline.delay()
+    return {
+        "message": "Statement pipeline triggered",
+        "task_id": str(task.id),
+    }

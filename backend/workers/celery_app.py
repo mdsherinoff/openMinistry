@@ -60,5 +60,9 @@ celery_app.conf.update(
             "task": "workers.tasks.detect_ministers",
             "schedule": 60 * 60,
         },
+        "run-pipeline-every-2-hours": {
+            "task": "workers.tasks.run_statement_pipeline",
+            "schedule": 2 * 60 * 60,
+        },
     },
 )

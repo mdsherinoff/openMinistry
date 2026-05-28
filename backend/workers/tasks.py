@@ -131,3 +131,24 @@ def detect_ministers():
     except Exception as e:
         logger.error(f"Detection task failed: {e}")
         raise
+
+@celery_app.task(name="workers.tasks.run_statement_pipeline")
+def run_statement_pipeline():
+    """Run full statement extraction pipeline."""
+    logger.info("Starting statement pipeline task")
+    try:
+        from nlp.statement_pipeline import run_pipeline
+        from database.config import get_session_factory
+
+        SessionLocal = get_session_factory()
+        db = SessionLocal()
+        try:
+            result = run_pipeline(db)
+        finally:
+            db.close()
+
+        logger.info(f"Pipeline complete: {result}")
+        return result
+    except Exception as e:
+        logger.error(f"Pipeline task failed: {e}")
+        raise
