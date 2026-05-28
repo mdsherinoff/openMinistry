@@ -42,4 +42,12 @@ export const api = {
   // Ministers
   getMinisters: () => apiClient.get("/api/ministers"),
   getMinister: (id: number) => apiClient.get(`/api/ministers/${id}`),
+
+  // Sources
+  getSources: () => apiClient.get("/api/sources/"),
+  createSource: (data: Record<string, unknown>) =>
+    apiClient.post("/api/sources/", data),
+  updateSource: (id: number, data: Record<string, unknown>) =>
+    apiClient.patch(`/api/sources/${id}`, data),
+  deleteSource: (id: number) => apiClient.delete(`/api/sources/${id}`),
 };

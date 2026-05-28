@@ -38,6 +38,9 @@ app.add_middleware(
 from api.routes.auth import router as auth_router
 app.include_router(auth_router)
 
+from api.routes.sources import router as sources_router
+app.include_router(sources_router)
+
 
 @app.get("/")
 async def root():
