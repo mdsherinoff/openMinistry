@@ -110,3 +110,24 @@ def _get_scraper(source_key: str):
         return ManoramaScraper()
     logger.warning(f"No scraper implemented for: {source_key}")
     return None
+
+@celery_app.task(name="workers.tasks.detect_ministers")
+def detect_ministers():
+    """Run name detection on all cleaned articles."""
+    logger.info("Starting minister detection task")
+    try:
+        from nlp.detection_service import process_undetected_articles
+        from database.config import get_session_factory
+
+        SessionLocal = get_session_factory()
+        db = SessionLocal()
+        try:
+            result = process_undetected_articles(db)
+        finally:
+            db.close()
+
+        logger.info(f"Detection complete: {result}")
+        return result
+    except Exception as e:
+        logger.error(f"Detection task failed: {e}")
+        raise

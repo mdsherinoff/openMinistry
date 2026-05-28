@@ -56,5 +56,9 @@ celery_app.conf.update(
             "task": "workers.tasks.clean_articles",
             "schedule": 60 * 60,  # every hour
         },
+        "detect-ministers-every-hour": {
+            "task": "workers.tasks.detect_ministers",
+            "schedule": 60 * 60,
+        },
     },
 )

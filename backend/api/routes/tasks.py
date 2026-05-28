@@ -58,3 +58,15 @@ def get_task_status(
         "status": task.status,
         "result": str(task.result) if task.ready() else None,
     }
+
+@router.post("/detect")
+def trigger_detection(
+    _: User = Depends(require_moderator),
+):
+    """Run name detection on all cleaned articles."""
+    from workers.tasks import detect_ministers
+    task = detect_ministers.delay()
+    return {
+        "message": "Detection task triggered",
+        "task_id": str(task.id),
+    }
