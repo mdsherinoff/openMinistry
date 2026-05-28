@@ -46,6 +46,57 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_worker
+    command: celery -A workers.celery_app worker --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+psycopg://openministry:openministry123@postgres:5432/openministry_db
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: change-this-in-production
+      DEBUG: "True"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_beat
+    command: celery -A workers.celery_app beat --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+psycopg://openministry:openministry123@postgres:5432/openministry_db
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: change-this-in-production
+      DEBUG: "True"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_flower
+    command: celery -A workers.celery_app flower --port=5555
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
 
   frontend:
     build:

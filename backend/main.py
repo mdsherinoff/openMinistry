@@ -41,6 +41,9 @@ app.include_router(auth_router)
 from api.routes.sources import router as sources_router
 app.include_router(sources_router)
 
+from api.routes.tasks import router as tasks_router
+app.include_router(tasks_router)
+
 
 @app.get("/")
 async def root():
