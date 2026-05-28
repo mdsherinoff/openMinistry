@@ -10,12 +10,16 @@ logger = logging.getLogger(__name__)
     max_retries=3,
     default_retry_delay=60,
     name="workers.tasks.scrape_source",
+    soft_time_limit=300,
+    time_limit=360,
 )
 def scrape_source(self, source_key: str):
     """
     Scrape all articles from a given source.
     source_key matches keys in SOURCE_CONFIGS.
     """
+    from celery.exceptions import SoftTimeLimitExceeded
+
     logger.info(f"Starting scrape task for: {source_key}")
 
     try:
@@ -27,15 +31,12 @@ def scrape_source(self, source_key: str):
             logger.error(f"Unknown source key: {source_key}")
             return {"error": f"Unknown source: {source_key}"}
 
-        # Import the right scraper
         scraper = _get_scraper(source_key)
         if not scraper:
             return {"error": f"No scraper for: {source_key}"}
 
-        # Run the scrape
         articles = scraper.scrape_all()
 
-        # Save to database
         SessionLocal = get_session_factory()
         db = SessionLocal()
         try:
@@ -45,6 +46,10 @@ def scrape_source(self, source_key: str):
 
         logger.info(f"Scrape complete for {source_key}: {result}")
         return result
+
+    except SoftTimeLimitExceeded:
+        logger.error(f"Scrape task timed out for {source_key}")
+        return {"error": "timeout", "source": source_key}
 
     except Exception as e:
         logger.error(f"Scrape task failed for {source_key}: {e}")

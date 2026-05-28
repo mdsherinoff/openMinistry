@@ -33,26 +33,82 @@ class BaseScraper(ABC):
         """Create a unique hash for a URL — used for deduplication."""
         return hashlib.sha256(url.strip().encode()).hexdigest()
 
-    def fetch_page(self, url: str) -> str | None:
-        """Fetch a page and return its HTML content."""
-        try:
-            with httpx.Client(
-                headers=self.headers,
-                follow_redirects=True,
-                timeout=30.0,
-            ) as client:
-                response = client.get(url)
-                response.raise_for_status()
-                return response.text
-        except httpx.TimeoutException:
-            logger.warning(f"Timeout fetching {url}")
-            return None
-        except httpx.HTTPStatusError as e:
-            logger.warning(f"HTTP {e.response.status_code} fetching {url}")
-            return None
-        except Exception as e:
-            logger.error(f"Error fetching {url}: {e}")
-            return None
+    def fetch_page(self, url: str, max_retries: int = 3) -> str | None:
+        """
+        Fetch a page with retry logic and exponential backoff.
+        """
+        import time
+
+        for attempt in range(max_retries):
+            try:
+                # Add delay between retries
+                if attempt > 0:
+                    wait = 2 ** attempt  # 2s, 4s, 8s
+                    logger.info(f"Retry {attempt}/{max_retries} for {url} (wait {wait}s)")
+                    time.sleep(wait)
+
+                with httpx.Client(
+                    headers=self.headers,
+                    follow_redirects=True,
+                    timeout=30.0,
+                ) as client:
+                    response = client.get(url)
+
+                    # Handle rate limiting
+                    if response.status_code == 429:
+                        wait = int(response.headers.get("Retry-After", 60))
+                        logger.warning(f"Rate limited on {url}, waiting {wait}s")
+                        time.sleep(wait)
+                        continue
+
+                    # Handle soft blocks
+                    if response.status_code in (403, 406):
+                        logger.warning(
+                            f"Blocked ({response.status_code}) on {url}"
+                        )
+                        return None
+
+                    response.raise_for_status()
+
+                    # Detect soft blocks via content
+                    if self._is_blocked(response.text):
+                        logger.warning(f"Soft block detected on {url}")
+                        return None
+
+                    return response.text
+
+            except httpx.TimeoutException:
+                logger.warning(f"Timeout on attempt {attempt + 1} for {url}")
+            except httpx.HTTPStatusError as e:
+                logger.warning(
+                    f"HTTP {e.response.status_code} on {url}"
+                )
+                if e.response.status_code in (404, 410):
+                    return None  # Don't retry missing pages
+            except Exception as e:
+                logger.error(f"Unexpected error fetching {url}: {e}")
+
+        logger.error(f"All {max_retries} attempts failed for {url}")
+        return None
+
+
+    def _is_blocked(self, html: str) -> bool:
+        """Detect common anti-bot block pages."""
+        if not html or len(html) < 500:
+            return True
+
+        block_indicators = [
+            "access denied",
+            "cloudflare",
+            "please enable javascript",
+            "captcha",
+            "robot or human",
+            "unusual traffic",
+            "automated queries",
+        ]
+
+        html_lower = html.lower()
+        return any(indicator in html_lower for indicator in block_indicators)
 
     def parse_html(self, html: str) -> BeautifulSoup:
         """Parse HTML into a BeautifulSoup object."""

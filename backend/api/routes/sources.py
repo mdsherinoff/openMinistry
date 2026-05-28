@@ -82,3 +82,16 @@ def delete_source(
     db.delete(source)
     db.commit()
     return {"message": "Source deleted"}
+
+@router.get("/health/pipeline")
+def pipeline_health(
+    db: Session = Depends(get_db),
+    _: User = Depends(require_moderator),
+):
+    """Get overall scraping pipeline health."""
+    from scrapers.monitor import ScraperMonitor
+    monitor = ScraperMonitor()
+    return {
+        "summary": monitor.get_pipeline_summary(db),
+        "sources": monitor.get_source_stats(db),
+    }

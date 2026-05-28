@@ -87,3 +87,11 @@ def save_articles(articles: list[dict], db: Session) -> dict:
     }
     logger.info(f"Save summary: {summary}")
     return summary
+
+def mark_article_failed(url: str, db: Session, reason: str = "") -> None:
+    """Mark an article as failed in the database."""
+    article = db.query(Article).filter(Article.url == url).first()
+    if article:
+        article.scrape_status = "failed"
+        db.commit()
+        logger.info(f"Marked as failed: {url[:60]} — {reason}")
