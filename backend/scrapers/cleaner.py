@@ -36,6 +36,14 @@ class ArticleCleaner:
         "download the app",
         "watch live",
         "live updates",
+        # Malayalam junk phrases
+        "വായിക്കുക",
+        "കൂടുതൽ വാർത്തകൾ",
+        "ഇതും വായിക്കുക",
+        "പ്രതികരണം രേഖപ്പെടുത്തുക",
+        "ഷെയർ ചെയ്യുക",
+        "ഡൗൺലോഡ് ചെയ്യുക",
+        "സബ്സ്ക്രൈബ് ചെയ്യുക",
     ]
 
     # Tags to completely remove

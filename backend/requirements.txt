@@ -19,3 +19,5 @@ fake-useragent==1.5.1
 celery==5.3.6
 celery[redis]==5.3.6
 flower==2.0.1
+chardet==5.2.0
+langdetect==1.0.9

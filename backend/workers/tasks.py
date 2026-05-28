@@ -97,6 +97,11 @@ def _get_scraper(source_key: str):
     if source_key == "thehindu.com":
         from scrapers.sources.the_hindu import TheHinduScraper
         return TheHinduScraper()
-    # We'll add Mathrubhumi and Manorama on Day 13
+    elif source_key == "mathrubhumi.com":
+        from scrapers.sources.mathrubhumi import MathrubhumiScraper
+        return MathrubhumiScraper()
+    elif source_key == "onmanorama.com":
+        from scrapers.sources.manorama import ManoramaScraper
+        return ManoramaScraper()
     logger.warning(f"No scraper implemented for: {source_key}")
     return None
