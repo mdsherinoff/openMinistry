@@ -6,6 +6,7 @@ from database.models.article import Article
 from database.models.statement import Statement
 from nlp.name_detector import NameDetector
 from nlp.quote_extractor import QuoteExtractor
+from nlp.statement_store import StatementStore
 
 logger = logging.getLogger(__name__)
 
@@ -14,17 +15,18 @@ def process_article(
     article: Article,
     detector: NameDetector,
     extractor: QuoteExtractor,
+    store: StatementStore,
     db: Session,
 ) -> dict:
     """
     Full pipeline for a single article:
     1. Detect minister mentions
     2. Extract quotes for each mention
-    3. Save as pending statements
+    3. Quality check and store
     """
     text = article.cleaned_content or article.raw_content or ""
     if not text:
-        return {"statements": 0, "skipped": True}
+        return {"statements": 0, "skipped": True, "reason": "no content"}
 
     full_text = f"{article.title or ''}\n\n{text}"
 
@@ -33,69 +35,58 @@ def process_article(
     if not mentions:
         article.scrape_status = "no_mentions"
         db.commit()
-        return {"statements": 0, "skipped": True}
+        return {"statements": 0, "skipped": True, "reason": "no mentions"}
 
-    # Step 2 — Extract quotes for each minister
-    saved = 0
-    extractor_obj = extractor
+    # Step 2 — Extract and store quotes
+    statements_to_save = []
 
     for mention in mentions:
-        quotes = extractor_obj.extract_quotes(
+        quotes = extractor.extract_quotes(
             text=full_text,
             minister_name=mention["minister_name"],
             minister_context=mention["context"],
         )
 
         for quote in quotes:
-            # Skip very short or low confidence quotes
-            if len(quote.text) < 30 or quote.confidence < 0.4:
-                continue
+            statements_to_save.append({
+                "minister_id": mention["minister_id"],
+                "article_id": article.id,
+                "text": quote.text,
+                "confidence": quote.confidence,
+                "quote_type": quote.quote_type,
+                "statement_date": article.published_at,
+            })
 
-            # Check for duplicate statement
-            existing = db.query(Statement).filter(
-                Statement.article_id == article.id,
-                Statement.minister_id == mention["minister_id"],
-            ).first()
+    # Step 3 — Save with quality checks
+    result = store.save_batch(statements_to_save, db)
 
-            if existing:
-                continue
-
-            statement = Statement(
-                minister_id=mention["minister_id"],
-                article_id=article.id,
-                statement_text=quote.text,
-                topic=None,           # filled on Day 25
-                sentiment=None,       # filled later
-                confidence_score=quote.confidence,
-                statement_date=article.published_at,
-                status="pending",     # awaits human moderation
-            )
-            db.add(statement)
-            saved += 1
-
-    if saved > 0:
+    if result["saved"] > 0:
         article.scrape_status = "processed"
-        db.commit()
-        logger.info(
-            f"Saved {saved} statements from: "
-            f"{article.title[:60] if article.title else 'untitled'}..."
-        )
     else:
         article.scrape_status = "no_quotes"
-        db.commit()
+    db.commit()
 
-    return {"statements": saved, "skipped": False}
+    logger.info(
+        f"Article '{(article.title or '')[:50]}': "
+        f"saved={result['saved']} rejected={result['rejected']}"
+    )
+
+    return {
+        "statements": result["saved"],
+        "rejected": result["rejected"],
+        "skipped": False,
+    }
 
 
 def run_pipeline(db: Session) -> dict:
     """
     Run the full statement extraction pipeline
-    on all detected articles.
+    on all detected/cleaned articles.
     """
-    # Load detector and extractor
     detector = NameDetector()
     detector.load_ministers(db)
     extractor = QuoteExtractor()
+    store = StatementStore()
 
     # Find articles ready for processing
     articles = db.query(Article).filter(
@@ -104,22 +95,30 @@ def run_pipeline(db: Session) -> dict:
 
     logger.info(f"Processing {len(articles)} articles")
 
-    total_statements = 0
+    total_saved = 0
+    total_rejected = 0
     processed = 0
     skipped = 0
 
     for article in articles:
-        result = process_article(article, detector, extractor, db)
+        result = process_article(article, detector, extractor, store, db)
         if result["skipped"]:
             skipped += 1
         else:
             processed += 1
-            total_statements += result["statements"]
+            total_saved += result["statements"]
+            total_rejected += result.get("rejected", 0)
+
+    # Get queue stats
+    store_obj = StatementStore()
+    queue_stats = store_obj.get_queue_stats(db)
 
     summary = {
         "articles_processed": processed,
         "articles_skipped": skipped,
-        "total_statements_saved": total_statements,
+        "statements_saved": total_saved,
+        "statements_rejected": total_rejected,
+        "queue": queue_stats,
     }
     logger.info(f"Pipeline complete: {summary}")
     return summary

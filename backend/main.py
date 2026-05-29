@@ -47,6 +47,9 @@ app.include_router(tasks_router)
 from api.routes.ministers import router as ministers_router
 app.include_router(ministers_router)
 
+from api.routes.statements import router as statements_router
+app.include_router(statements_router)
+
 
 @app.get("/")
 async def root():
