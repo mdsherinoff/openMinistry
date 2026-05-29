@@ -50,6 +50,8 @@ app.include_router(ministers_router)
 from api.routes.statements import router as statements_router
 app.include_router(statements_router)
 
+from api.routes.moderation import router as moderation_router
+app.include_router(moderation_router)
 
 @app.get("/")
 async def root():
