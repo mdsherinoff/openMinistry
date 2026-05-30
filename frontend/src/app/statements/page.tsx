@@ -9,14 +9,16 @@ import { FileText, ChevronLeft, ChevronRight } from "lucide-react";
 export default function StatementsPage() {
   const [offset, setOffset] = useState(0);
   const limit = 10;
+  const [selectedTopic, setSelectedTopic] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["statements", offset],
+    queryKey: ["statements", offset, selectedTopic],
     queryFn: () =>
       api.getStatements({
         status: "approved",
         limit: String(limit),
         offset: String(offset),
+        ...(selectedTopic && { topic: selectedTopic }),
       }),
   });
 
@@ -27,6 +29,12 @@ export default function StatementsPage() {
 
   const statements = data?.data || [];
   const total = countData?.data?.count || 0;
+
+  const { data: topicsData } = useQuery({
+    queryKey: ["topics"],
+    queryFn: () => api.getTopics(),
+  });
+  const topics = topicsData?.data || [];
 
   return (
     <div>
@@ -44,6 +52,41 @@ export default function StatementsPage() {
             : "Verified statements from Kerala ministers and MLAs"}
         </p>
       </div>
+
+      {/* Topic filters */}
+      {topics.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          <button
+            onClick={() => {
+              setSelectedTopic("");
+              setOffset(0);
+            }}
+            className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+              !selectedTopic
+                ? "bg-green-700 text-white border-green-700"
+                : "border-gray-200 text-gray-600 hover:border-green-400"
+            }`}
+          >
+            All
+          </button>
+          {topics.map((t: { topic: string; count: number }) => (
+            <button
+              key={t.topic}
+              onClick={() => {
+                setSelectedTopic(t.topic);
+                setOffset(0);
+              }}
+              className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                selectedTopic === t.topic
+                  ? "bg-green-700 text-white border-green-700"
+                  : "border-gray-200 text-gray-600 hover:border-green-400"
+              }`}
+            >
+              {t.topic} ({t.count})
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Statements */}
       {isLoading ? (

@@ -64,5 +64,9 @@ celery_app.conf.update(
             "task": "workers.tasks.run_statement_pipeline",
             "schedule": 2 * 60 * 60,
         },
+        "tag-statements-every-hour": {
+            "task": "workers.tasks.tag_statements",
+            "schedule": 60 * 60,
+        },
     },
 )

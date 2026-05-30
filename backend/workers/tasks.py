@@ -152,3 +152,24 @@ def run_statement_pipeline():
     except Exception as e:
         logger.error(f"Pipeline task failed: {e}")
         raise
+
+@celery_app.task(name="workers.tasks.tag_statements")
+def tag_statements():
+    """Tag all untagged statements with topics."""
+    logger.info("Starting tagging task")
+    try:
+        from nlp.tagging_service import tag_pending_statements
+        from database.config import get_session_factory
+
+        SessionLocal = get_session_factory()
+        db = SessionLocal()
+        try:
+            result = tag_pending_statements(db)
+        finally:
+            db.close()
+
+        logger.info(f"Tagging complete: {result}")
+        return result
+    except Exception as e:
+        logger.error(f"Tagging task failed: {e}")
+        raise

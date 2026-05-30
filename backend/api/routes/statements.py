@@ -11,8 +11,6 @@ from api.schemas.statement import StatementResponse, StatementUpdate
 
 router = APIRouter(prefix="/api/statements", tags=["statements"])
 
-
-@router.get("/", response_model=list[StatementResponse])
 @router.get("/", response_model=list[dict])
 def list_statements(
     status: Optional[str] = "approved",
@@ -96,6 +94,28 @@ def get_statement_count(
         query = query.filter(Statement.minister_id == minister_id)
     return {"count": query.count()}
 
+@router.get("/stats")
+def get_stats(db: Session = Depends(get_db)):
+    """Public endpoint — get statement statistics."""
+    from nlp.statement_store import StatementStore
+    store = StatementStore()
+    return store.get_queue_stats(db)
+
+@router.get("/topics")
+def get_topics(db: Session = Depends(get_db)):
+    """Get all available topics with statement counts."""
+    from nlp.tagging_service import get_topic_stats
+    return get_topic_stats(db)
+
+@router.post("/tag-all")
+def tag_all_statements(
+    db: Session = Depends(get_db),
+    _: User = Depends(require_moderator),
+):
+    """Tag all untagged statements with topics."""
+    from nlp.tagging_service import tag_pending_statements
+    result = tag_pending_statements(db)
+    return result
 
 @router.get("/pending", response_model=list[StatementResponse])
 def list_pending(
@@ -111,15 +131,6 @@ def list_pending(
         Statement.created_at.desc()
     ).offset(offset).limit(limit).all()
 
-
-@router.get("/stats")
-def get_stats(db: Session = Depends(get_db)):
-    """Public endpoint — get statement statistics."""
-    from nlp.statement_store import StatementStore
-    store = StatementStore()
-    return store.get_queue_stats(db)
-
-
 @router.get("/{statement_id}", response_model=StatementResponse)
 def get_statement(
     statement_id: int,
@@ -132,7 +143,6 @@ def get_statement(
     if not statement:
         raise HTTPException(status_code=404, detail="Statement not found")
     return statement
-
 
 @router.patch("/{statement_id}", response_model=StatementResponse)
 def update_statement(
