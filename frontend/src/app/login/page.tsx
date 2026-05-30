@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiClient } from "../../../lib/api";
+import { apiClient } from "@/lib/api";
 import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
@@ -35,9 +35,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-white-10">Admin Login</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            openMinistry Dashboard
-          </p>
+          <p className="mt-2 text-sm text-gray-600">openMinistry Dashboard</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
