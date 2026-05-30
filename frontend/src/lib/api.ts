@@ -71,4 +71,12 @@ export const api = {
   reviewStatement: (id: number, data: Record<string, unknown>) =>
     apiClient.post(`/api/moderation/${id}/review`, data),
   getStatementLogs: (id: number) => apiClient.get(`/api/moderation/${id}/logs`),
+
+  // Search
+  search: (q: string, params?: Record<string, string>) =>
+    apiClient.get("/api/search/", { params: { q, ...params } }),
+  searchMinisters: (q: string) =>
+    apiClient.get("/api/search/ministers", { params: { q } }),
+  getSearchSuggestions: (q: string) =>
+    apiClient.get("/api/search/suggestions", { params: { q } }),
 };

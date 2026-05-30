@@ -78,6 +78,9 @@ app.include_router(statements_router)
 from api.routes.moderation import router as moderation_router
 app.include_router(moderation_router)
 
+from api.routes.search import router as search_router
+app.include_router(search_router)
+
 @app.get("/")
 async def root():
     return {
