@@ -13,6 +13,7 @@ router = APIRouter(prefix="/api/statements", tags=["statements"])
 
 
 @router.get("/", response_model=list[StatementResponse])
+@router.get("/", response_model=list[dict])
 def list_statements(
     status: Optional[str] = "approved",
     minister_id: Optional[int] = None,
@@ -21,7 +22,11 @@ def list_statements(
     offset: int = 0,
     db: Session = Depends(get_db),
 ):
-    """Public endpoint — list approved statements."""
+    """Public endpoint — list approved statements with full context."""
+    from database.models.minister import Minister
+    from database.models.article import Article
+    from database.models.source import Source
+
     query = db.query(Statement)
 
     if status:
@@ -31,9 +36,65 @@ def list_statements(
     if topic:
         query = query.filter(Statement.topic == topic)
 
-    return query.order_by(
-        Statement.statement_date.desc()
+    statements = query.order_by(
+        Statement.statement_date.desc(),
+        Statement.created_at.desc(),
     ).offset(offset).limit(limit).all()
+
+    results = []
+    for stmt in statements:
+        minister = db.query(Minister).filter(
+            Minister.id == stmt.minister_id
+        ).first()
+        article = db.query(Article).filter(
+            Article.id == stmt.article_id
+        ).first()
+        source = None
+        if article:
+            source = db.query(Source).filter(
+                Source.id == article.source_id
+            ).first()
+
+        results.append({
+            "id": stmt.id,
+            "statement_text": stmt.statement_text,
+            "statement_summary": stmt.statement_summary,
+            "topic": stmt.topic,
+            "confidence_score": stmt.confidence_score,
+            "statement_date": stmt.statement_date.isoformat()
+                if stmt.statement_date else None,
+            "status": stmt.status,
+            "created_at": stmt.created_at.isoformat(),
+            "minister": {
+                "id": minister.id if minister else None,
+                "name": minister.name if minister else "Unknown",
+                "portfolio": minister.portfolio if minister else None,
+            },
+            "source": {
+                "name": source.name if source else None,
+                "url": article.url if article else None,
+                "title": article.title if article else None,
+                "published_at": article.published_at.isoformat()
+                    if article and article.published_at else None,
+            },
+        })
+
+    return results
+
+
+@router.get("/count")
+def get_statement_count(
+    status: Optional[str] = "approved",
+    minister_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+):
+    """Get total count of statements."""
+    query = db.query(Statement)
+    if status:
+        query = query.filter(Statement.status == status)
+    if minister_id:
+        query = query.filter(Statement.minister_id == minister_id)
+    return {"count": query.count()}
 
 
 @router.get("/pending", response_model=list[StatementResponse])
