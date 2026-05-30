@@ -36,42 +36,34 @@ class NameDetector:
             # Index by full name
             self.name_index[minister.name.lower()] = minister
 
-            # Index by name parts (first name, last name)
+            # Index by name parts
             parts = minister.name.split()
             for part in parts:
-                if len(part) > 3:  # skip initials like "K." or "V."
-                    key = part.lower()
+                if len(part) > 3 and part not in ["Shri", "Smt", "Dr"]:
+                    key = part.lower().strip(".")
                     if key not in self.name_index:
                         self.name_index[key] = minister
 
             # Index by Malayalam name
             if minister.name_malayalam:
                 self.name_index[minister.name_malayalam.lower()] = minister
+                # Also index individual Malayalam name parts
+                ml_parts = minister.name_malayalam.split()
+                for part in ml_parts:
+                    part = part.strip(".,")
+                    if len(part) > 2:
+                        if part.lower() not in self.name_index:
+                            self.name_index[part.lower()] = minister
 
-            # Index by aliases stored in bio
-            if minister.bio and "ALIASES:" in minister.bio:
-                alias_section = minister.bio.split("ALIASES:")[-1]
-                aliases = [a.strip() for a in alias_section.split(",")]
-                for alias in aliases:
-                    if alias:
-                        self.alias_index[alias.lower()] = minister
-
-            # Index by portfolio keywords
-            if minister.portfolio:
-                # Extract key portfolio words
-                portfolio_words = re.findall(
-                    r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b',
-                    minister.portfolio
-                )
-                for word in portfolio_words:
-                    if len(word) > 5:
-                        self.portfolio_index[word.lower()] = minister
-
-        logger.info(
-            f"Loaded {len(self.ministers)} ministers, "
-            f"{len(self.name_index)} name entries, "
-            f"{len(self.alias_index)} aliases"
-        )
+            # Index from bio — extract Malayalam name mentions
+            if minister.bio:
+                # Bio starts with role — e.g. "Minister — Dharmadam"
+                # constituency name often appears in Malayalam articles
+                if minister.constituency:
+                    # constituency as alias
+                    self.alias_index[
+                        minister.constituency.lower()
+                    ] = minister
 
     def detect_mentions(self, text: str) -> list[dict]:
         """

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from database.config import get_db
@@ -85,3 +85,122 @@ def delete_minister(
     db.delete(minister)
     db.commit()
     return {"message": "Minister deleted"}
+
+@router.get("/{minister_id}/statements")
+def get_minister_statements(
+    minister_id: int,
+    status: str = "approved",
+    limit: int = Query(default=20, le=100),
+    offset: int = 0,
+    db: Session = Depends(get_db),
+):
+    """Get all statements for a specific minister."""
+    from database.models.statement import Statement
+    from database.models.article import Article
+    from database.models.source import Source
+
+    minister = db.query(Minister).filter(
+        Minister.id == minister_id
+    ).first()
+    if not minister:
+        raise HTTPException(status_code=404, detail="Minister not found")
+
+    query = db.query(Statement).filter(
+        Statement.minister_id == minister_id,
+        Statement.status == status,
+    )
+
+    total = query.count()
+    statements = query.order_by(
+        Statement.statement_date.desc().nullslast()
+    ).offset(offset).limit(limit).all()
+
+    results = []
+    for stmt in statements:
+        article = db.query(Article).filter(
+            Article.id == stmt.article_id
+        ).first()
+        source = None
+        if article:
+            source = db.query(Source).filter(
+                Source.id == article.source_id
+            ).first()
+
+        results.append({
+            "id": stmt.id,
+            "statement_text": stmt.statement_text,
+            "topic": stmt.topic,
+            "confidence_score": stmt.confidence_score,
+            "statement_date": stmt.statement_date.isoformat()
+                if stmt.statement_date else None,
+            "status": stmt.status,
+            "minister": {
+                "id": minister.id,
+                "name": minister.name,
+                "portfolio": minister.portfolio,
+            },
+            "source": {
+                "name": source.name if source else None,
+                "url": article.url if article else None,
+                "title": article.title if article else None,
+                "published_at": article.published_at.isoformat()
+                    if article and article.published_at else None,
+            },
+        })
+
+    return {
+        "minister": {
+            "id": minister.id,
+            "name": minister.name,
+            "name_malayalam": minister.name_malayalam,
+            "portfolio": minister.portfolio,
+            "party": minister.party,
+            "constituency": minister.constituency,
+            "bio": minister.bio,
+            "is_active": minister.is_active,
+        },
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "statements": results,
+    }
+
+
+@router.get("/{minister_id}/stats")
+def get_minister_stats(
+    minister_id: int,
+    db: Session = Depends(get_db),
+):
+    """Get statement statistics for a minister."""
+    from database.models.statement import Statement
+    from sqlalchemy import func
+
+    minister = db.query(Minister).filter(
+        Minister.id == minister_id
+    ).first()
+    if not minister:
+        raise HTTPException(status_code=404, detail="Minister not found")
+
+    total = db.query(Statement).filter(
+        Statement.minister_id == minister_id,
+        Statement.status == "approved",
+    ).count()
+
+    # Topic breakdown
+    topics = db.query(
+        Statement.topic,
+        func.count(Statement.id).label("count")
+    ).filter(
+        Statement.minister_id == minister_id,
+        Statement.status == "approved",
+        Statement.topic.isnot(None),
+    ).group_by(Statement.topic).order_by(
+        func.count(Statement.id).desc()
+    ).limit(5).all()
+
+    return {
+        "total_statements": total,
+        "topics": [
+            {"topic": t, "count": c} for t, c in topics
+        ],
+    }

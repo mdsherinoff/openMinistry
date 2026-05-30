@@ -47,11 +47,11 @@ celery_app.conf.update(
             "schedule": 15 * 60,  # every 15 minutes
             "args": ["mathrubhumi.com"],
         },
-        "scrape-manorama-every-15-minutes": {
-            "task": "workers.tasks.scrape_source",
-            "schedule": 15 * 60,
-            "args": ["onmanorama.com"],
-        },
+        # "scrape-manorama-every-15-minutes": {
+        #     "task": "workers.tasks.scrape_source",
+        #     "schedule": 15 * 60,
+        #     "args": ["onmanorama.com"],
+        # },
         "clean-articles-every-hour": {
             "task": "workers.tasks.clean_articles",
             "schedule": 60 * 60,  # every hour

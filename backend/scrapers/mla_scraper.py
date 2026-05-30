@@ -204,6 +204,11 @@ if __name__ == "__main__":
     print("Clearing old MLA data...")
     SessionLocal = get_session_factory()
     db = SessionLocal()
+    from database.models.statement import Statement
+    from database.models.moderation_log import ModerationLog
+    # Must delete in order: logs → statements → ministers
+    db.query(ModerationLog).delete()
+    db.query(Statement).delete()
     db.query(Minister).delete()
     db.commit()
     db.close()

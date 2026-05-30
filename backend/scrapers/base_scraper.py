@@ -21,12 +21,15 @@ class BaseScraper(ABC):
         self.selectors = source_config["selectors"]
         self.headers = {
             "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
+                "Chrome/124.0.0.0 Safari/537.36"
             ),
-            "Accept-Language": "en-US,en;q=0.9,ml;q=0.8",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
         }
 
     def make_url_hash(self, url: str) -> str:
@@ -94,16 +97,16 @@ class BaseScraper(ABC):
 
     def _is_blocked(self, html: str) -> bool:
         """Detect common anti-bot block pages."""
-        if not html or len(html) < 500:
+        if not html or len(html) < 200:
             return True
 
         block_indicators = [
             "access denied",
-            "cloudflare",
-            "please enable javascript",
+            "you have been blocked",
+            "cloudflare ray id",
+            "please complete the security check",
             "captcha",
             "robot or human",
-            "unusual traffic",
             "automated queries",
         ]
 
