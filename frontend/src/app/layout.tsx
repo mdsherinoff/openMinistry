@@ -62,8 +62,7 @@ export default function RootLayout({
                   text-xs text-gray-500"
                 >
                   <a
-                    href="http://localhost:8000/docs"
-                    target="_blank"
+                    href="https://openministry.live/docs"
                     rel="noopener noreferrer"
                     className="hover:text-green-700 transition-colors"
                   >
@@ -71,7 +70,7 @@ export default function RootLayout({
                   </a>
 
                   <a
-                    href="https://github.com/YOUR_USERNAME/openMinistry"
+                    href="https://github.com/mdsherinoff/openMinistry"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-green-700 transition-colors"

@@ -4,11 +4,23 @@ from contextlib import asynccontextmanager
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from api.middleware import RequestLoggingMiddleware, SecurityHeadersMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from database.config import get_settings, get_engine
 from database.logging_config import setup_logging
 
 limiter = Limiter(key_func=get_remote_address)
+
+# Security headers middleware
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -54,7 +66,6 @@ All statements are verified by human moderators before publication.
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-from api.middleware import RequestLoggingMiddleware
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestLoggingMiddleware)
 
@@ -65,17 +76,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Security headers middleware
-from starlette.middleware.base import BaseHTTPMiddleware
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        return response
 
 app.add_middleware(
     CORSMiddleware,
