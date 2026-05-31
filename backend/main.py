@@ -51,6 +51,9 @@ All statements are verified by human moderators before publication.
     lifespan=lifespan,
 )
 
+from api.middleware import RequestLoggingMiddleware
+app.add_middleware(RequestLoggingMiddleware)
+
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -117,10 +120,38 @@ async def root():
 
 @app.get("/health", tags=["root"])
 async def health_check():
+    import time
+    start = time.time()
+    checks = {}
+
+    # Database check
     try:
         engine = get_engine()
         with engine.connect() as conn:
             conn.execute(__import__("sqlalchemy").text("SELECT 1"))
-        return {"status": "healthy", "database": "connected"}
+        checks["database"] = "connected"
     except Exception as e:
-        return {"status": "unhealthy", "database": str(e)}
+        checks["database"] = f"error: {str(e)}"
+
+    # Redis check
+    try:
+        from api.cache import get_redis
+        r = get_redis()
+        if r:
+            r.ping()
+            checks["redis"] = "connected"
+        else:
+            checks["redis"] = "unavailable"
+    except Exception as e:
+        checks["redis"] = f"error: {str(e)}"
+
+    duration = (time.time() - start) * 1000
+    status = "healthy" if all(
+        "error" not in v for v in checks.values()
+    ) else "degraded"
+
+    return {
+        "status": status,
+        "checks": checks,
+        "response_time_ms": round(duration, 2),
+    }

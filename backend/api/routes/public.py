@@ -4,6 +4,7 @@ Clean public API endpoints with full documentation.
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
+from api.cache import get_cached, set_cached
 
 from database.config import get_db
 from database.models.statement import Statement
@@ -66,12 +67,16 @@ All statements are human-verified before publication.
 def list_statements(
     minister_id: Optional[int] = None,
     topic: Optional[str] = None,
-    limit: int = Query(default=20, le=100, description="Results per page"),
-    offset: int = Query(default=0, description="Pagination offset"),
+    limit: int = Query(default=20, le=100),
+    offset: int = Query(default=0),
     db: Session = Depends(get_db),
 ):
-    query = db.query(Statement).filter(Statement.status == "approved")
+    cache_key = f"statements:{minister_id}:{topic}:{limit}:{offset}"
+    cached = get_cached(cache_key)
+    if cached:
+        return cached
 
+    query = db.query(Statement).filter(Statement.status == "approved")
     if minister_id:
         query = query.filter(Statement.minister_id == minister_id)
     if topic:
@@ -82,12 +87,15 @@ def list_statements(
         Statement.statement_date.desc().nullslast()
     ).offset(offset).limit(limit).all()
 
-    return {
+    result = {
         "total": total,
         "limit": limit,
         "offset": offset,
         "results": [build_statement(s, db) for s in statements],
     }
+
+    set_cached(cache_key, result, ttl=300)
+    return result
 
 @router.get(
     "/statements/{statement_id}",
@@ -226,11 +234,12 @@ def search(
         "results": [build_statement(s, db) for s in statements],
     }
 
-@router.get(
-    "/topics",
-    summary="List topics with statement counts",
-)
+@router.get("/topics")
 def list_topics(db: Session = Depends(get_db)):
+    cached = get_cached("topics:all")
+    if cached:
+        return cached
+
     from sqlalchemy import func
     results = db.query(
         Statement.topic,
@@ -242,6 +251,6 @@ def list_topics(db: Session = Depends(get_db)):
         func.count(Statement.id).desc()
     ).all()
 
-    return {
-        "topics": [{"topic": t, "count": c} for t, c in results]
-    }
+    result = {"topics": [{"topic": t, "count": c} for t, c in results]}
+    set_cached("topics:all", result, ttl=600)
+    return result
