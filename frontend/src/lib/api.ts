@@ -53,9 +53,8 @@ export const api = {
   updateMinister: (id: number, data: Record<string, unknown>) =>
     apiClient.patch(`/api/ministers/${id}`, data),
   getMinisterStatements: (id: number, params?: Record<string, string>) =>
-    apiClient.get(`/api/ministers/${id}/statements/`, { params }),
-  getMinisterStats: (id: number) =>
-    apiClient.get(`/api/ministers/${id}/stats/`),
+    apiClient.get(`/api/ministers/${id}/statements`, { params }),
+  getMinisterStats: (id: number) => apiClient.get(`/api/ministers/${id}/stats`),
 
   // Sources
   getSources: () => apiClient.get("/api/sources/"),
