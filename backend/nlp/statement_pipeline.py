@@ -18,29 +18,49 @@ def process_article(
     store: StatementStore,
     db: Session,
 ) -> dict:
-    """
-    Full pipeline for a single article:
-    1. Detect minister mentions
-    2. Extract quotes for each mention
-    3. Quality check and store
-    """
     text = article.cleaned_content or article.raw_content or ""
     if not text:
         return {"statements": 0, "skipped": True, "reason": "no content"}
 
     full_text = f"{article.title or ''}\n\n{text}"
 
-    # Step 1 — Detect ministers
+    # Detect ministers
     mentions = detector.detect_mentions(full_text)
     if not mentions:
         article.scrape_status = "no_mentions"
         db.commit()
         return {"statements": 0, "skipped": True, "reason": "no mentions"}
 
-    # Step 2 — Extract and store quotes
-    statements_to_save = []
-
+    # only keep the HIGHEST CONFIDENCE mention per minister
+    # and deduplicate by minister_id
+    seen_ministers = {}
     for mention in mentions:
+        mid = mention["minister_id"]
+        if mid not in seen_ministers:
+            seen_ministers[mid] = mention
+        # keep whichever has better match type
+        elif mention["match_type"] == "name" and \
+             seen_ministers[mid]["match_type"] != "name":
+            seen_ministers[mid] = mention
+
+    unique_mentions = list(seen_ministers.values())
+
+    # Only process if we have HIGH CONFIDENCE mentions
+    # i.e. full name match, not just partial
+    high_confidence_mentions = [
+        m for m in unique_mentions
+        if m["match_type"] in ("name", "alias")
+    ]
+
+    if not high_confidence_mentions:
+        article.scrape_status = "no_mentions"
+        db.commit()
+        return {"statements": 0, "skipped": True, "reason": "low confidence only"}
+
+    statements_to_save = []
+    seen_quote_texts = set()
+
+    for mention in high_confidence_mentions:
         quotes = extractor.extract_quotes(
             text=full_text,
             minister_name=mention["minister_name"],
@@ -48,6 +68,12 @@ def process_article(
         )
 
         for quote in quotes:
+            # deduplicate quotes by text across all ministers
+            quote_key = quote.text.lower()[:100]
+            if quote_key in seen_quote_texts:
+                continue
+            seen_quote_texts.add(quote_key)
+
             statements_to_save.append({
                 "minister_id": mention["minister_id"],
                 "article_id": article.id,
@@ -57,7 +83,6 @@ def process_article(
                 "statement_date": article.published_at,
             })
 
-    # Step 3 — Save with quality checks
     result = store.save_batch(statements_to_save, db)
 
     if result["saved"] > 0:
@@ -65,11 +90,6 @@ def process_article(
     else:
         article.scrape_status = "no_quotes"
     db.commit()
-
-    logger.info(
-        f"Article '{(article.title or '')[:50]}': "
-        f"saved={result['saved']} rejected={result['rejected']}"
-    )
 
     return {
         "statements": result["saved"],
