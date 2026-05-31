@@ -38,7 +38,7 @@ export const api = {
 
   // Statements
   getStatements: (params?: Record<string, string>) =>
-    apiClient.get("/api/statements", { params }),
+    apiClient.get("/api/statements/", { params }),
   getStatementCount: (params?: Record<string, string>) =>
     apiClient.get("/api/statements/count", { params }),
   getTopics: () => apiClient.get("/api/statements/topics"),
