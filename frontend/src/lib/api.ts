@@ -40,21 +40,22 @@ export const api = {
   getStatements: (params?: Record<string, string>) =>
     apiClient.get("/api/statements/", { params }),
   getStatementCount: (params?: Record<string, string>) =>
-    apiClient.get("/api/statements/count", { params }),
-  getTopics: () => apiClient.get("/api/statements/topics"),
+    apiClient.get("/api/statements/count/", { params }),
+  getTopics: () => apiClient.get("/api/statements/topics/"),
   tagAllStatements: () => apiClient.post("/api/statements/tag-all"),
 
   // Ministers
   getMinisters: (activeOnly: boolean = true) =>
     apiClient.get("/api/ministers/", { params: { active_only: activeOnly } }),
-  getMinister: (id: number) => apiClient.get(`/api/ministers/${id}`),
+  getMinister: (id: number) => apiClient.get(`/api/ministers/${id}/`),
   createMinister: (data: Record<string, unknown>) =>
     apiClient.post("/api/ministers/", data),
   updateMinister: (id: number, data: Record<string, unknown>) =>
     apiClient.patch(`/api/ministers/${id}`, data),
   getMinisterStatements: (id: number, params?: Record<string, string>) =>
-    apiClient.get(`/api/ministers/${id}/statements`, { params }),
-  getMinisterStats: (id: number) => apiClient.get(`/api/ministers/${id}/stats`),
+    apiClient.get(`/api/ministers/${id}/statements/`, { params }),
+  getMinisterStats: (id: number) =>
+    apiClient.get(`/api/ministers/${id}/stats/`),
 
   // Sources
   getSources: () => apiClient.get("/api/sources/"),
@@ -66,23 +67,24 @@ export const api = {
 
   // Moderation
   getModerationQueue: (params?: Record<string, string>) =>
-    apiClient.get("/api/moderation/queue", { params }),
-  getModerationStats: () => apiClient.get("/api/moderation/stats/overview"),
+    apiClient.get("/api/moderation/queue/", { params }),
+  getModerationStats: () => apiClient.get("/api/moderation/stats/overview/"),
   getStatementContext: (id: number) =>
-    apiClient.get(`/api/moderation/${id}/context`),
+    apiClient.get(`/api/moderation/${id}/context/`),
   approveStatement: (id: number, notes?: string) =>
-    apiClient.post(`/api/moderation/${id}/approve`, { notes }),
+    apiClient.post(`/api/moderation/${id}/approve/`, { notes }),
   rejectStatement: (id: number, notes?: string) =>
-    apiClient.post(`/api/moderation/${id}/reject`, { notes }),
+    apiClient.post(`/api/moderation/${id}/reject/`, { notes }),
   reviewStatement: (id: number, data: Record<string, unknown>) =>
-    apiClient.post(`/api/moderation/${id}/review`, data),
-  getStatementLogs: (id: number) => apiClient.get(`/api/moderation/${id}/logs`),
+    apiClient.post(`/api/moderation/${id}/review/`, data),
+  getStatementLogs: (id: number) =>
+    apiClient.get(`/api/moderation/${id}/logs/`),
 
   // Search
   search: (q: string, params?: Record<string, string>) =>
     apiClient.get("/api/search/", { params: { q, ...params } }),
   searchMinisters: (q: string) =>
-    apiClient.get("/api/search/ministers", { params: { q } }),
+    apiClient.get("/api/search/ministers/", { params: { q } }),
   getSearchSuggestions: (q: string) =>
-    apiClient.get("/api/search/suggestions", { params: { q } }),
+    apiClient.get("/api/search/suggestions/", { params: { q } }),
 };
