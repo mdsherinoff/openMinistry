@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Optional
@@ -44,10 +46,13 @@ def build_statement_result(stmt, db: Session) -> dict:
         },
     }
 
+limiter = Limiter(key_func=get_remote_address)
 
 @router.get("/")
+@limiter.limit("30/minute")
 def search(
-    q: str = Query(..., min_length=2, description="Search query"),
+    request: Request,
+    q: str = Query(..., min_length=2),
     minister_id: Optional[int] = None,
     topic: Optional[str] = None,
     limit: int = Query(default=20, le=100),
@@ -64,7 +69,6 @@ def search(
     if not query_clean:
         return {"total": 0, "results": [], "query": q}
 
-    # Always use simple ILIKE search — reliable and fast enough for MVP
     try:
         query = db.query(Statement).join(
             Minister, Statement.minister_id == Minister.id
@@ -101,7 +105,6 @@ def search(
         "limit": limit,
     }
 
-
 @router.get("/ministers")
 def search_ministers(
     q: str = Query(..., min_length=2),
@@ -130,7 +133,6 @@ def search_ministers(
         }
         for m in ministers
     ]
-
 
 @router.get("/suggestions")
 def get_suggestions(

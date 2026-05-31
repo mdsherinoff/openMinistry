@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -10,9 +12,12 @@ from api.auth import require_moderator
 from api.schemas.statement import StatementResponse, StatementUpdate
 
 router = APIRouter(prefix="/api/statements", tags=["statements"])
+limiter = Limiter(key_func=get_remote_address)
 
 @router.get("/", response_model=list[dict])
+@limiter.limit("60/minute")
 def list_statements(
+    request: Request,
     status: Optional[str] = "approved",
     minister_id: Optional[int] = None,
     topic: Optional[str] = None,
@@ -81,7 +86,9 @@ def list_statements(
 
 
 @router.get("/count")
+@limiter.limit("60/minute")
 def get_statement_count(
+    request: Request,
     status: Optional[str] = "approved",
     minister_id: Optional[int] = None,
     db: Session = Depends(get_db),
@@ -102,7 +109,11 @@ def get_stats(db: Session = Depends(get_db)):
     return store.get_queue_stats(db)
 
 @router.get("/topics")
-def get_topics(db: Session = Depends(get_db)):
+@limiter.limit("60/minute")
+def get_topics(
+    request: Request,
+    db: Session = Depends(get_db)
+):
     """Get all available topics with statement counts."""
     from nlp.tagging_service import get_topic_stats
     return get_topic_stats(db)
