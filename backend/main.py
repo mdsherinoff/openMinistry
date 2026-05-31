@@ -51,17 +51,18 @@ All statements are verified by human moderators before publication.
     lifespan=lifespan,
 )
 
-from api.middleware import RequestLoggingMiddleware
-app.add_middleware(RequestLoggingMiddleware)
-
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+from api.middleware import RequestLoggingMiddleware
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["GET"],
+    allow_origins=["http://localhost:3000", "https://openministry.live"],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
