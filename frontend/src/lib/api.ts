@@ -1,7 +1,34 @@
 import axios from "axios";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://openministry.live";
+const DEFAULT_API_BASE_URL =
+  process.env.NODE_ENV === "development" ? "http://localhost:8000" : "";
+
+function getApiBaseUrl() {
+  const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
+  const baseUrl = configured || DEFAULT_API_BASE_URL;
+
+  if (typeof window === "undefined" || !baseUrl) {
+    return baseUrl;
+  }
+
+  try {
+    const url = new URL(baseUrl, window.location.origin);
+    if (
+      window.location.protocol === "https:" &&
+      url.protocol === "http:" &&
+      url.hostname === window.location.hostname
+    ) {
+      url.protocol = "https:";
+      return url.origin;
+    }
+  } catch {
+    return baseUrl;
+  }
+
+  return baseUrl;
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
