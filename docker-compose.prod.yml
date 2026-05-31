@@ -43,9 +43,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://openministry.live
     container_name: openministry_frontend
     environment:
-      NEXT_PUBLIC_API_URL: https://openministry.live/api
+      NEXT_PUBLIC_API_URL: https://openministry.live
     restart: unless-stopped
     depends_on:
       - backend
