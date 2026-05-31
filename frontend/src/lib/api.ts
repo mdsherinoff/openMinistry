@@ -66,8 +66,8 @@ export const api = {
 
   // Moderation
   getModerationQueue: (params?: Record<string, string>) =>
-    apiClient.get("/api/moderation/queue/", { params }),
-  getModerationStats: () => apiClient.get("/api/moderation/stats/overview/"),
+    apiClient.get("/api/moderation/queue", { params }),
+  getModerationStats: () => apiClient.get("/api/moderation/stats/overview"),
   getStatementContext: (id: number) =>
     apiClient.get(`/api/moderation/${id}/context/`),
   approveStatement: (id: number, notes?: string) =>
