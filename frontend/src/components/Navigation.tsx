@@ -19,7 +19,7 @@ export default function Navigation() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1">
+          <Link href="/" className="flex items-center">
             <span className="text-lg font-bold text-green-700">open</span>
             <span className="text-lg font-bold text-gray-900">Ministry</span>
             <span

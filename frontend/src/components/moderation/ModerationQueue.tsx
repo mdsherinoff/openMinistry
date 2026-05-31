@@ -31,7 +31,7 @@ export default function ModerationQueue() {
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h2 className="font-semibold text-gray-900">
+          <h2 className="font-semibold text-white-100">
             Review Queue
             {total > 0 && (
               <span className="ml-2 text-sm font-normal text-gray-500">
@@ -64,7 +64,7 @@ export default function ModerationQueue() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex items-center gap-1.5 text-sm text-gray-600
+            className="flex items-center gap-1.5 text-sm text-green-500
               border border-gray-200 px-3 py-1.5 rounded-lg
               hover:bg-gray-50 disabled:opacity-50"
           >

@@ -49,7 +49,7 @@ export default function StatementsPage() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
           <FileText size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-white-10">
             Verified Statements
           </h1>
         </div>
@@ -89,7 +89,7 @@ export default function StatementsPage() {
                 transition-colors ${
                   selectedTopic === t.topic
                     ? "bg-green-700 text-white border-green-700"
-                    : "border-gray-200 text-gray-600 hover:border-green-400"
+                    : "border-gray-200 text-gray-400 hover:border-green-400"
                 }`}
             >
               {t.topic}

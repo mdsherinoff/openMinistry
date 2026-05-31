@@ -13,14 +13,14 @@ export default function HomePage() {
           <Shield size={14} />
           Human verified · Open source · Public interest
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-white-10 mb-4">
           Kerala Government
           <br />
           Statement Tracker
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+        <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
           A searchable public archive of statements made by Kerala ministers and
-          MLAs — scraped from newspapers, verified by human moderators, and
+          MLAs scraped from newspapers, verified by human moderators, and
           published openly.
         </p>
         <div className="flex items-center justify-center gap-3">
@@ -36,7 +36,7 @@ export default function HomePage() {
           <Link
             href="/search"
             className="inline-flex items-center gap-2 border
-              border-gray-300 text-gray-700 px-6 py-3 rounded-lg
+              border-gray-300 text-gray-400 px-6 py-3 rounded-lg
               font-medium hover:bg-gray-50 transition-colors"
           >
             <Search size={18} />
@@ -49,28 +49,28 @@ export default function HomePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
         <div className="border border-gray-200 rounded-lg p-6">
           <FileText className="text-green-700 mb-3" size={24} />
-          <h3 className="font-semibold text-gray-900 mb-2">
+          <h3 className="font-semibold text-white-10 mb-2">
             Verified Statements
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-500">
             Every statement is reviewed by a human moderator before publication.
             No automated publishing.
           </p>
         </div>
         <div className="border border-gray-200 rounded-lg p-6">
           <Users className="text-green-700 mb-3" size={24} />
-          <h3 className="font-semibold text-gray-900 mb-2">All 140 MLAs</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="font-semibold text-gray-10 mb-2">All 140 MLAs</h3>
+          <p className="text-sm text-gray-500">
             Tracks statements from all ministers and MLAs of the 16th Kerala
             Legislative Assembly.
           </p>
         </div>
         <div className="border border-gray-200 rounded-lg p-6">
           <Shield className="text-green-700 mb-3" size={24} />
-          <h3 className="font-semibold text-gray-900 mb-2">
+          <h3 className="font-semibold text-gray-10 mb-2">
             Source Transparency
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-500">
             Every statement links back to its original news source so you can
             verify it yourself.
           </p>

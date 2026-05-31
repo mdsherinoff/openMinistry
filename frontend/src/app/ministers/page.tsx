@@ -56,9 +56,9 @@ export default function MinistersPage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <Users size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-gray-900">Ministers & MLAs</h1>
+          <h1 className="text-2xl font-bold text-white-100">Ministers & MLAs</h1>
         </div>
-        <p className="text-gray-600">
+        <p className="text-gray-500">
           16th Kerala Legislative Assembly — {ministers.length} members
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function MinistersPage() {
           {cabinetMinisters.length > 0 && (
             <div className="mb-8">
               <h2
-                className="text-lg font-semibold text-gray-900 mb-4
+                className="text-lg font-semibold text-white-10 mb-4
                 flex items-center gap-2"
               >
                 <Building size={18} className="text-green-700" />
@@ -116,7 +116,7 @@ export default function MinistersPage() {
           {mlas.length > 0 && (
             <div>
               <h2
-                className="text-lg font-semibold text-gray-900 mb-4
+                className="text-lg font-semibold text-white-10 mb-4
                 flex items-center gap-2"
               >
                 <Users size={18} className="text-green-700" />

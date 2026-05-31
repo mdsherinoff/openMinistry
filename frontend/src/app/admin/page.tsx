@@ -42,13 +42,13 @@ export default function AdminPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Shield size={20} className="text-green-700" />
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="text-xl font-bold text-white-100">
             Moderation Dashboard
           </h1>
         </div>
         <button
           onClick={logout}
-          className="flex items-center gap-1.5 text-sm text-gray-600
+          className="flex items-center gap-1.5 text-sm text-green-400
             border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50"
         >
           <LogOut size={14} />

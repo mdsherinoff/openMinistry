@@ -68,8 +68,8 @@ export default function StatsCards() {
           <div className={`inline-flex p-2 rounded-lg ${bg} mb-2`}>
             <Icon size={18} className={color} />
           </div>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-2xl font-bold text-gray-500">{value}</p>
+          <p className="text-sm text-gray-100">{label}</p>
         </div>
       ))}
     </div>
