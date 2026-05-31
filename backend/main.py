@@ -1,26 +1,16 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from api.middleware import RequestLoggingMiddleware, SecurityHeadersMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 
 from database.config import get_settings, get_engine
 from database.logging_config import setup_logging
+from api.middleware import RequestLoggingMiddleware, SecurityHeadersMiddleware
 
 limiter = Limiter(key_func=get_remote_address)
 
-# Security headers middleware
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        return response
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,6 +20,7 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("Shutting down...")
 
+
 settings = get_settings()
 
 app = FastAPI(
@@ -37,7 +28,7 @@ app = FastAPI(
     description="""
 ## openMinistry Public API
 
-A public API for accessing verified statements made by Kerala 
+A public API for accessing verified statements made by Kerala
 ministers and MLAs.
 
 ### Authentication
@@ -68,15 +59,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RequestLoggingMiddleware)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://openministry.live"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "https://openministry.live"],
@@ -104,6 +86,7 @@ app.include_router(tasks_router)
 app.include_router(moderation_router)
 app.include_router(public_router)
 
+
 @app.get("/", tags=["root"])
 async def root():
     return {
@@ -119,13 +102,13 @@ async def root():
         },
     }
 
+
 @app.get("/health", tags=["root"])
 async def health_check():
     import time
     start = time.time()
     checks = {}
 
-    # Database check
     try:
         engine = get_engine()
         with engine.connect() as conn:
@@ -134,7 +117,6 @@ async def health_check():
     except Exception as e:
         checks["database"] = f"error: {str(e)}"
 
-    # Redis check
     try:
         from api.cache import get_redis
         r = get_redis()
