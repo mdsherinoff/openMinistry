@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-
 class StatementResponse(BaseModel):
     id: int
     minister_id: int
@@ -17,7 +16,6 @@ class StatementResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 class StatementUpdate(BaseModel):
     statement_text: Optional[str] = None

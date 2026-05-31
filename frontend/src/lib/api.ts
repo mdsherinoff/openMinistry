@@ -78,6 +78,8 @@ export const api = {
     apiClient.post(`/api/moderation/${id}/review/`, data),
   getStatementLogs: (id: number) =>
     apiClient.get(`/api/moderation/${id}/logs/`),
+  updateStatement: (id: number, data: Record<string, unknown>) =>
+    apiClient.patch(`/api/statements/${id}/`, data),
 
   // Search
   search: (q: string, params?: Record<string, string>) =>

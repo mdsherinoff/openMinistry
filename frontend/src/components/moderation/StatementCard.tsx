@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../lib/api";
+import { api } from "@/lib/api";
 import {
-  CheckCircle,
-  XCircle,
-  Edit,
-  Flag,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
+  CheckCircle, XCircle, Edit, Flag,
+  ExternalLink, ChevronDown, ChevronUp,
 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface StatementCardProps {
   statement: {
@@ -20,12 +15,14 @@ export interface StatementCardProps {
     statement_text: string;
     confidence_score: number;
     minister_name: string;
+    minister_id: number;
     minister_portfolio: string;
     article_title: string;
     article_url: string;
     article_source: string;
     article_published_at: string;
     statement_date: string;
+    topic: string | null;
   };
 }
 
@@ -33,9 +30,17 @@ export default function StatementCard({ statement }: StatementCardProps) {
   const queryClient = useQueryClient();
   const [showEdit, setShowEdit] = useState(false);
   const [editedText, setEditedText] = useState(statement.statement_text);
+  const [editedTopic, setEditedTopic] = useState(statement.topic || "");
   const [notes, setNotes] = useState("");
   const [showContext, setShowContext] = useState(false);
   const [context, setContext] = useState<string | null>(null);
+
+  const TOPICS = [
+    "Health", "Education", "Transport", "Economy",
+    "Agriculture", "Environment", "Infrastructure",
+    "Law & Order", "Social Welfare", "Politics",
+    "Tourism", "Finance",
+  ];
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["moderation-queue"] });
@@ -59,7 +64,14 @@ export default function StatementCard({ statement }: StatementCardProps) {
         edited_text: editedText,
         notes: notes || undefined,
       }),
-    onSuccess: invalidate,
+    onSuccess: async () => {
+      // Also update topic if changed
+      if (editedTopic !== (statement.topic || "")) {
+        await api.updateStatement(statement.id, { topic: editedTopic });
+      }
+      invalidate();
+      setShowEdit(false);
+    },
   });
 
   const flagMutation = useMutation({
@@ -91,8 +103,8 @@ export default function StatementCard({ statement }: StatementCardProps) {
     confidence >= 0.8
       ? "text-green-600 bg-green-50"
       : confidence >= 0.6
-        ? "text-amber-600 bg-amber-50"
-        : "text-red-600 bg-red-50";
+      ? "text-amber-600 bg-amber-50"
+      : "text-red-600 bg-red-50";
 
   const isLoading =
     approveMutation.isPending ||
@@ -110,7 +122,7 @@ export default function StatementCard({ statement }: StatementCardProps) {
           </span>
           {statement.minister_portfolio && (
             <span className="ml-2 text-sm text-gray-500">
-              {statement.minister_portfolio.split(",")[0]}
+              {statement.minister_portfolio.split(",")[0].replace("MLA - ", "")}
             </span>
           )}
         </div>
@@ -126,18 +138,72 @@ export default function StatementCard({ statement }: StatementCardProps) {
 
       {/* Statement text */}
       {showEdit ? (
-        <textarea
-          value={editedText}
-          onChange={(e) => setEditedText(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg p-3 text-sm
-            text-gray-800 focus:outline-none focus:border-green-500
-            focus:ring-1 focus:ring-green-500 mb-3"
-          rows={4}
-        />
+        <div className="space-y-3 mb-3">
+          {/* Edit text */}
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Statement text
+            </label>
+            <textarea
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3
+                text-sm text-gray-800 focus:outline-none
+                focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              rows={4}
+            />
+          </div>
+
+          {/* Edit topic */}
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Topic
+            </label>
+            <select
+              value={editedTopic}
+              onChange={(e) => setEditedTopic(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3
+                py-2 text-sm focus:outline-none focus:border-green-500"
+            >
+              <option value="">No topic</option>
+              {TOPICS.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Edit notes
+            </label>
+            <input
+              type="text"
+              placeholder="Reason for edit..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3
+                py-2 text-xs text-gray-700 focus:outline-none
+                focus:border-green-500"
+            />
+          </div>
+        </div>
       ) : (
         <p className="text-gray-800 text-sm leading-relaxed mb-3">
           {statement.statement_text}
         </p>
+      )}
+
+      {/* Topic badge */}
+      {!showEdit && statement.topic && (
+        <span
+          className="inline-block text-xs bg-blue-50 text-blue-700
+          px-2 py-0.5 rounded-full border border-blue-200 mb-3"
+        >
+          {statement.topic}
+        </span>
       )}
 
       {/* Source */}
@@ -160,7 +226,7 @@ export default function StatementCard({ statement }: StatementCardProps) {
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-green-700 hover:underline"
             >
-              Source article <ExternalLink size={10} />
+              Source <ExternalLink size={10} />
             </a>
           </>
         )}
@@ -173,45 +239,53 @@ export default function StatementCard({ statement }: StatementCardProps) {
           hover:text-gray-700 mb-3"
       >
         {showContext ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        {showContext ? "Hide" : "Show"} article context
+        {showContext ? "Hide" : "Show"} original article
       </button>
 
       {showContext && context && (
         <div
           className="bg-gray-50 rounded-lg p-3 mb-3 text-xs
-          text-gray-600 max-h-40 overflow-y-auto leading-relaxed"
+          text-gray-600 max-h-48 overflow-y-auto leading-relaxed
+          border border-gray-200"
         >
           {context}
         </div>
       )}
 
-      {/* Notes field */}
-      <input
-        type="text"
-        placeholder="Optional notes (reason for rejection, edit notes...)"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        className="w-full border border-gray-200 rounded-lg px-3 py-2
-          text-xs text-gray-700 focus:outline-none focus:border-green-500
-          focus:ring-1 focus:ring-green-500 mb-3"
-      />
+      {/* Notes field for approve/reject */}
+      {!showEdit && (
+        <input
+          type="text"
+          placeholder="Optional notes..."
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2
+            text-xs text-gray-700 focus:outline-none
+            focus:border-green-500 mb-3"
+        />
+      )}
 
       {/* Action buttons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         {showEdit ? (
           <>
             <button
               onClick={() => editMutation.mutate()}
-              disabled={isLoading}
-              className="flex items-center gap-1.5 bg-green-700 text-white
-                px-3 py-1.5 rounded-lg text-sm font-medium
+              disabled={isLoading || editedText.length < 10}
+              className="flex items-center gap-1.5 bg-green-700
+                text-white px-3 py-1.5 rounded-lg text-sm font-medium
                 hover:bg-green-800 disabled:opacity-50"
             >
               <CheckCircle size={14} />
               Save & Approve
             </button>
             <button
-              onClick={() => setShowEdit(false)}
+              onClick={() => {
+                setShowEdit(false);
+                setEditedText(statement.statement_text);
+                setEditedTopic(statement.topic || "");
+                setNotes("");
+              }}
               className="px-3 py-1.5 rounded-lg text-sm text-gray-600
                 border border-gray-200 hover:bg-gray-50"
             >
@@ -223,8 +297,8 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => approveMutation.mutate()}
               disabled={isLoading}
-              className="flex items-center gap-1.5 bg-green-700 text-white
-                px-3 py-1.5 rounded-lg text-sm font-medium
+              className="flex items-center gap-1.5 bg-green-700
+                text-white px-3 py-1.5 rounded-lg text-sm font-medium
                 hover:bg-green-800 disabled:opacity-50"
             >
               <CheckCircle size={14} />
@@ -233,8 +307,8 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => rejectMutation.mutate()}
               disabled={isLoading}
-              className="flex items-center gap-1.5 bg-red-600 text-white
-                px-3 py-1.5 rounded-lg text-sm font-medium
+              className="flex items-center gap-1.5 bg-red-600
+                text-white px-3 py-1.5 rounded-lg text-sm font-medium
                 hover:bg-red-700 disabled:opacity-50"
             >
               <XCircle size={14} />

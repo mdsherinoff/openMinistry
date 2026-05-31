@@ -142,6 +142,25 @@ def list_pending(
         Statement.created_at.desc()
     ).offset(offset).limit(limit).all()
 
+@router.patch("/{statement_id}/")
+def update_statement(
+    statement_id: int,
+    payload: StatementUpdate,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_moderator),
+):
+    """Moderator only — update a statement's text, topic, or status."""
+    statement = db.query(Statement).filter(
+        Statement.id == statement_id
+    ).first()
+    if not statement:
+        raise HTTPException(status_code=404, detail="Statement not found")
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(statement, field, value)
+    db.commit()
+    db.refresh(statement)
+    return statement
+
 @router.get("/{statement_id}", response_model=StatementResponse)
 def get_statement(
     statement_id: int,

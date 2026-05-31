@@ -42,11 +42,11 @@ celery_app.conf.update(
             "schedule": 30 * 60,  # every 30 minutes
             "args": ["thehindu.com"],
         },
-        "scrape-mathrubhumi-every-15-minutes": {
-            "task": "workers.tasks.scrape_source",
-            "schedule": 15 * 60,  # every 15 minutes
-            "args": ["mathrubhumi.com"],
-        },
+        # "scrape-mathrubhumi-every-15-minutes": {
+        #     "task": "workers.tasks.scrape_source",
+        #     "schedule": 15 * 60,  # every 15 minutes
+        #     "args": ["mathrubhumi.com"],
+        # },
         # "scrape-manorama-every-15-minutes": {
         #     "task": "workers.tasks.scrape_source",
         #     "schedule": 15 * 60,
