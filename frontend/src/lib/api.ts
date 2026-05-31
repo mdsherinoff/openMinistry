@@ -40,8 +40,8 @@ export const api = {
   getStatements: (params?: Record<string, string>) =>
     apiClient.get("/api/statements/", { params }),
   getStatementCount: (params?: Record<string, string>) =>
-    apiClient.get("/api/statements/count/", { params }),
-  getTopics: () => apiClient.get("/api/statements/topics/"),
+    apiClient.get("/api/statements/count", { params }),
+  getTopics: () => apiClient.get("/api/statements/topics"),
   tagAllStatements: () => apiClient.post("/api/statements/tag-all"),
 
   // Ministers
