@@ -191,7 +191,7 @@ def seed_mlas(mlas: list):
         db.add(minister)
         db.commit()
 
-        icon = "⭐" if mla["role"] != "MLA" else "✅"
+        icon = "⭐" if mla["role"] != "MLA" else " "
         print(f"{icon} {mla['role']}: {mla['name']} ({mla['constituency']})")
         added += 1
 
