@@ -84,7 +84,7 @@ export default function MinisterPage() {
       <Link
         href="/ministers"
         className="flex items-center gap-1.5 text-sm text-gray-500
-          hover:text-gray-700 mb-6"
+          hover:text-gray-500 mb-6"
       >
         <ArrowLeft size={14} />
         All Ministers & MLAs
@@ -194,7 +194,7 @@ export default function MinisterPage() {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <FileText size={18} className="text-green-700" />
-          <h2 className="font-semibold text-gray-900">
+          <h2 className="font-semibold text-gray-500">
             Statements
             {total > 0 && (
               <span className="ml-2 text-sm font-normal text-gray-500">
