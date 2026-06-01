@@ -173,7 +173,7 @@ function MinisterCard({ minister }: { minister: Minister }) {
           {minister.image_url ? (
             <div
               className="w-10 h-10 rounded-full overflow-hidden
-    border border-gray-200 flex-shrink-0"
+      border border-gray-200 flex-shrink-0"
             >
               <Image
                 src={minister.image_url}
@@ -181,26 +181,17 @@ function MinisterCard({ minister }: { minister: Minister }) {
                 width={40}
                 height={40}
                 className="object-cover w-full h-full"
-                onError={() => {}}
               />
             </div>
           ) : (
             <div
               className="w-10 h-10 rounded-full bg-green-100
-    flex items-center justify-center text-green-700
-    font-semibold text-sm flex-shrink-0"
+      flex items-center justify-center text-green-700
+      font-semibold text-sm flex-shrink-0"
             >
               {minister.name.charAt(0)}
             </div>
           )}
-          <div
-            className="w-10 h-10 rounded-full bg-green-100
-              flex items-center justify-center text-green-700
-              font-semibold text-sm flex-shrink-0"
-            style={{ display: minister.image_url ? "none" : "flex" }}
-          >
-            {minister.name.charAt(0)}
-          </div>
 
           {isMinister && (
             <span

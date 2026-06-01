@@ -8,8 +8,13 @@ import StatementCard from "@/components/StatementCard";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowLeft, User, MapPin, Building,
-  FileText, ChevronLeft, ChevronRight,
+  ArrowLeft,
+  User,
+  MapPin,
+  Building,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export default function MinisterPage() {
@@ -69,12 +74,9 @@ export default function MinisterPage() {
   }
 
   const isMinister =
-    minister.portfolio &&
-    !minister.portfolio.startsWith("MLA");
+    minister.portfolio && !minister.portfolio.startsWith("MLA");
 
-  const cleanBio = minister.bio
-    ?.split("ALIASES:")[0]
-    .trim();
+  const cleanBio = minister.bio?.split("ALIASES:")[0].trim();
 
   return (
     <div>
@@ -92,10 +94,7 @@ export default function MinisterPage() {
       <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white">
         <div className="flex items-start gap-4">
           {minister.image_url ? (
-            <div
-              className="w-16 h-16 rounded-full overflow-hidden
-    border-2 border-gray-200 flex-shrink-0"
-            >
+            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
               <Image
                 src={minister.image_url}
                 alt={minister.name}
@@ -105,22 +104,11 @@ export default function MinisterPage() {
               />
             </div>
           ) : (
-            <div
-              className="w-16 h-16 rounded-full bg-green-100
-    flex items-center justify-center text-green-700
-    font-bold text-2xl flex-shrink-0"
-            >
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-2xl flex-shrink-0">
               {minister.name.charAt(0)}
             </div>
           )}
-          <div
-            className="w-16 h-16 rounded-full bg-green-100
-    flex items-center justify-center text-green-700
-    font-bold text-2xl flex-shrink-0"
-            style={{ display: minister.image_url ? "none" : "flex" }}
-          >
-            {minister.name.charAt(0)}
-          </div>
+
           <div className="flex-1">
             <div className="flex items-start justify-between">
               <div>
