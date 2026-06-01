@@ -1,6 +1,8 @@
 """
 Run this once to create the first admin user.
 Usage: python seed.py
+Or with custom credentials:
+ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD=securepass python seed.py
 """
 import sys
 import os
@@ -18,33 +20,34 @@ def seed():
     SessionLocal = get_session_factory()
     db = SessionLocal()
 
-    # Check if admin already exists
-    existing = db.query(User).filter(User.email == "admin@openministry.in").first()
+    # Read from environment or prompt
+    admin_email = os.environ.get("ADMIN_EMAIL", "administrator@openministry.live")
+    admin_password = os.environ.get("ADMIN_PASSWORD")
+
+    if not admin_password:
+        import getpass
+        print("No ADMIN_PASSWORD env var found.")
+        admin_password = getpass.getpass("Enter admin password: ")
+
+    existing = db.query(User).filter(
+        User.email == admin_email
+    ).first()
+
     if existing:
-        print("Admin user already exists.")
+        print(f"User {admin_email} already exists.")
         db.close()
         return
 
     admin = User(
-        email="admin@openministry.in",
-        hashed_password=hash_password("admin123"),
+        email=admin_email,
+        hashed_password=hash_password(admin_password),
         full_name="Admin User",
         role="admin",
         is_active=1,
     )
     db.add(admin)
-
-    moderator = User(
-        email="moderator@openministry.in",
-        hashed_password=hash_password("mod123"),
-        full_name="Moderator User",
-        role="moderator",
-        is_active=1,
-    )
-    db.add(moderator)
     db.commit()
-    print("Created admin: admin@openministry.in / admin123")
-    print("Created moderator: moderator@openministry.in / mod123")
+    print(f"Created admin: {admin_email}")
     db.close()
 
 
