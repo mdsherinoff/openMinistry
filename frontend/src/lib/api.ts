@@ -71,11 +71,11 @@ export const api = {
   getStatementContext: (id: number) =>
     apiClient.get(`/api/moderation/${id}/context`),
   approveStatement: (id: number, notes?: string) =>
-    apiClient.post(`/api/moderation/${id}/approve/`, { notes }),
+    apiClient.post(`/api/moderation/${id}/approve`, { notes }),
   rejectStatement: (id: number, notes?: string) =>
-    apiClient.post(`/api/moderation/${id}/reject/`, { notes }),
+    apiClient.post(`/api/moderation/${id}/reject`, { notes }),
   reviewStatement: (id: number, data: Record<string, unknown>) =>
-    apiClient.post(`/api/moderation/${id}/review/`, data),
+    apiClient.post(`/api/moderation/${id}/review`, data),
   getStatementLogs: (id: number) =>
     apiClient.get(`/api/moderation/${id}/logs/`),
   updateStatement: (id: number, data: Record<string, unknown>) =>
