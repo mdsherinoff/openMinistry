@@ -79,6 +79,50 @@ services:
         sleep 12h & wait $${!};
       done"
 
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_worker
+    command: celery -A workers.celery_app worker --loglevel=info
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_beat
+    command: celery -A workers.celery_app beat --loglevel=info
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: openministry_flower
+    command: celery -A workers.celery_app flower --port=5555
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5555:5555"
+    restart: unless-stopped
+    depends_on:
+      - redis
+
 volumes:
   postgres_data:
   certbot_data:
