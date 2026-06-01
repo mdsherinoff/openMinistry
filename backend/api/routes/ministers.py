@@ -138,6 +138,7 @@ def get_minister_statements(
                 "id": minister.id,
                 "name": minister.name,
                 "portfolio": minister.portfolio,
+                "image_url": minister.image_url,
             },
             "source": {
                 "name": source.name if source else None,
@@ -154,6 +155,7 @@ def get_minister_statements(
             "name": minister.name,
             "name_malayalam": minister.name_malayalam,
             "portfolio": minister.portfolio,
+            "image_url": minister.image_url,
             "party": minister.party,
             "constituency": minister.constituency,
             "bio": minister.bio,
