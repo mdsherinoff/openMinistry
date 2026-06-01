@@ -37,6 +37,7 @@ def build_statement(stmt: Statement, db: Session) -> dict:
             "portfolio": minister.portfolio if minister else None,
             "party": minister.party if minister else None,
             "constituency": minister.constituency if minister else None,
+            "image_url": minister.image_url if minister else None,  # add this
         },
         "source": {
             "publication": source.name if source else None,

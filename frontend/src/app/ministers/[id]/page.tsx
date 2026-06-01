@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import StatementCard from "@/components/StatementCard";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft, User, MapPin, Building,
   FileText, ChevronLeft, ChevronRight,
@@ -90,10 +91,33 @@ export default function MinisterPage() {
       {/* Profile header */}
       <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white">
         <div className="flex items-start gap-4">
+          {minister.image_url ? (
+            <div
+              className="w-16 h-16 rounded-full overflow-hidden
+    border-2 border-gray-200 flex-shrink-0"
+            >
+              <Image
+                src={minister.image_url}
+                alt={minister.name}
+                width={64}
+                height={64}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          ) : (
+            <div
+              className="w-16 h-16 rounded-full bg-green-100
+    flex items-center justify-center text-green-700
+    font-bold text-2xl flex-shrink-0"
+            >
+              {minister.name.charAt(0)}
+            </div>
+          )}
           <div
             className="w-16 h-16 rounded-full bg-green-100
-            flex items-center justify-center text-green-700
-            font-bold text-2xl flex-shrink-0"
+    flex items-center justify-center text-green-700
+    font-bold text-2xl flex-shrink-0"
+            style={{ display: minister.image_url ? "none" : "flex" }}
           >
             {minister.name.charAt(0)}
           </div>

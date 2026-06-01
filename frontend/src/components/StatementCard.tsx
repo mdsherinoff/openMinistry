@@ -1,4 +1,5 @@
 import { ExternalLink, Calendar, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface Statement {
@@ -11,6 +12,7 @@ interface Statement {
     id: number;
     name: string;
     portfolio: string | null;
+    image_url?: string | null;
   };
   source: {
     name: string | null;
@@ -38,12 +40,30 @@ export default function StatementCard({ statement }: { statement: Statement }) {
       <div className="flex items-start justify-between mb-3">
         <Link href={`/ministers/${statement.minister.id}`} className="group">
           <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-full bg-green-100
-              flex items-center justify-center"
-            >
-              <User size={14} className="text-green-700" />
-            </div>
+            {/* Avatar — photo or fallback */}
+            {statement.minister.image_url ? (
+              <div
+                className="w-8 h-8 rounded-full overflow-hidden
+                border border-gray-200 flex-shrink-0"
+              >
+                <Image
+                  src={statement.minister.image_url}
+                  alt={statement.minister.name}
+                  width={32}
+                  height={32}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            ) : (
+              <div
+                className="w-8 h-8 rounded-full bg-green-100
+                flex items-center justify-center flex-shrink-0"
+              >
+                <User size={14} className="text-green-700" />
+              </div>
+            )}
+
+            {/* Name and portfolio */}
             <div>
               <p
                 className="font-semibold text-gray-900 text-sm

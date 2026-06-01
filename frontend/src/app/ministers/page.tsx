@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { Users, Search, Building } from "lucide-react";
 import { MinisterCardSkeleton } from "@/components/ui/Skeleton";
+import Image from "next/image";
 
 interface Minister {
   id: number;
@@ -16,6 +17,7 @@ interface Minister {
   constituency: string | null;
   is_active: number;
   bio: string | null;
+  image_url: string | null;
 }
 
 export default function MinistersPage() {
@@ -56,7 +58,9 @@ export default function MinistersPage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <Users size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-white-100">Ministers & MLAs</h1>
+          <h1 className="text-2xl font-bold text-white-100">
+            Ministers & MLAs
+          </h1>
         </div>
         <p className="text-gray-500">
           16th Kerala Legislative Assembly — {ministers.length} members
@@ -165,13 +169,39 @@ function MinisterCard({ minister }: { minister: Minister }) {
         hover:border-green-300 hover:shadow-sm transition-all cursor-pointer"
       >
         <div className="flex items-start justify-between mb-2">
+          {/* Photo or initial */}
+          {minister.image_url ? (
+            <div
+              className="w-10 h-10 rounded-full overflow-hidden
+    border border-gray-200 flex-shrink-0"
+            >
+              <Image
+                src={minister.image_url}
+                alt={minister.name}
+                width={40}
+                height={40}
+                className="object-cover w-full h-full"
+                onError={() => {}}
+              />
+            </div>
+          ) : (
+            <div
+              className="w-10 h-10 rounded-full bg-green-100
+    flex items-center justify-center text-green-700
+    font-semibold text-sm flex-shrink-0"
+            >
+              {minister.name.charAt(0)}
+            </div>
+          )}
           <div
-            className="w-9 h-9 rounded-full bg-green-100
-            flex items-center justify-center text-green-700
-            font-semibold text-sm flex-shrink-0"
+            className="w-10 h-10 rounded-full bg-green-100
+              flex items-center justify-center text-green-700
+              font-semibold text-sm flex-shrink-0"
+            style={{ display: minister.image_url ? "none" : "flex" }}
           >
             {minister.name.charAt(0)}
           </div>
+
           {isMinister && (
             <span
               className="text-xs bg-green-50 text-green-700
@@ -193,11 +223,7 @@ function MinisterCard({ minister }: { minister: Minister }) {
           <p className="text-xs text-gray-600 mb-1">{displayPortfolio}</p>
         )}
         {minister.constituency && (
-          <p className="text-xs text-gray-400">
-            {minister.constituency
-              .replace(/\s*\(ST\)\s*/i, " (ST)")
-              .replace(/\s*\(SC\)\s*/i, " (SC)")}
-          </p>
+          <p className="text-xs text-gray-400">{minister.constituency}</p>
         )}
       </div>
     </Link>

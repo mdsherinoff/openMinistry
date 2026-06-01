@@ -99,6 +99,28 @@ def scrape_mlas():
         # Col 4: MLA Hostel / Role
         hostel_raw = cols[4].get_text(separator=" ", strip=True) if len(cols) > 4 else ""
 
+        # Col 6: Photo
+        photo_url = None
+        if len(cols) > 6:
+            img = cols[6].find("img")
+            if img:
+                src = img.get("src", "")
+                if src:
+                    if src.startswith("http"):
+                        photo_url = src
+                    else:
+                        # Make absolute URL
+                        photo_url = f"http://www.niyamasabha.org/{src.lstrip('../')}"
+            # Also check for anchor tag with image
+            a_tag = cols[6].find("a")
+            if not photo_url and a_tag:
+                href = a_tag.get("href", "")
+                if href and (".jpg" in href.lower() or ".png" in href.lower()):
+                    if href.startswith("http"):
+                        photo_url = href
+                    else:
+                        photo_url = f"http://www.niyamasabha.org/{href.lstrip('../')}"
+
         # Clean name — remove honorifics
         name = re.sub(
             r"^(Shri|Smt|Dr|Sri|Adv|Prof|Shri\.|Smt\.)\.?\s*",
@@ -133,8 +155,10 @@ def scrape_mlas():
         mlas.append({
             "name": name[:255],
             "constituency": constituency[:255],
+            "party": "",
             "role": role,
             "portfolio": portfolio[:255] if portfolio else f"MLA - {constituency}"[:255],
+            "image_url": photo_url,
         })
 
     # Remove duplicates by name
@@ -187,6 +211,7 @@ def seed_mlas(mlas: list):
             constituency=mla["constituency"],
             is_active=1,
             bio=f"{mla['role']} — {mla['constituency']}",
+            image_url=mla.get("image_url"),  # add this line
         )
         db.add(minister)
         db.commit()
