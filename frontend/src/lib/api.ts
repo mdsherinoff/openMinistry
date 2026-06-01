@@ -69,7 +69,7 @@ export const api = {
     apiClient.get("/api/moderation/queue", { params }),
   getModerationStats: () => apiClient.get("/api/moderation/stats/overview"),
   getStatementContext: (id: number) =>
-    apiClient.get(`/api/moderation/${id}/context/`),
+    apiClient.get(`/api/moderation/${id}/context`),
   approveStatement: (id: number, notes?: string) =>
     apiClient.post(`/api/moderation/${id}/approve/`, { notes }),
   rejectStatement: (id: number, notes?: string) =>
