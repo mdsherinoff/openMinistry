@@ -22,7 +22,7 @@ statements from newspapers, interviews, press conferences, and public media.
 
 ## Getting Started
 
-See current status of [openMinistry Website](openministry.live).
+See current status of [openMinistry Website](https://openministry.live).
 
 ## License
 
