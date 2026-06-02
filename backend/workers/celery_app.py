@@ -37,11 +37,11 @@ celery_app.conf.update(
 
     # Scheduled tasks
     beat_schedule={
-        "scrape-the-hindu-every-30-minutes": {
-            "task": "workers.tasks.scrape_source",
-            "schedule": 30 * 60,  # every 30 minutes
-            "args": ["thehindu.com"],
-        },
+        # "scrape-the-hindu-every-30-minutes": {
+        #     "task": "workers.tasks.scrape_source",
+        #     "schedule": 30 * 60,  # every 30 minutes
+        #     "args": ["thehindu.com"],
+        # },
         # "scrape-mathrubhumi-every-15-minutes": {
         #     "task": "workers.tasks.scrape_source",
         #     "schedule": 15 * 60,  # every 15 minutes
@@ -52,6 +52,11 @@ celery_app.conf.update(
         #     "schedule": 15 * 60,
         #     "args": ["onmanorama.com"],
         # },
+        "run-miner-every-30-minutes": {
+            "task": "workers.tasks.run_miner",
+            "schedule": 30 * 60,
+            "args": ["thehindu", 20],
+        },
         "clean-articles-every-hour": {
             "task": "workers.tasks.clean_articles",
             "schedule": 60 * 60,  # every hour

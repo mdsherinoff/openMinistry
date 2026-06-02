@@ -123,6 +123,18 @@ services:
     depends_on:
       - redis
 
+  miner:
+    image: openministry_miner
+    build:
+      context: /opt/open-ministry-miner
+      dockerfile: Dockerfile
+    container_name: openministry_miner
+    env_file:
+      - /opt/open-ministry-miner/.env
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   certbot_data:

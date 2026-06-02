@@ -173,3 +173,24 @@ def tag_statements():
     except Exception as e:
         logger.error(f"Tagging task failed: {e}")
         raise
+
+@celery_app.task(name="workers.tasks.run_miner")
+def run_miner(source: str = "thehindu", limit: int = 20):
+    """Fetch and process articles via open-ministry-miner."""
+    logger.info(f"Starting miner task for {source}")
+    try:
+        from nlp.miner_client import fetch_and_process
+        from database.config import get_session_factory
+
+        SessionLocal = get_session_factory()
+        db = SessionLocal()
+        try:
+            result = fetch_and_process(source=source, limit=limit, db=db)
+        finally:
+            db.close()
+
+        logger.info(f"Miner task complete: {result}")
+        return result
+    except Exception as e:
+        logger.error(f"Miner task failed: {e}")
+        raise
