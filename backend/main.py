@@ -76,6 +76,7 @@ from api.routes.search import router as search_router
 from api.routes.tasks import router as tasks_router
 from api.routes.moderation import router as moderation_router
 from api.routes.public import router as public_router
+from api.routes.queue import router as queue_router
 
 app.include_router(auth_router)
 app.include_router(sources_router)
@@ -85,6 +86,7 @@ app.include_router(search_router)
 app.include_router(tasks_router)
 app.include_router(moderation_router)
 app.include_router(public_router)
+app.include_router(queue_router)
 
 
 @app.get("/", tags=["root"])

@@ -16,6 +16,9 @@ class Statement(Base):
     topic = Column(String(100), nullable=True)
     sentiment = Column(String(50), nullable=True)  # positive/neutral/negative
     confidence_score = Column(Float, nullable=True)  # 0.0 to 1.0
+    context_text = Column(Text, nullable=True)      # surrounding paragraph
+    article_context = Column(Text, nullable=True)   # broader article context
+    queue_item_id = Column(Integer, ForeignKey("article_queue.id"), nullable=True)
     statement_date = Column(DateTime(timezone=True), nullable=True)
     status = Column(String(50), default="pending")
     # pending | approved | rejected | needs_review

@@ -52,6 +52,15 @@ celery_app.conf.update(
         #     "schedule": 15 * 60,
         #     "args": ["onmanorama.com"],
         # },
+        "collect-urls-every-30-minutes": {
+        "task": "workers.tasks.collect_urls",
+        "schedule": 30 * 60,
+        "args": ["thehindu.com"],
+        },
+        "tag-statements-every-hour": {
+            "task": "workers.tasks.tag_statements",
+            "schedule": 60 * 60,
+        },
         "run-miner-every-30-minutes": {
             "task": "workers.tasks.run_miner",
             "schedule": 30 * 60,
