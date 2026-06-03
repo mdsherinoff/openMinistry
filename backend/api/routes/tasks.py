@@ -82,3 +82,16 @@ def trigger_pipeline(
         "message": "Statement pipeline triggered",
         "task_id": str(task.id),
     }
+
+@router.post("/collect-urls")
+def trigger_url_collection(
+    source_key: str = "thehindu.com",
+    _: User = Depends(require_moderator),
+):
+    """Manually trigger URL collection for a source."""
+    from workers.tasks import collect_urls
+    task = collect_urls.delay(source_key)
+    return {
+        "message": f"URL collection triggered for {source_key}",
+        "task_id": str(task.id),
+    }

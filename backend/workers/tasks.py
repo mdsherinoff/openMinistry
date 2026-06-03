@@ -302,82 +302,38 @@ def mine_queue_item(queue_item_id: int):
 
 @celery_app.task(name="workers.tasks.collect_urls")
 def collect_urls(source_key: str = "thehindu.com"):
-    """Collect URLs from a source and add to the moderation queue."""
+    """
+    Collect article URLs from a source and
+    add new ones to the moderation queue.
+    """
     logger.info(f"Collecting URLs from {source_key}")
 
-    import httpx
-    import hashlib
     from database.config import get_session_factory
-    from database.models.article_queue import ArticleQueue
-    from scrapers.source_config import SOURCE_CONFIGS
-
-    config = SOURCE_CONFIGS.get(source_key)
-    if not config:
-        logger.error(f"Unknown source: {source_key}")
-        return
 
     SessionLocal = get_session_factory()
     db = SessionLocal()
-    added = 0
 
     try:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
-            ),
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate",
-        }
+        collector = _get_collector(source_key)
+        if not collector:
+            logger.error(f"No collector for: {source_key}")
+            return {"error": f"No collector for {source_key}"}
 
-        for list_url in config.get("article_list_urls", []):
-            try:
-                from bs4 import BeautifulSoup
-                res = httpx.get(list_url, headers=headers, timeout=30)
-                soup = BeautifulSoup(res.text, "html.parser")
+        result = collector.submit_to_queue(db)
+        logger.info(f"Collection complete: {result}")
+        return result
 
-                for a in soup.find_all("a", href=True):
-                    href = a["href"]
-                    if href.startswith("/"):
-                        href = f"{config['base_url']}{href}"
-
-                    if "/article" not in href:
-                        continue
-                    if config["base_url"].replace("https://www.", "") \
-                       not in href:
-                        continue
-
-                    url = href.split("?")[0]
-                    url_hash = hashlib.sha256(
-                        url.strip().lower().encode()
-                    ).hexdigest()
-
-                    existing = db.query(ArticleQueue).filter(
-                        ArticleQueue.url_hash == url_hash
-                    ).first()
-                    if existing:
-                        continue
-
-                    # Get title from link text
-                    title = a.get_text(strip=True)[:500] or None
-
-                    item = ArticleQueue(
-                        url=url,
-                        url_hash=url_hash,
-                        title=title,
-                        source_name=config["name"],
-                        language=config["language"],
-                        status="pending_review",
-                    )
-                    db.add(item)
-                    added += 1
-
-            except Exception as e:
-                logger.error(f"Error collecting from {list_url}: {e}")
-
-        db.commit()
-        logger.info(f"Collected {added} new URLs from {source_key}")
-        return {"added": added}
-
+    except Exception as e:
+        logger.error(f"URL collection failed for {source_key}: {e}")
+        raise
     finally:
         db.close()
+
+
+def _get_collector(source_key: str):
+    """Return the right collector for a source key."""
+    if source_key == "thehindu.com":
+        from scrapers.collectors.the_hindu_collector import TheHinduCollector
+        return TheHinduCollector()
+    logger.warning(f"No collector implemented for: {source_key}")
+    return None
