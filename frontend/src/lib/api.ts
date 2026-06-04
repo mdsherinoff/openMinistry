@@ -128,5 +128,5 @@ export const api = {
     apiClient.post(`/api/queue/${itemId}/mined/${resultId}/reject`),
   addManualStatement: (itemId: number, data: Record<string, unknown>) =>
     apiClient.post(`/api/queue/${itemId}/statements/add/`, data),
-  getMiningStatus: (id: number) => apiClient.get(`/api/queue/${id}/status/`),
+  getMiningStatus: (id: number) => apiClient.get(`/api/queue/${id}/status`),
 };
