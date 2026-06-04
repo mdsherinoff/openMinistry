@@ -317,6 +317,12 @@ def approve_mined_result(
     current_user: User = Depends(require_moderator),
 ):
     """Approve a single mined result — creates a public statement."""
+    if payload.mined_result_id is not None and payload.mined_result_id != result_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Mined result ID does not match request path"
+        )
+
     result = db.query(MinedResult).filter(
         MinedResult.id == result_id,
         MinedResult.queue_item_id == item_id,
