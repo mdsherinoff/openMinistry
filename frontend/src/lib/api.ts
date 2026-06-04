@@ -94,8 +94,8 @@ export const api = {
     apiClient.get("/api/queue/pending", { params }),
   getQueueStats: () => apiClient.get("/api/queue/stats"),
   getQueueItem: (id: number) => apiClient.get(`/api/queue/${id}/`),
-  approveForMining: (id: number) => apiClient.post(`/api/queue/${id}/mine/`),
-  mineBatch: (ids: number[]) => apiClient.post("/api/queue/mine-batch/", ids),
+  approveForMining: (id: number) => apiClient.post(`/api/queue/${id}/mine`),
+  mineBatch: (ids: number[]) => apiClient.post("/api/queue/mine-batch", ids),
   rejectQueueItem: (id: number, notes?: string) =>
     apiClient.post(`/api/queue/${id}/reject/`, { notes }),
   deleteQueueItem: (id: number) => apiClient.delete(`/api/queue/${id}/`),
@@ -111,7 +111,7 @@ export const api = {
     data: Record<string, unknown>,
   ) => apiClient.post(`/api/queue/${itemId}/mined/${resultId}/approve/`, data),
   rejectMinedResult: (itemId: number, resultId: number) =>
-    apiClient.post(`/api/queue/${itemId}/mined/${resultId}/reject/`),
+    apiClient.post(`/api/queue/${itemId}/mined/${resultId}/reject`),
   addManualStatement: (itemId: number, data: Record<string, unknown>) =>
     apiClient.post(`/api/queue/${itemId}/statements/add/`, data),
   getMiningStatus: (id: number) => apiClient.get(`/api/queue/${id}/status/`),
