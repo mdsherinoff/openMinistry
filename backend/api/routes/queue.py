@@ -5,12 +5,14 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from database.config import get_db
 from database.models.article import Article
 from database.models.article_queue import ArticleQueue
 from database.models.mined_result import MinedResult
+from database.models.minister import Minister
 from database.models.source import Source
 from database.models.statement import Statement
 from database.models.user import User
@@ -355,32 +357,68 @@ def approve_mined_result(
             status_code=400,
             detail="Minister must be assigned before approving"
         )
+    minister = db.query(Minister).filter(Minister.id == final_minister_id).first()
+    if not minister:
+        raise HTTPException(
+            status_code=400,
+            detail="Assigned minister does not exist"
+        )
 
-    article = get_or_create_article_for_queue_item(db, queue_item)
+    if result.status == "approved" and result.statement_id:
+        return {
+            "message": "Statement already approved and published",
+            "statement_id": result.statement_id,
+        }
 
-    # Create the public statement
-    statement = Statement(
-        minister_id=final_minister_id,
-        article_id=article.id,
-        statement_text=final_text,
-        topic=final_topic,
-        context_text=payload.context_text or result.context_description,
-        queue_item_id=item_id,
-        statement_date=queue_item.published_at,
-        confidence_score=result.confidence_stars / 5.0,
-        status="approved",
-        reviewed_by=current_user.id,
-        reviewed_at=datetime.now(timezone.utc),
-    )
-    db.add(statement)
-    db.flush()
+    try:
+        article = get_or_create_article_for_queue_item(db, queue_item)
+        confidence_stars = result.confidence_stars or 3
 
-    # Link back
-    result.statement_id = statement.id
-    result.status = "approved"
-    result.reviewed_by = current_user.id
-    result.reviewed_at = datetime.now(timezone.utc)
-    db.commit()
+        # Create the public statement
+        statement = Statement(
+            minister_id=final_minister_id,
+            article_id=article.id,
+            statement_text=final_text,
+            topic=final_topic,
+            context_text=payload.context_text or result.context_description,
+            queue_item_id=item_id,
+            statement_date=queue_item.published_at,
+            confidence_score=confidence_stars / 5.0,
+            status="approved",
+            reviewed_by=current_user.id,
+            reviewed_at=datetime.now(timezone.utc),
+        )
+        db.add(statement)
+        db.flush()
+
+        # Link back
+        result.statement_id = statement.id
+        result.status = "approved"
+        result.reviewed_by = current_user.id
+        result.reviewed_at = datetime.now(timezone.utc)
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        logger.exception(
+            "Failed to approve mined result %s for queue item %s",
+            result_id,
+            item_id,
+        )
+        raise HTTPException(
+            status_code=400,
+            detail="Approval failed database validation"
+        ) from exc
+    except SQLAlchemyError as exc:
+        db.rollback()
+        logger.exception(
+            "Database error approving mined result %s for queue item %s",
+            result_id,
+            item_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Approval failed while saving statement"
+        ) from exc
 
     return {
         "message": "Statement approved and published",
@@ -422,25 +460,48 @@ def add_manual_statement(
     ).first()
     if not queue_item:
         raise HTTPException(status_code=404, detail="Queue item not found")
+    minister = db.query(Minister).filter(
+        Minister.id == payload.minister_id
+    ).first()
+    if not minister:
+        raise HTTPException(
+            status_code=400,
+            detail="Assigned minister does not exist"
+        )
 
-    article = get_or_create_article_for_queue_item(db, queue_item)
+    try:
+        article = get_or_create_article_for_queue_item(db, queue_item)
 
-    statement = Statement(
-        minister_id=payload.minister_id,
-        article_id=article.id,
-        statement_text=payload.statement_text,
-        topic=payload.topic,
-        context_text=payload.context_text,
-        queue_item_id=item_id,
-        statement_date=queue_item.published_at,
-        confidence_score=1.0,  # manually added = highest confidence
-        status="approved",
-        reviewed_by=current_user.id,
-        reviewed_at=datetime.now(timezone.utc),
-    )
-    db.add(statement)
-    db.commit()
-    db.refresh(statement)
+        statement = Statement(
+            minister_id=payload.minister_id,
+            article_id=article.id,
+            statement_text=payload.statement_text,
+            topic=payload.topic,
+            context_text=payload.context_text,
+            queue_item_id=item_id,
+            statement_date=queue_item.published_at,
+            confidence_score=1.0,  # manually added = highest confidence
+            status="approved",
+            reviewed_by=current_user.id,
+            reviewed_at=datetime.now(timezone.utc),
+        )
+        db.add(statement)
+        db.commit()
+        db.refresh(statement)
+    except IntegrityError as exc:
+        db.rollback()
+        logger.exception("Failed to add manual statement for queue item %s", item_id)
+        raise HTTPException(
+            status_code=400,
+            detail="Manual statement failed database validation"
+        ) from exc
+    except SQLAlchemyError as exc:
+        db.rollback()
+        logger.exception("Database error adding manual statement for queue item %s", item_id)
+        raise HTTPException(
+            status_code=500,
+            detail="Manual statement failed while saving"
+        ) from exc
 
     return {
         "message": "Statement added manually",
