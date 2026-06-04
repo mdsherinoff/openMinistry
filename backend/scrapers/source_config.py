@@ -62,6 +62,5 @@ def get_source_config(domain: str) -> dict | None:
             return config
     return None
 
-
 def get_all_active_configs() -> list[dict]:
     return list(SOURCE_CONFIGS.values())

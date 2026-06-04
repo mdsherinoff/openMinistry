@@ -61,26 +61,5 @@ celery_app.conf.update(
             "task": "workers.tasks.tag_statements",
             "schedule": 60 * 60,
         },
-        "run-miner-every-30-minutes": {
-            "task": "workers.tasks.run_miner",
-            "schedule": 30 * 60,
-            "args": ["thehindu", 20],
-        },
-        "clean-articles-every-hour": {
-            "task": "workers.tasks.clean_articles",
-            "schedule": 60 * 60,  # every hour
-        },
-        "detect-ministers-every-hour": {
-            "task": "workers.tasks.detect_ministers",
-            "schedule": 60 * 60,
-        },
-        "run-pipeline-every-2-hours": {
-            "task": "workers.tasks.run_statement_pipeline",
-            "schedule": 2 * 60 * 60,
-        },
-        "tag-statements-every-hour": {
-            "task": "workers.tasks.tag_statements",
-            "schedule": 60 * 60,
-        },
     },
 )

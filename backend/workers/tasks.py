@@ -137,7 +137,7 @@ def run_statement_pipeline():
     """Run full statement extraction pipeline."""
     logger.info("Starting statement pipeline task")
     try:
-        from nlp.statement_pipeline import run_pipeline
+        from backend.nlp.miner_pipeline import run_pipeline
         from database.config import get_session_factory
 
         SessionLocal = get_session_factory()

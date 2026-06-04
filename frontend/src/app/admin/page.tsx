@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
+import { Inbox } from "lucide-react";
 import StatsCards from "@/components/moderation/StatsCards";
 import ModerationQueue from "@/components/moderation/ModerationQueue";
 import { LogOut, Shield } from "lucide-react";
@@ -54,6 +56,28 @@ export default function AdminPage() {
           <LogOut size={14} />
           Logout
         </button>
+      </div>
+
+      <div className="mb-6">
+        <Link
+          href="/admin/queue"
+          className="flex items-center justify-between p-4
+      border border-green-200 rounded-lg bg-green-50
+      hover:bg-green-100 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <Inbox size={20} className="text-green-700" />
+            <div>
+              <p className="font-semibold text-green-900 text-sm">
+                Article Queue
+              </p>
+              <p className="text-xs text-green-700">
+                Review incoming articles and mine statements
+              </p>
+            </div>
+          </div>
+          <span className="text-green-700 text-sm font-medium">Open →</span>
+        </Link>
       </div>
 
       {/* Stats */}

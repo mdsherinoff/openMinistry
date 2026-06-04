@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Search, Users, FileText, Shield } from "lucide-react";
 
@@ -13,6 +15,15 @@ const navLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
+
+  // Get pending queue count for badge
+  const { data: statsData } = useQuery({
+    queryKey: ["queue-stats-nav"],
+    queryFn: () => api.getQueueStats(),
+    refetchInterval: 60000,
+    retry: false,
+  });
+  const pendingCount = statsData?.data?.pending_review || 0;
 
   return (
     <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -48,10 +59,12 @@ export default function Navigation() {
                 <span className="hidden sm:inline">{label}</span>
               </Link>
             ))}
+
+            {/* Admin */}
             <Link
               href="/admin"
               className={cn(
-                "flex items-center gap-1.5 rounded-md px-3 py-2",
+                "relative flex items-center gap-1.5 rounded-md px-3 py-2",
                 "text-sm font-medium transition-colors ml-1",
                 pathname.startsWith("/admin") || pathname === "/login"
                   ? "bg-green-700 text-white"
@@ -60,6 +73,15 @@ export default function Navigation() {
             >
               <Shield size={14} />
               <span className="hidden sm:inline">Admin</span>
+              {pendingCount > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 w-4 h-4
+                  bg-red-500 text-white text-xs rounded-full
+                  flex items-center justify-center font-bold"
+                >
+                  {pendingCount > 9 ? "9+" : pendingCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

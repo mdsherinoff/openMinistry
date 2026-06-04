@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(level=logging.WARNING)
 
 from nlp.quote_extractor import QuoteExtractor
-from nlp.statement_pipeline import run_pipeline
+from backend.nlp.miner_pipeline import run_pipeline
 from database.config import get_session_factory
 from database.models.statement import Statement
 from database.models.article import Article

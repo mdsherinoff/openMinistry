@@ -25,10 +25,8 @@ from api.schemas.queue import (
 router = APIRouter(prefix="/api/queue", tags=["queue"])
 logger = logging.getLogger(__name__)
 
-
 def make_url_hash(url: str) -> str:
     return hashlib.sha256(url.strip().lower().split("?")[0].encode()).hexdigest()
-
 
 # ─────────────────────────────────────────
 # Queue Management
@@ -62,7 +60,6 @@ def add_to_queue(
     db.refresh(item)
     return item
 
-
 @router.get("/pending", response_model=list[QueueItemResponse])
 def get_pending(
     status: Optional[str] = "pending_review",
@@ -78,7 +75,6 @@ def get_pending(
     return query.order_by(
         ArticleQueue.created_at.desc()
     ).offset(offset).limit(limit).all()
-
 
 @router.get("/stats")
 def get_queue_stats(
@@ -97,7 +93,6 @@ def get_queue_stats(
         ).count()
     return stats
 
-
 @router.get("/{item_id}", response_model=QueueItemResponse)
 def get_queue_item(
     item_id: int,
@@ -110,7 +105,6 @@ def get_queue_item(
     if not item:
         raise HTTPException(status_code=404, detail="Queue item not found")
     return item
-
 
 @router.post("/{item_id}/mine")
 def approve_for_mining(
@@ -147,7 +141,6 @@ def approve_for_mining(
         "task_id": str(task.id),
     }
 
-
 @router.post("/mine-batch")
 def mine_batch(
     item_ids: list[int],
@@ -178,7 +171,6 @@ def mine_batch(
 
     return {"results": results}
 
-
 @router.post("/{item_id}/reject")
 def reject_queue_item(
     item_id: int,
@@ -201,7 +193,6 @@ def reject_queue_item(
 
     return {"message": "Item rejected", "item_id": item_id}
 
-
 @router.delete("/{item_id}")
 def delete_queue_item(
     item_id: int,
@@ -218,7 +209,6 @@ def delete_queue_item(
     db.delete(item)
     db.commit()
     return {"message": "Item deleted permanently"}
-
 
 # ─────────────────────────────────────────
 # Mined Results
@@ -241,7 +231,6 @@ def get_mined_results(
         MinedResult.queue_item_id == item_id
     ).all()
 
-
 @router.patch("/{item_id}/mined/{result_id}")
 def update_mined_result(
     item_id: int,
@@ -263,7 +252,6 @@ def update_mined_result(
     db.commit()
     db.refresh(result)
     return result
-
 
 @router.post("/{item_id}/mined/{result_id}/approve")
 def approve_mined_result(
@@ -341,7 +329,6 @@ def approve_mined_result(
         "statement_id": statement.id,
     }
 
-
 @router.post("/{item_id}/mined/{result_id}/reject")
 def reject_mined_result(
     item_id: int,
@@ -363,7 +350,6 @@ def reject_mined_result(
     db.commit()
 
     return {"message": "Result rejected"}
-
 
 @router.post("/{item_id}/statements/add")
 def add_manual_statement(
@@ -404,7 +390,6 @@ def add_manual_statement(
         "message": "Statement added manually",
         "statement_id": statement.id,
     }
-
 
 @router.get("/{item_id}/status")
 def get_mining_status(

@@ -2,14 +2,12 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-
 class QueueItemCreate(BaseModel):
     url: str
     title: Optional[str] = None
     source_name: Optional[str] = None
     published_at: Optional[datetime] = None
     language: str = "en"
-
 
 class QueueItemResponse(BaseModel):
     id: int
@@ -27,7 +25,6 @@ class QueueItemResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 class MinedResultResponse(BaseModel):
     id: int
@@ -48,13 +45,11 @@ class MinedResultResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
 class MinedResultUpdate(BaseModel):
     edited_speaker_name: Optional[str] = None
     edited_statement_text: Optional[str] = None
     edited_topic: Optional[str] = None
     minister_id: Optional[int] = None
-
 
 class ApproveStatementRequest(BaseModel):
     mined_result_id: int
@@ -62,7 +57,6 @@ class ApproveStatementRequest(BaseModel):
     minister_id: Optional[int] = None
     topic: Optional[str] = None
     context_text: Optional[str] = None
-
 
 class NewStatementRequest(BaseModel):
     """For manually adding a statement the miner missed."""

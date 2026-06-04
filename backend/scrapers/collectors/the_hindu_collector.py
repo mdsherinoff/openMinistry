@@ -6,7 +6,6 @@ from scrapers.source_config import SOURCE_CONFIGS
 
 logger = logging.getLogger(__name__)
 
-
 class TheHinduCollector(BaseURLCollector):
     """Collects article URLs from The Hindu Kerala section."""
 
