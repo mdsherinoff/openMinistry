@@ -257,3 +257,43 @@ def list_topics(db: Session = Depends(get_db)):
     result = {"topics": [{"topic": t, "count": c} for t, c in results]}
     set_cached("topics:all", result, ttl=600)
     return result
+
+@router.get(
+    "/statements/{statement_id}",
+    summary="Get a single statement with full context",
+)
+def get_statement_detail(
+    statement_id: int,
+    db: Session = Depends(get_db),
+):
+    stmt = db.query(Statement).filter(
+        Statement.id == statement_id,
+        Statement.status == "approved",
+    ).first()
+    if not stmt:
+        raise HTTPException(status_code=404, detail="Statement not found")
+
+    # Get related statements from same article
+    related = []
+    if stmt.article_id:
+        related_stmts = db.query(Statement).filter(
+            Statement.article_id == stmt.article_id,
+            Statement.status == "approved",
+            Statement.id != stmt.id,
+        ).limit(10).all()
+        related = [build_statement(s, db) for s in related_stmts]
+
+    # Also get related from same queue item
+    if not related and stmt.queue_item_id:
+        related_stmts = db.query(Statement).filter(
+            Statement.queue_item_id == stmt.queue_item_id,
+            Statement.status == "approved",
+            Statement.id != stmt.id,
+        ).limit(10).all()
+        related = [build_statement(s, db) for s in related_stmts]
+
+    result = build_statement(stmt, db)
+    result["context_text"] = stmt.context_text
+    result["related_statements"] = related
+
+    return result

@@ -55,6 +55,7 @@ export const api = {
     apiClient.get("/api/statements/count", { params }),
   getTopics: () => apiClient.get("/api/statements/topics"),
   tagAllStatements: () => apiClient.post("/api/statements/tag-all"),
+  getStatementDetail: (id: number) => apiClient.get(`/api/v1/statements/${id}`),
 
   // Ministers
   getMinisters: (activeOnly: boolean = true) =>

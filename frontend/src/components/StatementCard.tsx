@@ -1,6 +1,9 @@
 import { ExternalLink, Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Share2, Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface Statement {
   id: number;
@@ -23,6 +26,32 @@ interface Statement {
 }
 
 export default function StatementCard({ statement }: { statement: Statement }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    try {
+      const url = `${window.location.origin}/statements/${statement.id}`;
+
+      if (navigator.share) {
+        await navigator.share({
+          url,
+          title: statement.source.title ?? "Statement",
+        });
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+      } catch {
+        window.prompt("Copy this link:", url);
+      }
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Share failed:", error);
+    }
+  };
+
   const date = statement.statement_date
     ? new Date(statement.statement_date).toLocaleDateString("en-IN", {
         day: "numeric",
@@ -93,15 +122,17 @@ export default function StatementCard({ statement }: { statement: Statement }) {
       </div>
 
       {/* Statement text */}
-      <p className="text-gray-800 leading-relaxed mb-4">
-        {statement.statement_text}
-      </p>
+      <Link href={`/statements/${statement.id}`}>
+        <p
+          className="text-gray-800 leading-relaxed mb-4 hover:text-green-700
+    transition-colors cursor-pointer"
+        >
+          {statement.statement_text}
+        </p>
+      </Link>
 
       {/* Footer */}
-      <div
-        className="flex items-center justify-between
-        pt-3 border-t border-gray-100"
-      >
+      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
         <div className="flex items-center gap-3 text-xs text-gray-500">
           {date && (
             <span className="flex items-center gap-1">
@@ -112,16 +143,29 @@ export default function StatementCard({ statement }: { statement: Statement }) {
           {statement.source.name && <span>{statement.source.name}</span>}
         </div>
 
-        {statement.source.url && (
-          <a
-            href={statement.source.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-green-700 hover:underline"
+        <div className="flex items-center gap-4">
+          {statement.source.url && (
+            <a
+              href={statement.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs text-green-700 hover:underline"
+            >
+              Source <ExternalLink size={10} />
+            </a>
+          )}
+
+          <button
+            onClick={handleShare}
+            className={cn(
+              "flex items-center gap-1 text-xs transition-colors",
+              copied ? "text-green-700" : "text-gray-500 hover:text-gray-700",
+            )}
           >
-            Source <ExternalLink size={10} />
-          </a>
-        )}
+            {copied ? <Copy size={10} /> : <Share2 size={10} />}
+            {copied ? "Copied!" : "Share"}
+          </button>
+        </div>
       </div>
     </div>
   );
