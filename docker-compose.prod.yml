@@ -139,3 +139,6 @@ volumes:
   postgres_data:
   certbot_data:
   certbot_webroot:
+
+networks:
+  - default
