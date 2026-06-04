@@ -82,6 +82,8 @@ def upgrade() -> None:
     op.drop_index('idx_statements_status', table_name='statements')
     op.drop_index('idx_statements_topic', table_name='statements')
     op.create_foreign_key(None, 'statements', 'article_queue', ['queue_item_id'], ['id'])
+    op.execute("DROP TRIGGER IF EXISTS statement_search_vector_update ON statements;")
+    op.execute("DROP FUNCTION IF EXISTS update_statement_search_vector;")
     op.drop_column('statements', 'search_vector')
     # ### end Alembic commands ###
 
