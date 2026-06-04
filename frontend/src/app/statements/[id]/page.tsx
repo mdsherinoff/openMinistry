@@ -39,7 +39,7 @@ interface StatementDetail {
     published_at: string | null;
   };
   verified_at: string | null;
-  related_statements: StatementDetail[];
+  related_statements?: StatementDetail[];
 }
 
 export default function StatementDetailPage() {
@@ -133,6 +133,7 @@ export default function StatementDetailPage() {
         year: "numeric",
       })
     : null;
+  const relatedStatements = statement.related_statements ?? [];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -291,7 +292,7 @@ export default function StatementDetailPage() {
       </div>
 
       {/* Related statements */}
-      {statement.related_statements.length > 0 && (
+      {relatedStatements.length > 0 && (
         <div>
           <h2
             className="text-sm font-semibold text-gray-700 mb-3
@@ -301,7 +302,7 @@ export default function StatementDetailPage() {
             Other statements from this article
           </h2>
           <div className="space-y-3">
-            {statement.related_statements.map((related) => (
+            {relatedStatements.map((related) => (
               <RelatedStatementCard key={related.id} statement={related} />
             ))}
           </div>

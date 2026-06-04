@@ -101,22 +101,6 @@ def list_statements(
     return result
 
 @router.get(
-    "/statements/{statement_id}",
-    summary="Get a single statement",
-)
-def get_statement(
-    statement_id: int,
-    db: Session = Depends(get_db),
-):
-    stmt = db.query(Statement).filter(
-        Statement.id == statement_id,
-        Statement.status == "approved",
-    ).first()
-    if not stmt:
-        raise HTTPException(status_code=404, detail="Statement not found")
-    return build_statement(stmt, db)
-
-@router.get(
     "/ministers",
     summary="List all ministers and MLAs",
     description="Returns all active members of the 16th Kerala Legislative Assembly.",
