@@ -13,9 +13,7 @@ export const apiClient = axios.create({
 // Automatically attach auth token to every request if it exists
 apiClient.interceptors.request.use((config) => {
   const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("access_token")
-      : null;
+    typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -112,8 +110,8 @@ export const api = {
   mineBatch: (ids: number[]) => apiClient.post("/api/queue/mine-batch", ids),
   rejectQueueItem: (id: number, notes?: string) =>
     apiClient.post(`/api/queue/${id}/reject/`, { notes }),
-  deleteQueueItem: (id: number) => apiClient.delete(`/api/queue/${id}/`),
-  getMinedResults: (id: number) => apiClient.get(`/api/queue/${id}/mined/`),
+  deleteQueueItem: (id: number) => apiClient.delete(`/api/queue/${id}`),
+  getMinedResults: (id: number) => apiClient.get(`/api/queue/${id}/mined`),
   updateMinedResult: (
     itemId: number,
     resultId: number,
