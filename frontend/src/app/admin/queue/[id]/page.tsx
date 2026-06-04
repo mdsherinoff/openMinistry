@@ -154,8 +154,8 @@ export default function ReviewPage() {
       {/* Back */}
       <Link
         href="/admin/queue"
-        className="flex items-center gap-1.5 text-sm text-gray-500
-          hover:text-gray-700 mb-4"
+        className="flex items-center gap-1.5 text-sm text-white-100
+          hover:text-gray-500 mb-4"
       >
         <ArrowLeft size={14} />
         Back to queue
@@ -403,7 +403,7 @@ function MinedResultCard({
           disabled={isDone && !isEditing}
           className="w-full border border-gray-300 rounded-lg px-3 py-2
             text-sm focus:outline-none focus:border-green-500
-            disabled:bg-gray-50 disabled:text-gray-500"
+            disabled:bg-gray-50 text-gray-600"
         >
           <option value="">— Not assigned —</option>
           {ministers.map((m) => (
@@ -434,7 +434,7 @@ function MinedResultCard({
             onChange={(e) => setText(e.target.value)}
             rows={4}
             className="w-full border border-gray-300 rounded-lg p-3
-              text-sm focus:outline-none focus:border-green-500"
+              text-sm text-gray-600 focus:outline-none focus:border-green-500"
           />
         ) : (
           <p
@@ -456,7 +456,7 @@ function MinedResultCard({
           onChange={(e) => setTopic(e.target.value)}
           disabled={isDone && !isEditing}
           className="w-full border border-gray-300 rounded-lg px-3 py-2
-            text-sm focus:outline-none focus:border-green-500
+            text-sm text-gray-600 focus:outline-none focus:border-green-500
             disabled:bg-gray-50"
         >
           <option value="">— No topic —</option>

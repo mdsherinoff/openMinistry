@@ -116,7 +116,7 @@ export const api = {
     itemId: number,
     resultId: number,
     data: Record<string, unknown>,
-  ) => apiClient.patch(`/api/queue/${itemId}/mined/${resultId}/`),
+  ) => apiClient.patch(`/api/queue/${itemId}/mined/${resultId}`),
   approveMinedResult: (
     itemId: number,
     resultId: number,
