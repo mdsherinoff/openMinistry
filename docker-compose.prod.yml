@@ -32,12 +32,16 @@ services:
     container_name: openministry_backend
     env_file:
       - ./backend/.env
+    environment:
+      MINER_URL: http://miner:8001
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      miner:
+        condition: service_started
 
   frontend:
     build:
@@ -87,12 +91,16 @@ services:
     command: celery -A workers.celery_app worker --loglevel=info
     env_file:
       - ./backend/.env
+    environment:
+      MINER_URL: http://miner:8001
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      miner:
+        condition: service_started
 
   celery-beat:
     build:
@@ -102,12 +110,16 @@ services:
     command: celery -A workers.celery_app beat --loglevel=info
     env_file:
       - ./backend/.env
+    environment:
+      MINER_URL: http://miner:8001
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      miner:
+        condition: service_started
 
   flower:
     build:

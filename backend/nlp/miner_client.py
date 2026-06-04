@@ -9,7 +9,7 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-MINER_URL = os.environ.get("MINER_URL", "http://localhost:8001")
+MINER_URL = os.environ.get("MINER_URL", "http://miner:8001")
 
 
 def mine_url(url: str, timeout: int = 120) -> dict:

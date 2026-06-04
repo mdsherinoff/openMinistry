@@ -105,5 +105,5 @@ def check_miner_health(_: User = Depends(require_moderator)):
     available = is_miner_available()
     return {
         "available": available,
-        "miner_url": os.environ.get("MINER_URL", "http://localhost:8001"),
+        "miner_url": os.environ.get("MINER_URL", "http://miner:8001"),
     }
