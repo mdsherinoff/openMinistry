@@ -100,7 +100,7 @@ export const api = {
   searchMinisters: (q: string) =>
     apiClient.get("/api/search/ministers/", { params: { q } }),
   getSearchSuggestions: (q: string) =>
-    apiClient.get("/api/search/suggestions/", { params: { q } }),
+    apiClient.get("/api/search/suggestions", { params: { q } }),
 
   // Queue
   getQueuePending: (params?: Record<string, string>) =>
