@@ -29,6 +29,8 @@ def build_statement(stmt: Statement, db: Session) -> dict:
         "id": stmt.id,
         "text": stmt.statement_text,
         "topic": stmt.topic,
+        "context_text": stmt.context_text,
+        "queue_item_id": stmt.queue_item_id,
         "date": stmt.statement_date.isoformat()
             if stmt.statement_date else None,
         "minister": {

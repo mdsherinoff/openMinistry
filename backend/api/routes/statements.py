@@ -64,6 +64,8 @@ def list_statements(
             "statement_summary": stmt.statement_summary,
             "topic": stmt.topic,
             "confidence_score": stmt.confidence_score,
+            "context_text": stmt.context_text,
+            "queue_item_id": stmt.queue_item_id, 
             "statement_date": stmt.statement_date.isoformat()
                 if stmt.statement_date else None,
             "status": stmt.status,
