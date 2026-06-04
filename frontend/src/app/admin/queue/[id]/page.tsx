@@ -306,7 +306,6 @@ function MinedResultCard({
   const approveMutation = useMutation({
     mutationFn: () =>
       api.approveMinedResult(itemId, result.id, {
-        mined_result_id: result.id,
         statement_text: text,
         minister_id: ministerId ? Number(ministerId) : null,
         topic: topic || null,
