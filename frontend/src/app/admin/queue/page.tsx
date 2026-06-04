@@ -48,6 +48,7 @@ export default function QueuePage() {
   const [activeTab, setActiveTab] = useState("pending_review");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [pollingIds, setPollingIds] = useState<Set<number>>(new Set());
+  const canLoadQueue = isLoaded && isLoggedIn && isModerator;
 
   useEffect(() => {
     if (isLoaded && !isLoggedIn) router.push("/login");
@@ -57,6 +58,7 @@ export default function QueuePage() {
   const { data: statsData, refetch: refetchStats } = useQuery({
     queryKey: ["queue-stats"],
     queryFn: () => api.getQueueStats(),
+    enabled: canLoadQueue,
     refetchInterval: 15000,
   });
   const stats = statsData?.data || {};
@@ -66,6 +68,7 @@ export default function QueuePage() {
     queryKey: ["queue", activeTab],
     queryFn: () =>
       api.getQueuePending({ status: activeTab, limit: "100" }),
+    enabled: canLoadQueue,
     refetchInterval: activeTab === "mining" ? 5000 : 30000,
   });
   const items: QueueItem[] = queueData?.data || [];
@@ -122,7 +125,7 @@ export default function QueuePage() {
       }
       return null;
     },
-    enabled: pollingIds.size > 0,
+    enabled: canLoadQueue && pollingIds.size > 0,
     refetchInterval: 3000,
   });
 

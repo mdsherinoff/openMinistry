@@ -12,7 +12,10 @@ export const apiClient = axios.create({
 
 // Automatically attach auth token to every request if it exists
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("access_token")
+      : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,9 +26,20 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || "";
+    const isLoginRequest = requestUrl.includes("/api/auth/login");
+    const isLoginPage =
+      typeof window !== "undefined" && window.location.pathname === "/login";
+
+    if (
+      error.response?.status === 401 &&
+      typeof window !== "undefined" &&
+      !isLoginRequest &&
+      !isLoginPage
+    ) {
       localStorage.removeItem("access_token");
-      window.location.href = "/login";
+      localStorage.removeItem("user_role");
+      window.location.replace("/login");
     }
     return Promise.reject(error);
   },

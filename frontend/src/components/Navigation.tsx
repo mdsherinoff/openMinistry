@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Search, Users, FileText, Shield } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { href: "/statements", label: "Statements", icon: FileText },
@@ -15,11 +16,13 @@ const navLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { isLoaded, isModerator } = useAuth();
 
   // Get pending queue count for badge
   const { data: statsData } = useQuery({
     queryKey: ["queue-stats-nav"],
     queryFn: () => api.getQueueStats(),
+    enabled: isLoaded && isModerator,
     refetchInterval: 60000,
     retry: false,
   });
