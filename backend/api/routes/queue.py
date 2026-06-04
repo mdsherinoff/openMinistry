@@ -2,17 +2,19 @@ import hashlib
 import logging
 from datetime import datetime, timezone
 from typing import Optional
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from database.config import get_db
+from database.models.article import Article
 from database.models.article_queue import ArticleQueue
 from database.models.mined_result import MinedResult
-from database.models.minister import Minister
+from database.models.source import Source
 from database.models.statement import Statement
 from database.models.user import User
-from api.auth import get_current_user, require_moderator
+from api.auth import require_moderator
 from api.schemas.queue import (
     QueueItemCreate,
     QueueItemResponse,
@@ -27,6 +29,57 @@ logger = logging.getLogger(__name__)
 
 def make_url_hash(url: str) -> str:
     return hashlib.sha256(url.strip().lower().split("?")[0].encode()).hexdigest()
+
+def get_or_create_article_for_queue_item(
+    db: Session,
+    queue_item: ArticleQueue,
+) -> Article:
+    """Ensure approved queue statements always link to a persisted article."""
+    url_hash = make_url_hash(queue_item.url)
+    article = db.query(Article).filter(
+        (Article.url == queue_item.url) | (Article.url_hash == url_hash)
+    ).first()
+    if article:
+        return article
+
+    parsed = urlparse(queue_item.url)
+    origin = (
+        f"{parsed.scheme}://{parsed.netloc}"
+        if parsed.netloc else queue_item.url
+    )
+    source_name = queue_item.source_name or parsed.netloc or "Queued Articles"
+
+    source = None
+    if queue_item.source_name:
+        source = db.query(Source).filter(
+            Source.name == queue_item.source_name
+        ).first()
+    if not source:
+        source = db.query(Source).filter(Source.website == origin).first()
+    if not source:
+        source = Source(
+            name=source_name,
+            website=origin,
+            language=queue_item.language or "en",
+            credibility_score=1.0,
+            is_active=1,
+        )
+        db.add(source)
+        db.flush()
+
+    article = Article(
+        source_id=source.id,
+        url=queue_item.url,
+        url_hash=url_hash,
+        title=queue_item.title,
+        published_at=queue_item.published_at,
+        language=queue_item.language,
+        scrape_status="scraped",
+        scraped_at=datetime.now(timezone.utc),
+    )
+    db.add(article)
+    db.flush()
+    return article
 
 # ─────────────────────────────────────────
 # Queue Management
@@ -278,6 +331,8 @@ def approve_mined_result(
     queue_item = db.query(ArticleQueue).filter(
         ArticleQueue.id == item_id
     ).first()
+    if not queue_item:
+        raise HTTPException(status_code=404, detail="Queue item not found")
 
     # Use edited values if available, else original
     final_text = (
@@ -301,20 +356,17 @@ def approve_mined_result(
             detail="Minister must be assigned before approving"
         )
 
-    # Find article if exists
-    from database.models.article import Article
-    article = db.query(Article).filter(
-        Article.url == queue_item.url
-    ).first()
+    article = get_or_create_article_for_queue_item(db, queue_item)
 
     # Create the public statement
     statement = Statement(
         minister_id=final_minister_id,
-        article_id=article.id if article else None,
+        article_id=article.id,
         statement_text=final_text,
         topic=final_topic,
         context_text=payload.context_text or result.context_description,
         queue_item_id=item_id,
+        statement_date=queue_item.published_at,
         confidence_score=result.confidence_stars / 5.0,
         status="approved",
         reviewed_by=current_user.id,
@@ -371,18 +423,16 @@ def add_manual_statement(
     if not queue_item:
         raise HTTPException(status_code=404, detail="Queue item not found")
 
-    from database.models.article import Article
-    article = db.query(Article).filter(
-        Article.url == queue_item.url
-    ).first()
+    article = get_or_create_article_for_queue_item(db, queue_item)
 
     statement = Statement(
         minister_id=payload.minister_id,
-        article_id=article.id if article else None,
+        article_id=article.id,
         statement_text=payload.statement_text,
         topic=payload.topic,
         context_text=payload.context_text,
         queue_item_id=item_id,
+        statement_date=queue_item.published_at,
         confidence_score=1.0,  # manually added = highest confidence
         status="approved",
         reviewed_by=current_user.id,
