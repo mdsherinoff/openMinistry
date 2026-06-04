@@ -52,7 +52,7 @@ class MinedResultUpdate(BaseModel):
     minister_id: Optional[int] = None
 
 class ApproveStatementRequest(BaseModel):
-    mined_result_id: int
+    mined_result_id: Optional[int] = None
     statement_text: Optional[str] = None
     minister_id: Optional[int] = None
     topic: Optional[str] = None
