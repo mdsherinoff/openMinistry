@@ -91,8 +91,8 @@ export const api = {
 
   // Queue
   getQueuePending: (params?: Record<string, string>) =>
-    apiClient.get("/api/queue/pending/", { params }),
-  getQueueStats: () => apiClient.get("/api/queue/stats/"),
+    apiClient.get("/api/queue/pending", { params }),
+  getQueueStats: () => apiClient.get("/api/queue/stats"),
   getQueueItem: (id: number) => apiClient.get(`/api/queue/${id}/`),
   approveForMining: (id: number) => apiClient.post(`/api/queue/${id}/mine/`),
   mineBatch: (ids: number[]) => apiClient.post("/api/queue/mine-batch/", ids),
