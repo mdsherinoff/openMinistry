@@ -1,160 +1,81 @@
 """
-Client that calls open-ministry-miner API
-instead of running scrapers locally.
+Client for calling the open-ministry-miner API.
+Handles all communication between openMinistry and the miner service.
 """
 import logging
 import httpx
 import os
-from sqlalchemy.orm import Session
-
-from database.models.article import Article
-from database.models.minister import Minister
-from database.models.statement import Statement
-from nlp.statement_store import StatementStore
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
 MINER_URL = os.environ.get("MINER_URL", "http://localhost:8001")
 
 
-def find_minister(name: str, db: Session) -> Minister | None:
-    """Find minister by name — exact then partial."""
-    if not name:
-        return None
-    minister = db.query(Minister).filter(
-        Minister.name.ilike(name)
-    ).first()
-    if minister:
-        return minister
-    parts = name.strip().split()
-    for part in reversed(parts):
-        if len(part) > 4 and "." not in part:
-            minister = db.query(Minister).filter(
-                Minister.name.ilike(f"%{part}%")
-            ).first()
-            if minister:
-                return minister
-    return None
-
-
-def map_topic(topic_tag: str) -> str | None:
-    mapping = {
-        "education": "Education",
-        "health": "Health",
-        "transport": "Transport",
-        "budget": "Finance",
-        "finance": "Finance",
-        "election": "Politics",
-        "law_order": "Law & Order",
-        "agriculture": "Agriculture",
-        "welfare": "Social Welfare",
-        "environment": "Environment",
-        "infrastructure": "Infrastructure",
-        "tourism": "Tourism",
-    }
-    return mapping.get(topic_tag.lower()) if topic_tag else None
-
-
-def fetch_and_process(source: str = "thehindu", limit: int = 20, db: Session = None) -> dict:
+def mine_url(url: str, timeout: int = 120) -> dict:
     """
-    Call the miner API to scrape and extract statements.
-    Save results directly to the database.
+    Send a URL to the miner and get back structured extraction.
+    Returns the full miner response dict.
     """
-    store = StatementStore()
-
     try:
-        with httpx.Client(timeout=300.0) as client:
+        with httpx.Client(timeout=timeout) as client:
             res = client.post(
-                f"{MINER_URL}/batch",
-                json={"source": source, "limit": limit},
+                f"{MINER_URL}/mine",
+                json={"url": url},
             )
             res.raise_for_status()
-            data = res.json()
+            return res.json()
+    except httpx.TimeoutException:
+        raise Exception(f"Miner timed out processing {url}")
+    except httpx.HTTPStatusError as e:
+        raise Exception(
+            f"Miner returned {e.response.status_code} for {url}"
+        )
     except Exception as e:
-        logger.error(f"Miner API call failed: {e}")
-        return {"error": str(e), "statements": 0}
+        raise Exception(f"Miner error: {e}")
 
-    results = data.get("results", [])
-    total_statements = 0
 
-    for item in results:
-        url = item.get("url")
-        title = item.get("title")
-        published_at = item.get("published_at")
-        speaker_briefs = item.get("speaker_briefs", [])
+def is_miner_available() -> bool:
+    """Check if the miner service is reachable."""
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            res = client.get(f"{MINER_URL}/")
+            return res.status_code == 200
+    except Exception:
+        return False
 
-        # Check if article already exists
-        from database.models.source import Source
-        existing = db.query(Article).filter(
-            Article.url == url
-        ).first()
 
-        if not existing:
-            # Get or create source
-            source_record = db.query(Source).filter(
-                Source.name == "The Hindu - Kerala"
-            ).first()
+def parse_speaker_briefs(annotation: dict) -> list[dict]:
+    """
+    Parse the miner's annotation output into
+    a flat list of statement candidates.
+    """
+    results = []
+    speaker_briefs = annotation.get("speaker_briefs", [])
 
-            if source_record:
-                article = Article(
-                    source_id=source_record.id,
-                    url=url,
-                    url_hash=__import__("hashlib").sha256(
-                        url.encode()
-                    ).hexdigest(),
-                    title=title,
-                    language="en",
-                    scrape_status="processed",
-                )
-                db.add(article)
-                db.commit()
-                db.refresh(article)
-            else:
-                continue
-        else:
-            article = existing
+    for brief in speaker_briefs:
+        speaker_name = brief.get("speaker_name", "").strip()
+        speaker_role = brief.get("speaker_role", "").strip()
+        quality_stars = brief.get("extraction_quality_stars", 3)
+        topics = brief.get("topics", [])
+        context_description = brief.get("combined_context_description", "")
 
-        # Save statements from each speaker brief
-        for brief in speaker_briefs:
-            speaker_name = brief.get("speaker_name", "")
-            quality_stars = brief.get("extraction_quality_stars", 1)
-
-            if quality_stars < 2:
+        for stmt in brief.get("statements", []):
+            text = stmt.get("snippet", "").strip()
+            if not text or len(text) < 15:
                 continue
 
-            minister = find_minister(speaker_name, db)
-            if not minister:
-                logger.debug(f"Minister not found: {speaker_name}")
-                continue
+            topic_tag = stmt.get("topic_tag", "")
+            stmt_context = stmt.get("context_description", "")
 
-            for stmt in brief.get("statements", []):
-                text = stmt.get("snippet", "").strip()
-                topic_tag = stmt.get("topic_tag", "")
+            results.append({
+                "speaker_name": speaker_name,
+                "speaker_role": speaker_role,
+                "statement_text": text,
+                "context_description": stmt_context or context_description,
+                "topic_tag": topic_tag,
+                "confidence_stars": quality_stars,
+                "brief_topics": topics,
+            })
 
-                if not text or len(text) < 20:
-                    continue
-
-                result = store.save_statement(
-                    minister_id=minister.id,
-                    article_id=article.id,
-                    text=text,
-                    confidence=quality_stars / 5.0,
-                    quote_type="direct",
-                    statement_date=None,
-                    db=db,
-                )
-
-                if result["saved"]:
-                    stmt_obj = db.query(Statement).filter(
-                        Statement.id == result["statement_id"]
-                    ).first()
-                    if stmt_obj:
-                        stmt_obj.topic = map_topic(topic_tag)
-                        db.commit()
-                    total_statements += 1
-
-    return {
-        "articles_processed": data.get("processed", 0),
-        "articles_with_statements": data.get("articles_with_statements", 0),
-        "statements_saved": total_statements,
-    }
+    return results

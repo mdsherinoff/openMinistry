@@ -195,87 +195,99 @@ def run_miner(source: str = "thehindu", limit: int = 20):
         logger.error(f"Miner task failed: {e}")
         raise
 
-@celery_app.task(name="workers.tasks.mine_queue_item")
-def mine_queue_item(queue_item_id: int):
-    """Mine a single queue item using open-ministry-miner."""
+@celery_app.task(
+    name="workers.tasks.mine_queue_item",
+    bind=True,
+    max_retries=2,
+    default_retry_delay=30,
+)
+def mine_queue_item(self, queue_item_id: int):
+    """
+    Mine a single queue item using open-ministry-miner.
+    Called when moderator approves a URL for mining.
+    """
     logger.info(f"Mining queue item: {queue_item_id}")
 
     from database.config import get_session_factory
     from database.models.article_queue import ArticleQueue
     from database.models.mined_result import MinedResult
     from database.models.minister import Minister
+    from nlp.miner_client import mine_url, parse_speaker_briefs
     from datetime import datetime, timezone
-    import os
-
-    MINER_URL = os.environ.get("MINER_URL", "http://localhost:8001")
 
     SessionLocal = get_session_factory()
     db = SessionLocal()
 
     try:
+        # Get queue item
         item = db.query(ArticleQueue).filter(
             ArticleQueue.id == queue_item_id
         ).first()
         if not item:
             logger.error(f"Queue item not found: {queue_item_id}")
-            return
+            return {"error": "not found"}
 
-        item.mining_started_at = datetime.now(timezone.utc)
+        # Mark as mining
         item.status = "mining"
+        item.mining_started_at = datetime.now(timezone.utc)
         db.commit()
 
         # Call the miner
-        import httpx
-        with httpx.Client(timeout=120.0) as client:
-            res = client.post(
-                f"{MINER_URL}/mine",
-                json={"url": item.url},
-            )
-            res.raise_for_status()
-            data = res.json()
+        logger.info(f"Calling miner for: {item.url}")
+        data = mine_url(item.url)
 
-        annotation = data.get("annotation", {})
         article_data = data.get("article", {})
+        annotation = data.get("annotation", {})
 
-        # Update article title if we got it
+        # Update title from miner if we didn't have it
         if article_data.get("title") and not item.title:
             item.title = article_data["title"][:500]
 
-        # Save mined results
-        speaker_briefs = annotation.get("speaker_briefs", [])
+        # Parse statements from speaker briefs
+        candidates = parse_speaker_briefs(annotation)
+        logger.info(
+            f"Miner found {len(candidates)} statement candidates "
+            f"for item {queue_item_id}"
+        )
+
+        # Match each speaker to our ministers database
         saved_count = 0
+        for candidate in candidates:
+            speaker_name = candidate["speaker_name"]
 
-        for brief in speaker_briefs:
-            speaker_name = brief.get("speaker_name", "")
-            speaker_role = brief.get("speaker_role", "")
-            quality_stars = brief.get("extraction_quality_stars", 3)
-
-            # Try to find minister
+            # Try to find minister — exact then partial
             minister = None
             if speaker_name:
                 minister = db.query(Minister).filter(
-                    Minister.name.ilike(f"%{speaker_name.split()[-1]}%")
+                    Minister.name.ilike(speaker_name)
                 ).first()
 
-            for stmt in brief.get("statements", []):
-                text = stmt.get("snippet", "").strip()
-                if not text or len(text) < 15:
-                    continue
+                if not minister:
+                    # Try last name
+                    parts = speaker_name.strip().split()
+                    for part in reversed(parts):
+                        if len(part) > 4 and "." not in part:
+                            minister = db.query(Minister).filter(
+                                Minister.name.ilike(f"%{part}%")
+                            ).first()
+                            if minister:
+                                break
 
-                mined = MinedResult(
-                    queue_item_id=queue_item_id,
-                    speaker_name=speaker_name,
-                    speaker_role=speaker_role,
-                    minister_id=minister.id if minister else None,
-                    statement_text=text,
-                    context_description=stmt.get("context_description"),
-                    topic_tag=stmt.get("topic_tag"),
-                    confidence_stars=quality_stars,
-                    status="awaiting_review",
-                )
-                db.add(mined)
-                saved_count += 1
+            mined = MinedResult(
+                queue_item_id=queue_item_id,
+                speaker_name=speaker_name,
+                speaker_role=candidate["speaker_role"],
+                minister_id=minister.id if minister else None,
+                statement_text=candidate["statement_text"],
+                context_description=candidate["context_description"],
+                topic_tag=candidate["topic_tag"],
+                confidence_stars=candidate["confidence_stars"],
+                status="awaiting_review",
+            )
+            db.add(mined)
+            saved_count += 1
 
+        # Update queue item status
         item.status = "mined"
         item.statements_found = saved_count
         item.mining_completed_at = datetime.now(timezone.utc)
@@ -285,18 +297,32 @@ def mine_queue_item(queue_item_id: int):
             f"Mining complete for item {queue_item_id}: "
             f"{saved_count} statements found"
         )
-        return {"statements_found": saved_count}
+        return {
+            "queue_item_id": queue_item_id,
+            "statements_found": saved_count,
+            "overall_quality": annotation.get(
+                "overall_extraction_quality_stars"
+            ),
+        }
 
     except Exception as e:
-        logger.error(f"Mining failed for item {queue_item_id}: {e}")
-        item = db.query(ArticleQueue).filter(
-            ArticleQueue.id == queue_item_id
-        ).first()
-        if item:
-            item.status = "mining_failed"
-            item.mining_error = str(e)
-            db.commit()
-        raise
+        logger.error(f"Mining failed for {queue_item_id}: {e}")
+        db.rollback()
+
+        # Update item as failed
+        try:
+            item = db.query(ArticleQueue).filter(
+                ArticleQueue.id == queue_item_id
+            ).first()
+            if item:
+                item.status = "mining_failed"
+                item.mining_error = str(e)[:500]
+                db.commit()
+        except Exception:
+            pass
+
+        raise self.retry(exc=e)
+
     finally:
         db.close()
 
