@@ -109,9 +109,12 @@ export const api = {
   getQueueItem: (id: number) => apiClient.get(`/api/queue/${id}`),
   approveForMining: (id: number) => apiClient.post(`/api/queue/${id}/mine`),
   mineBatch: (ids: number[]) => apiClient.post("/api/queue/mine-batch", ids),
+  rejectBatch: (ids: number[]) => apiClient.post("/api/queue/reject-batch", ids),
   rejectQueueItem: (id: number, notes?: string) =>
     apiClient.post(`/api/queue/${id}/reject`, { notes }),
   deleteQueueItem: (id: number) => apiClient.delete(`/api/queue/${id}`),
+  deleteBatch: (ids: number[]) =>
+    apiClient.delete("/api/queue/delete-batch", { data: ids }),
   getMinedResults: (id: number) => apiClient.get(`/api/queue/${id}/mined`),
   updateMinedResult: (
     itemId: number,

@@ -89,6 +89,11 @@ export default function QueuePage() {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const firstItem = total === 0 ? 0 : page * PAGE_SIZE + 1;
   const lastItem = Math.min(total, (page + 1) * PAGE_SIZE);
+  const selectableItems = items.filter((item) => item.status !== "mining");
+  const selectedItems = items.filter((item) => selectedIds.has(item.id));
+  const selectedPendingItems = selectedItems.filter(
+    (item) => item.status === "pending_review",
+  );
 
   // Mine single item
   const mineMutation = useMutation({
@@ -103,6 +108,16 @@ export default function QueuePage() {
   // Mine batch
   const mineBatchMutation = useMutation({
     mutationFn: (ids: number[]) => api.mineBatch(ids),
+    onSuccess: () => {
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["queue"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
+    },
+  });
+
+  // Reject batch
+  const rejectBatchMutation = useMutation({
+    mutationFn: (ids: number[]) => api.rejectBatch(ids),
     onSuccess: () => {
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["queue"] });
@@ -127,6 +142,19 @@ export default function QueuePage() {
       if (items.length === 1 && page > 0) {
         setPage((current) => current - 1);
       }
+      queryClient.invalidateQueries({ queryKey: ["queue"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
+    },
+  });
+
+  // Delete batch
+  const deleteBatchMutation = useMutation({
+    mutationFn: (ids: number[]) => api.deleteBatch(ids),
+    onSuccess: () => {
+      if (selectedIds.size >= items.length && page > 0) {
+        setPage((current) => current - 1);
+      }
+      setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["queue"] });
       queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
     },
@@ -169,10 +197,7 @@ export default function QueuePage() {
   };
 
   const selectAll = () => {
-    const pendingIds = items
-      .filter((i) => i.status === "pending_review")
-      .map((i) => i.id);
-    setSelectedIds(new Set(pendingIds));
+    setSelectedIds(new Set(selectableItems.map((item) => item.id)));
   };
 
   if (!isLoaded || !isLoggedIn || !isModerator) {
@@ -213,18 +238,70 @@ export default function QueuePage() {
         </div>
         <div className="flex items-center gap-2">
           {selectedIds.size > 0 && (
-            <button
-              onClick={() =>
-                mineBatchMutation.mutate([...selectedIds])
-              }
-              disabled={mineBatchMutation.isPending}
-              className="flex items-center gap-1.5 bg-green-700
-                text-white px-3 py-1.5 rounded-lg text-sm font-medium
-                hover:bg-green-800 disabled:opacity-50"
-            >
-              <Zap size={14} />
-              Mine {selectedIds.size} selected
-            </button>
+            <>
+              {selectedPendingItems.length > 0 && (
+                <>
+                  <button
+                    onClick={() =>
+                      mineBatchMutation.mutate(
+                        selectedPendingItems.map((item) => item.id),
+                      )
+                    }
+                    disabled={mineBatchMutation.isPending}
+                    className="flex items-center gap-1.5 bg-green-700
+                      text-white px-3 py-1.5 rounded-lg text-sm font-medium
+                      hover:bg-green-800 disabled:opacity-50"
+                  >
+                    <Zap size={14} />
+                    Mine {selectedPendingItems.length} selected
+                  </button>
+                  <button
+                    onClick={() => {
+                      const shouldReject = window.confirm(
+                        `Reject ${selectedPendingItems.length} selected article${
+                          selectedPendingItems.length !== 1 ? "s" : ""
+                        }?`,
+                      );
+                      if (shouldReject) {
+                        rejectBatchMutation.mutate(
+                          selectedPendingItems.map((item) => item.id),
+                        );
+                      }
+                    }}
+                    disabled={rejectBatchMutation.isPending}
+                    className="flex items-center gap-1.5 border border-gray-200
+                      text-gray-600 px-3 py-1.5 rounded-lg text-sm font-medium
+                      hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    <XCircle size={14} />
+                    Reject {selectedPendingItems.length}
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => {
+                  const shouldDelete = window.confirm(
+                    `Remove ${selectedIds.size} selected article${
+                      selectedIds.size !== 1 ? "s" : ""
+                    } from the queue? They will not be picked up again.`,
+                  );
+                  if (shouldDelete) {
+                    deleteBatchMutation.mutate([...selectedIds]);
+                  }
+                }}
+                disabled={deleteBatchMutation.isPending}
+                className="flex items-center gap-1.5 border border-red-200
+                  text-red-600 px-3 py-1.5 rounded-lg text-sm font-medium
+                  hover:bg-red-50 disabled:opacity-50"
+              >
+                {deleteBatchMutation.isPending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} />
+                )}
+                Remove {selectedIds.size}
+              </button>
+            </>
           )}
           <button
             onClick={() => {
@@ -277,7 +354,7 @@ export default function QueuePage() {
       </div>
 
       {/* Select all bar */}
-      {activeTab === "pending_review" && items.length > 0 && (
+      {selectableItems.length > 0 && (
         <div className="flex items-center gap-3 mb-3 text-sm text-white-100">
           <button
             onClick={selectAll}
@@ -331,6 +408,7 @@ export default function QueuePage() {
               item={item}
               isSelected={selectedIds.has(item.id)}
               isMining={pollingIds.has(item.id)}
+              canSelect={item.status !== "mining"}
               onSelect={() => toggleSelect(item.id)}
               onMine={() => mineMutation.mutate(item.id)}
               onReject={() => rejectMutation.mutate(item.id)}
@@ -399,6 +477,7 @@ interface QueueItemCardProps {
   item: QueueItem;
   isSelected: boolean;
   isMining: boolean;
+  canSelect: boolean;
   onSelect: () => void;
   onMine: () => void;
   onReject: () => void;
@@ -411,6 +490,7 @@ function QueueItemCard({
   item,
   isSelected,
   isMining,
+  canSelect,
   onSelect,
   onMine,
   onReject,
@@ -436,7 +516,7 @@ function QueueItemCard({
     >
       <div className="flex items-start gap-3">
         {/* Checkbox */}
-        {isPending && (
+        {canSelect && (
           <input
             type="checkbox"
             checked={isSelected}

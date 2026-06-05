@@ -236,6 +236,34 @@ def mine_batch(
 
     return {"results": results}
 
+@router.post("/reject-batch")
+def reject_batch(
+    item_ids: list[int],
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_moderator),
+):
+    """Reject multiple pending URLs at once."""
+    results = []
+    now = datetime.now(timezone.utc)
+    for item_id in item_ids:
+        item = db.query(ArticleQueue).filter(
+            ArticleQueue.id == item_id
+        ).first()
+        if not item:
+            results.append({"id": item_id, "error": "not found"})
+            continue
+        if item.status != "pending_review":
+            results.append({"id": item_id, "error": f"wrong status: {item.status}"})
+            continue
+
+        item.status = "rejected"
+        item.reviewed_by = current_user.id
+        item.reviewed_at = now
+        results.append({"id": item_id, "status": "rejected"})
+
+    db.commit()
+    return {"results": results}
+
 @router.post("/{item_id}/reject")
 def reject_queue_item(
     item_id: int,
@@ -258,6 +286,49 @@ def reject_queue_item(
 
     return {"message": "Item rejected", "item_id": item_id}
 
+def remove_queue_item(
+    db: Session,
+    item: ArticleQueue,
+    current_user: User,
+):
+    """Hide a queue item while retaining its URL hash for deduping."""
+    db.query(Statement).filter(
+        Statement.queue_item_id == item.id
+    ).update({Statement.queue_item_id: None})
+    db.query(MinedResult).filter(
+        MinedResult.queue_item_id == item.id
+    ).delete(synchronize_session=False)
+
+    item.status = "deleted"
+    item.reviewed_by = current_user.id
+    item.reviewed_at = datetime.now(timezone.utc)
+    item.review_notes = "Removed from article queue"
+
+@router.delete("/delete-batch")
+def delete_batch(
+    item_ids: list[int],
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_moderator),
+):
+    """Remove multiple queue items while keeping their URL hashes blocked."""
+    results = []
+    for item_id in item_ids:
+        item = db.query(ArticleQueue).filter(
+            ArticleQueue.id == item_id
+        ).first()
+        if not item:
+            results.append({"id": item_id, "error": "not found"})
+            continue
+        if item.status == "mining":
+            results.append({"id": item_id, "error": "cannot remove mining item"})
+            continue
+
+        remove_queue_item(db, item, current_user)
+        results.append({"id": item_id, "status": "deleted"})
+
+    db.commit()
+    return {"results": results}
+
 @router.delete("/{item_id}")
 def delete_queue_item(
     item_id: int,
@@ -270,18 +341,13 @@ def delete_queue_item(
     ).first()
     if not item:
         raise HTTPException(status_code=404, detail="Queue item not found")
+    if item.status == "mining":
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot remove an item while mining is in progress"
+        )
 
-    db.query(Statement).filter(
-        Statement.queue_item_id == item_id
-    ).update({Statement.queue_item_id: None})
-    db.query(MinedResult).filter(
-        MinedResult.queue_item_id == item_id
-    ).delete(synchronize_session=False)
-
-    item.status = "deleted"
-    item.reviewed_by = current_user.id
-    item.reviewed_at = datetime.now(timezone.utc)
-    item.review_notes = "Removed from article queue"
+    remove_queue_item(db, item, current_user)
     db.commit()
     return {"message": "Item removed from queue", "item_id": item_id}
 
