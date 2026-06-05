@@ -10,19 +10,16 @@ statements from newspapers, interviews, press conferences, and public media.
 
 ## Status
 
-🚧 Active development
+Live at [openministry.live](https://openministry.live)
 
 ## Stack
 
-- Frontend: Next.js + Tailwind CSS
-- Backend: Python + FastAPI
-- Database: PostgreSQL
+- Frontend: Next.js 16 + Tailwind CSS
+- Backend: Python 3.12 + FastAPI
+- Database: PostgreSQL 16
 - Queue: Redis + Celery
-- Scraping: Playwright + BeautifulSoup
-
-## Getting Started
-
-See current status of [openMinistry Website](https://openministry.live).
+- LLM: Groq (LLaMA 3.3 70B) via open-ministry-miner
+- Deployment: Docker + DigitalOcean
 
 ## License
 
