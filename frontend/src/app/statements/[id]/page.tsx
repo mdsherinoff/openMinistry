@@ -295,10 +295,10 @@ export default function StatementDetailPage() {
       {relatedStatements.length > 0 && (
         <div>
           <h2
-            className="text-sm font-semibold text-gray-700 mb-3
+            className="text-sm font-semibold text-white-100 mb-3
             flex items-center gap-2"
           >
-            <FileText size={14} className="text-white-100" />
+            <FileText size={14} className="text-green-700" />
             Other statements from this article
           </h2>
           <div className="space-y-3">
