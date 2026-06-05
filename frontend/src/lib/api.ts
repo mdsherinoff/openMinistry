@@ -45,37 +45,20 @@ apiClient.interceptors.response.use(
 
 // API functions
 export const api = {
-  // Health
-  health: () => apiClient.get("/health"),
-
   // Statements
   getStatements: (params?: Record<string, string>) =>
     apiClient.get("/api/statements/", { params }),
   getStatementCount: (params?: Record<string, string>) =>
     apiClient.get("/api/statements/count", { params }),
   getTopics: () => apiClient.get("/api/statements/topics"),
-  tagAllStatements: () => apiClient.post("/api/statements/tag-all"),
   getStatementDetail: (id: number) => apiClient.get(`/api/v1/statements/${id}`),
 
   // Ministers
   getMinisters: (activeOnly: boolean = true) =>
     apiClient.get("/api/ministers/", { params: { active_only: activeOnly } }),
-  getMinister: (id: number) => apiClient.get(`/api/ministers/${id}/`),
-  createMinister: (data: Record<string, unknown>) =>
-    apiClient.post("/api/ministers/", data),
-  updateMinister: (id: number, data: Record<string, unknown>) =>
-    apiClient.patch(`/api/ministers/${id}`, data),
   getMinisterStatements: (id: number, params?: Record<string, string>) =>
     apiClient.get(`/api/ministers/${id}/statements`, { params }),
   getMinisterStats: (id: number) => apiClient.get(`/api/ministers/${id}/stats`),
-
-  // Sources
-  getSources: () => apiClient.get("/api/sources/"),
-  createSource: (data: Record<string, unknown>) =>
-    apiClient.post("/api/sources/", data),
-  updateSource: (id: number, data: Record<string, unknown>) =>
-    apiClient.patch(`/api/sources/${id}`, data),
-  deleteSource: (id: number) => apiClient.delete(`/api/sources/${id}`),
 
   // Moderation
   getModerationQueue: (params?: Record<string, string>) =>
@@ -89,16 +72,12 @@ export const api = {
     apiClient.post(`/api/moderation/${id}/reject`, { notes }),
   reviewStatement: (id: number, data: Record<string, unknown>) =>
     apiClient.post(`/api/moderation/${id}/review`, data),
-  getStatementLogs: (id: number) =>
-    apiClient.get(`/api/moderation/${id}/logs/`),
   updateStatement: (id: number, data: Record<string, unknown>) =>
     apiClient.patch(`/api/statements/${id}/`, data),
 
   // Search
   search: (q: string, params?: Record<string, string>) =>
     apiClient.get("/api/search/", { params: { q, ...params } }),
-  searchMinisters: (q: string) =>
-    apiClient.get("/api/search/ministers/", { params: { q } }),
   getSearchSuggestions: (q: string) =>
     apiClient.get("/api/search/suggestions", { params: { q } }),
 
