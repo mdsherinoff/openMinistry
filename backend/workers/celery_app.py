@@ -37,29 +37,16 @@ celery_app.conf.update(
 
     # Scheduled tasks
     beat_schedule={
-        # "scrape-the-hindu-every-30-minutes": {
-        #     "task": "workers.tasks.scrape_source",
-        #     "schedule": 30 * 60,  # every 30 minutes
-        #     "args": ["thehindu.com"],
-        # },
-        # "scrape-mathrubhumi-every-15-minutes": {
-        #     "task": "workers.tasks.scrape_source",
-        #     "schedule": 15 * 60,  # every 15 minutes
-        #     "args": ["mathrubhumi.com"],
-        # },
-        # "scrape-manorama-every-15-minutes": {
-        #     "task": "workers.tasks.scrape_source",
-        #     "schedule": 15 * 60,
-        #     "args": ["onmanorama.com"],
-        # },
-        "collect-urls-every-30-minutes": {
+    # URL Collection
+    "collect-urls-thehindu-every-30-minutes": {
         "task": "workers.tasks.collect_urls",
         "schedule": 30 * 60,
         "args": ["thehindu.com"],
-        },
-        "tag-statements-every-hour": {
-            "task": "workers.tasks.tag_statements",
-            "schedule": 60 * 60,
-        },
     },
+    # Statement tagging
+    "tag-statements-every-hour": {
+        "task": "workers.tasks.tag_statements",
+        "schedule": 60 * 60,
+    },
+},
 )
