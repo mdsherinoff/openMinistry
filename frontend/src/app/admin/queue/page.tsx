@@ -26,7 +26,7 @@ interface QueueItem {
   reviewed_at: string | null;
 }
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 10;
 
 const STATUS_COLORS: Record<string, string> = {
   pending_review: "bg-amber-50 text-amber-700 border-amber-200",
