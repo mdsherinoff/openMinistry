@@ -278,10 +278,10 @@ export default function QueuePage() {
 
       {/* Select all bar */}
       {activeTab === "pending_review" && items.length > 0 && (
-        <div className="flex items-center gap-3 mb-3 text-sm text-gray-600">
+        <div className="flex items-center gap-3 mb-3 text-sm text-white-100">
           <button
             onClick={selectAll}
-            className="hover:text-green-700 transition-colors"
+            className="hover:text-green-600 transition-colors"
           >
             Select all
           </button>
@@ -336,7 +336,7 @@ export default function QueuePage() {
               onReject={() => rejectMutation.mutate(item.id)}
               onDelete={() => {
                 const shouldDelete = window.confirm(
-                  "Delete this article from the queue? Published statements will stay visible.",
+                  "Remove this article from the queue? It will not be picked up again in future batches.",
                 );
                 if (shouldDelete) deleteMutation.mutate(item.id);
               }}

@@ -262,9 +262,9 @@ def reject_queue_item(
 def delete_queue_item(
     item_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(require_moderator),
+    current_user: User = Depends(require_moderator),
 ):
-    """Permanently delete a queue item (admin action)."""
+    """Remove a queue item while keeping its URL hash blocked."""
     item = db.query(ArticleQueue).filter(
         ArticleQueue.id == item_id
     ).first()
@@ -274,9 +274,16 @@ def delete_queue_item(
     db.query(Statement).filter(
         Statement.queue_item_id == item_id
     ).update({Statement.queue_item_id: None})
-    db.delete(item)
+    db.query(MinedResult).filter(
+        MinedResult.queue_item_id == item_id
+    ).delete(synchronize_session=False)
+
+    item.status = "deleted"
+    item.reviewed_by = current_user.id
+    item.reviewed_at = datetime.now(timezone.utc)
+    item.review_notes = "Removed from article queue"
     db.commit()
-    return {"message": "Item deleted permanently"}
+    return {"message": "Item removed from queue", "item_id": item_id}
 
 # ─────────────────────────────────────────
 # Mined Results
