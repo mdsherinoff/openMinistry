@@ -38,6 +38,7 @@ def build_statement_result(stmt, db: Session) -> dict:
             "id": minister.id if minister else None,
             "name": minister.name if minister else "Unknown",
             "portfolio": minister.portfolio if minister else None,
+            "image_url": minister.image_url if minister else None,
         },
         "source": {
             "name": source.name if source else None,

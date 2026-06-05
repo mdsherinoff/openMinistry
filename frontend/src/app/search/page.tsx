@@ -67,7 +67,7 @@ export default function SearchPage() {
             <Search
               size={18}
               className="absolute left-3 top-1/2 -translate-y-1/2
-                text-gray-400"
+                text-gray-700"
             />
             <input
               type="text"
@@ -115,13 +115,13 @@ export default function SearchPage() {
                   setActiveQuery(s.value);
                   setOffset(0);
                 }}
-                className="w-full text-left px-4 py-2.5 text-sm
-                  hover:bg-gray-50 flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700
+                  hover:bg-gray-100 flex items-center gap-2"
               >
                 <span
                   className={`text-xs px-1.5 py-0.5 rounded
                   ${
-                    s.type === "minister"
+                    s.type === "Minister"
                       ? "bg-green-100 text-green-700"
                       : "bg-blue-100 text-blue-700"
                   }`}
@@ -241,7 +241,7 @@ export default function SearchPage() {
                   onClick={() => setOffset(Math.max(0, offset - limit))}
                   disabled={offset === 0}
                   className="px-3 py-1.5 text-sm border border-gray-200
-                    rounded-lg disabled:opacity-50 hover:bg-gray-50"
+                    rounded-lg disabled:opacity-50 hover:bg-gray-100"
                 >
                   Previous
                 </button>
@@ -249,7 +249,7 @@ export default function SearchPage() {
                   onClick={() => setOffset(offset + limit)}
                   disabled={offset + limit >= total}
                   className="px-3 py-1.5 text-sm border border-gray-200
-                    rounded-lg disabled:opacity-50 hover:bg-gray-50"
+                    rounded-lg disabled:opacity-50 hover:bg-gray-100"
                 >
                   Next
                 </button>

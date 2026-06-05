@@ -140,8 +140,8 @@ export default function StatementDetailPage() {
       {/* Back */}
       <Link
         href="/statements"
-        className="flex items-center gap-1.5 text-sm text-gray-500
-          hover:text-gray-700 mb-6"
+        className="flex items-center gap-1.5 text-sm text-white-500
+          hover:text-gray-500 mb-6"
       >
         <ArrowLeft size={14} />
         All statements
@@ -298,7 +298,7 @@ export default function StatementDetailPage() {
             className="text-sm font-semibold text-gray-700 mb-3
             flex items-center gap-2"
           >
-            <FileText size={14} className="text-gray-400" />
+            <FileText size={14} className="text-white-100" />
             Other statements from this article
           </h2>
           <div className="space-y-3">
@@ -314,7 +314,7 @@ export default function StatementDetailPage() {
         <Link
           href={`/ministers/${statement.minister.id}`}
           className="flex items-center justify-between text-sm
-            text-gray-600 hover:text-green-700 transition-colors"
+            text-white-100 hover:text-green-700 transition-colors"
         >
           <span>More statements by {statement.minister.name}</span>
           <span>→</span>
