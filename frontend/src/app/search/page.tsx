@@ -67,7 +67,7 @@ export default function SearchPage() {
             <Search
               size={18}
               className="absolute left-3 top-1/2 -translate-y-1/2
-                text-gray-700"
+                text-white-100"
             />
             <input
               type="text"
@@ -138,7 +138,7 @@ export default function SearchPage() {
       {/* Example searches */}
       {!activeQuery && (
         <div className="mb-8">
-          <p className="text-sm text-gray-500 mb-3">Try searching for:</p>
+          <p className="text-sm text-white-100 mb-3">Try searching for:</p>
           <div className="flex flex-wrap gap-2">
             {[
               "health hospitals",
