@@ -68,6 +68,7 @@ const TOPICS = [
   "Politics",
   "Tourism",
   "Finance",
+  "Sports",
 ];
 
 const CONFIDENCE_LABELS: Record<number, string> = {

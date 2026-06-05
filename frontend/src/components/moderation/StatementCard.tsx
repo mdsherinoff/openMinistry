@@ -39,7 +39,7 @@ export default function StatementCard({ statement }: StatementCardProps) {
     "Health", "Education", "Transport", "Economy",
     "Agriculture", "Environment", "Infrastructure",
     "Law & Order", "Social Welfare", "Politics",
-    "Tourism", "Finance",
+    "Tourism", "Finance", "Sport",
   ];
 
   const invalidate = () => {
