@@ -7,8 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import {
   ExternalLink, CheckCircle, XCircle,
-  Clock, Loader2, RefreshCw, Zap,
-  AlertCircle, FileText, BarChart2,
+  Loader2, RefreshCw, Zap,
+  AlertCircle, FileText,
+  Trash2, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -24,6 +25,8 @@ interface QueueItem {
   created_at: string;
   reviewed_at: string | null;
 }
+
+const PAGE_SIZE = 25;
 
 const STATUS_COLORS: Record<string, string> = {
   pending_review: "bg-amber-50 text-amber-700 border-amber-200",
@@ -46,6 +49,7 @@ export default function QueuePage() {
   const { isLoaded, isLoggedIn, isModerator } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("pending_review");
+  const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [pollingIds, setPollingIds] = useState<Set<number>>(new Set());
   const canLoadQueue = isLoaded && isLoggedIn && isModerator;
@@ -65,13 +69,26 @@ export default function QueuePage() {
 
   // Queue items
   const { data: queueData, isLoading, refetch } = useQuery({
-    queryKey: ["queue", activeTab],
+    queryKey: ["queue", activeTab, page],
     queryFn: () =>
-      api.getQueuePending({ status: activeTab, limit: "100" }),
+      api.getQueuePending({
+        status: activeTab,
+        limit: String(PAGE_SIZE),
+        offset: String(page * PAGE_SIZE),
+      }),
     enabled: canLoadQueue,
     refetchInterval: activeTab === "mining" ? 5000 : 30000,
   });
-  const items: QueueItem[] = queueData?.data || [];
+  const queuePayload = queueData?.data;
+  const items: QueueItem[] = Array.isArray(queuePayload)
+    ? queuePayload
+    : queuePayload?.items || [];
+  const total = Array.isArray(queuePayload)
+    ? items.length
+    : queuePayload?.total || 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const firstItem = total === 0 ? 0 : page * PAGE_SIZE + 1;
+  const lastItem = Math.min(total, (page + 1) * PAGE_SIZE);
 
   // Mine single item
   const mineMutation = useMutation({
@@ -97,6 +114,19 @@ export default function QueuePage() {
   const rejectMutation = useMutation({
     mutationFn: (id: number) => api.rejectQueueItem(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["queue"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
+    },
+  });
+
+  // Delete item
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => api.deleteQueueItem(id),
+    onSuccess: () => {
+      setSelectedIds(new Set());
+      if (items.length === 1 && page > 0) {
+        setPage((current) => current - 1);
+      }
       queryClient.invalidateQueries({ queryKey: ["queue"] });
       queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
     },
@@ -218,6 +248,7 @@ export default function QueuePage() {
             key={tab.key}
             onClick={() => {
               setActiveTab(tab.key);
+              setPage(0);
               setSelectedIds(new Set());
             }}
             className={cn(
@@ -303,12 +334,61 @@ export default function QueuePage() {
               onSelect={() => toggleSelect(item.id)}
               onMine={() => mineMutation.mutate(item.id)}
               onReject={() => rejectMutation.mutate(item.id)}
+              onDelete={() => {
+                const shouldDelete = window.confirm(
+                  "Delete this article from the queue? Published statements will stay visible.",
+                );
+                if (shouldDelete) deleteMutation.mutate(item.id);
+              }}
               isMineLoading={
                 mineMutation.isPending &&
                 mineMutation.variables === item.id
               }
+              isDeleteLoading={
+                deleteMutation.isPending &&
+                deleteMutation.variables === item.id
+              }
             />
           ))}
+        </div>
+      )}
+
+      {total > PAGE_SIZE && (
+        <div className="flex items-center justify-between gap-3 mt-5 text-sm">
+          <p className="text-gray-500">
+            Showing {firstItem}-{lastItem} of {total}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setPage((current) => Math.max(0, current - 1));
+                setSelectedIds(new Set());
+              }}
+              disabled={page === 0}
+              className="flex items-center gap-1.5 border border-gray-200
+                text-gray-600 px-3 py-1.5 rounded-lg font-medium
+                hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              <ChevronLeft size={14} />
+              Previous
+            </button>
+            <span className="text-gray-500">
+              Page {page + 1} of {totalPages}
+            </span>
+            <button
+              onClick={() => {
+                setPage((current) => Math.min(totalPages - 1, current + 1));
+                setSelectedIds(new Set());
+              }}
+              disabled={page >= totalPages - 1}
+              className="flex items-center gap-1.5 border border-gray-200
+                text-gray-600 px-3 py-1.5 rounded-lg font-medium
+                hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              Next
+              <ChevronRight size={14} />
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -322,7 +402,9 @@ interface QueueItemCardProps {
   onSelect: () => void;
   onMine: () => void;
   onReject: () => void;
+  onDelete: () => void;
   isMineLoading: boolean;
+  isDeleteLoading: boolean;
 }
 
 function QueueItemCard({
@@ -332,13 +414,16 @@ function QueueItemCard({
   onSelect,
   onMine,
   onReject,
+  onDelete,
   isMineLoading,
+  isDeleteLoading,
 }: QueueItemCardProps) {
   const isPending = item.status === "pending_review";
   const isMiningStatus =
     item.status === "mining" || isMining;
   const isMined = item.status === "mined";
   const isFailed = item.status === "mining_failed";
+  const canDelete = item.status !== "mining" && !isMining;
 
   return (
     <div
@@ -477,6 +562,23 @@ function QueueItemCard({
                 <Loader2 size={12} className="animate-spin" />
                 Processing with LLM...
               </span>
+            )}
+
+            {canDelete && (
+              <button
+                onClick={onDelete}
+                disabled={isDeleteLoading}
+                className="flex items-center gap-1.5 border border-red-200
+                  text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium
+                  hover:bg-red-50 disabled:opacity-50"
+              >
+                {isDeleteLoading ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Trash2 size={12} />
+                )}
+                Delete
+              </button>
             )}
           </div>
         </div>

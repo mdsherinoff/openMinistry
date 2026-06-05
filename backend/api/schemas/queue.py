@@ -26,6 +26,12 @@ class QueueItemResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class QueuePageResponse(BaseModel):
+    items: list[QueueItemResponse]
+    total: int
+    limit: int
+    offset: int
+
 class MinedResultResponse(BaseModel):
     id: int
     queue_item_id: int

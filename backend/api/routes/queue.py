@@ -20,6 +20,7 @@ from api.auth import require_moderator
 from api.schemas.queue import (
     QueueItemCreate,
     QueueItemResponse,
+    QueuePageResponse,
     MinedResultResponse,
     MinedResultUpdate,
     ApproveStatementRequest,
@@ -115,11 +116,11 @@ def add_to_queue(
     db.refresh(item)
     return item
 
-@router.get("/pending", response_model=list[QueueItemResponse])
+@router.get("/pending", response_model=QueuePageResponse)
 def get_pending(
     status: Optional[str] = "pending_review",
-    limit: int = Query(default=50, le=200),
-    offset: int = 0,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
     _: User = Depends(require_moderator),
 ):
@@ -127,9 +128,18 @@ def get_pending(
     query = db.query(ArticleQueue)
     if status:
         query = query.filter(ArticleQueue.status == status)
-    return query.order_by(
+
+    total = query.count()
+    items = query.order_by(
         ArticleQueue.created_at.desc()
     ).offset(offset).limit(limit).all()
+
+    return {
+        "items": items,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
 
 @router.get("/stats")
 def get_queue_stats(
@@ -141,7 +151,7 @@ def get_queue_stats(
     stats = {}
     for status in [
         "pending_review", "mining", "mined",
-        "rejected", "deleted"
+        "mining_failed", "rejected", "deleted"
     ]:
         stats[status] = db.query(ArticleQueue).filter(
             ArticleQueue.status == status
@@ -261,6 +271,9 @@ def delete_queue_item(
     if not item:
         raise HTTPException(status_code=404, detail="Queue item not found")
 
+    db.query(Statement).filter(
+        Statement.queue_item_id == item_id
+    ).update({Statement.queue_item_id: None})
     db.delete(item)
     db.commit()
     return {"message": "Item deleted permanently"}
