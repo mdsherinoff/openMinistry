@@ -37,15 +37,15 @@ celery_app.conf.update(
     # Scheduled tasks
     beat_schedule={
     # URL Collection
-    "collect-urls-thehindu-every-30-minutes": {
+    "collect-urls-thehindu-every-hour": {
         "task": "workers.tasks.collect_urls",
-        "schedule": 30 * 60,
+        "schedule": 60 * 60,
         "args": ["thehindu.com"],
     },
     # Statement tagging
-    "tag-statements-every-hour": {
+    "tag-statements-every-2-hour": {
         "task": "workers.tasks.tag_statements",
-        "schedule": 60 * 60,
+        "schedule": 2 * 60 * 60,
     },
 },
 )
