@@ -3,7 +3,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from celery import Celery
-from celery.schedules import crontab
 from dotenv import load_dotenv
 load_dotenv()
 
