@@ -2,11 +2,11 @@
 
 ## Phase 1 Sources
 
-| Name             | URL                             | Language  | Priority |
-| ---------------- | ------------------------------- | --------- | -------- |
-| Mathrubhumi      | mathrubhumi.com                 | Malayalam | High     |
-| Manorama Online  | onmanorama.com                  | Malayalam | High     |
-| The Hindu Kerala | thehindu.com/news/states/kerala | English   | Medium   |
+| Name             | URL                             | Language  | Priority | Status |
+| ---------------- | ------------------------------- | --------- | -------- | ------ |
+| Mathrubhumi      | mathrubhumi.com                 | Malayalam | High     | NO     |
+| Manorama Online  | onmanorama.com                  | Malayalam | High     | NO     |
+| The Hindu Kerala | thehindu.com/news/states/kerala | English   | Medium   | YES    |
 
 ## Selection Criteria
 
