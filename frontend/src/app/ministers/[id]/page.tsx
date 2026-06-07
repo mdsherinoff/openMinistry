@@ -73,8 +73,7 @@ export default function MinisterPage() {
     );
   }
 
-  const isMinister =
-    minister.portfolio && !minister.portfolio.startsWith("MLA");
+  const isMinister = minister.portfolio?.toLowerCase().includes("minister");
 
   const cleanBio = minister.bio?.split("ALIASES:")[0].trim();
 
