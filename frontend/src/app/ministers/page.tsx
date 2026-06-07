@@ -102,7 +102,7 @@ export default function MinistersPage() {
         ${
           activeParty === party
             ? "bg-green-600 text-white border-green-600"
-            : "bg-white hover:border-green-300 border-gray-200"
+            : "bg-white hover:border-green-300 border-gray-200 text-gray-900"
         }`}
           >
             {party}
