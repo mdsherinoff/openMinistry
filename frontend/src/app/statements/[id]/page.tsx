@@ -204,12 +204,12 @@ export default function StatementDetailPage() {
         )}
 
         {/* Statement text */}
-        <blockquote
+        <p
           className="text-gray-900 text-lg leading-relaxed
           mb-5 font-medium border-l-4 border-green-500 pl-4"
         >
           {statement.text}
-        </blockquote>
+        </p>
 
         {/* Context */}
         {statement.context_text && (
