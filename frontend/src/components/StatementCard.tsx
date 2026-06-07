@@ -143,7 +143,14 @@ export default function StatementCard({ statement }: { statement: Statement }) {
           {statement.source.name && <span>{statement.source.name}</span>}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 text-xs ">
+          <Link
+            href={`/statements/${statement.id}`}
+            className="text-blue-500 hover:text-green-700 transition-colors"
+          >
+            Context
+          </Link>
+
           {statement.source.url && (
             <a
               href={statement.source.url}
@@ -154,13 +161,6 @@ export default function StatementCard({ statement }: { statement: Statement }) {
               Source <ExternalLink size={10} />
             </a>
           )}
-
-          <Link
-            href={`/statements/${statement.id}`}
-            className="text-blue-700 hover:text-green-700 transition-colors"
-          >
-            Context
-          </Link>
 
           <button
             onClick={handleShare}
