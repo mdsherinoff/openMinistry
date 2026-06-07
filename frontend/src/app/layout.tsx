@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import QueryProvider from "@/providers/QueryProvider";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,19 +38,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-50 min-h-screen`}>
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-VF0WRFHDZT"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-VF0WRFHDZT');
-          `}
-        </Script>
         <QueryProvider>
           <Navigation />
           <main
