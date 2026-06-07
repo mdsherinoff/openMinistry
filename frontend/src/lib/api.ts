@@ -109,6 +109,6 @@ export const api = {
   rejectMinedResult: (itemId: number, resultId: number) =>
     apiClient.post(`/api/queue/${itemId}/mined/${resultId}/reject`),
   addManualStatement: (itemId: number, data: Record<string, unknown>) =>
-    apiClient.post(`/api/queue/${itemId}/statements/add/`, data),
+    apiClient.post(`/api/queue/${itemId}/statements/add`, data),
   getMiningStatus: (id: number) => apiClient.get(`/api/queue/${id}/status`),
 };
