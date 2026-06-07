@@ -9,6 +9,7 @@ interface Statement {
   id: number;
   statement_text: string;
   statement_date: string | null;
+  context_text?: string | null;
   topic: string | null;
   confidence_score: number;
   minister: {
@@ -144,22 +145,48 @@ export default function StatementCard({ statement }: { statement: Statement }) {
         </div>
 
         <div className="flex items-center gap-4 text-xs ">
-          <Link
-            href={`/statements/${statement.id}`}
-            className="text-blue-500 hover:text-green-700 transition-colors"
-          >
-            Context
-          </Link>
+          <div className="relative group">
+            <Link
+              href={`/statements/${statement.id}`}
+              className="text-blue-500 hover:underline"
+            >
+              Context
+            </Link>
+
+            {statement.context_text && (
+              <div
+                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2
+                hidden group-hover:block
+                bg-white text-blue-500 text-xs rounded px-3 py-2
+                w-[340px] shadow-lg z-50"
+              >
+                {statement.context_text}
+              </div>
+            )}
+          </div>
 
           {statement.source.url && (
-            <a
-              href={statement.source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs text-green-700 hover:underline"
-            >
-              Source <ExternalLink size={10} />
-            </a>
+            <div className="relative group">
+              <a
+                href={statement.source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs text-green-700 hover:underline"
+              >
+                Source <ExternalLink size={10} />
+              </a>
+
+              {statement.source.title && (
+                <div
+                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2
+                  hidden group-hover:block
+                  bg-white text-green-700 text-xs rounded px-3 py-2
+                  w-[340px] shadow-lg z-50"
+                >
+                  {statement.source.title}
+                </div>
+              )}
+            </div>
           )}
 
           <button
