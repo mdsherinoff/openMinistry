@@ -214,7 +214,7 @@ function MinisterCard({ minister }: { minister: Minister }) {
           <p className="text-xs text-gray-600 mb-1">{displayPortfolio}</p>
         )}
         {minister.constituency && (
-          <p className="text-xs text-gray-400">{minister.constituency}</p>
+          <p className="text-xs text-gray-400">{minister.party}</p>
         )}
       </div>
     </Link>
