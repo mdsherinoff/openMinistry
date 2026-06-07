@@ -21,6 +21,8 @@ interface Minister {
 }
 
 export default function MinistersPage() {
+  const [activeParty, setActiveParty] = useState<string | null>(null);
+
   const [search, setSearch] = useState("");
 
   const { data, isLoading } = useQuery({
@@ -30,15 +32,38 @@ export default function MinistersPage() {
 
   const ministers: Minister[] = data?.data || [];
 
+  const partyCounts = ministers.reduce((acc: Record<string, number>, m) => {
+    const party = m.party?.trim() || "Unknown";
+    acc[party] = (acc[party] || 0) + 1;
+    return acc;
+  }, {});
+
+  const top5Parties = Object.entries(partyCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([party]) => party);
+
+  const allParties = Object.keys(partyCounts);
+
+  const otherParties = allParties.filter((p) => !top5Parties.includes(p));
+
   const filtered = ministers.filter((m) => {
-    if (!search) return true;
     const s = search.toLowerCase();
-    return (
+
+    const matchesSearch =
+      !search ||
       m.name.toLowerCase().includes(s) ||
       m.portfolio?.toLowerCase().includes(s) ||
       m.constituency?.toLowerCase().includes(s) ||
-      m.party?.toLowerCase().includes(s)
-    );
+      m.party?.toLowerCase().includes(s);
+
+    const matchesParty =
+      !activeParty ||
+      (activeParty === "Others"
+        ? m.party && otherParties.includes(m.party)
+        : m.party === activeParty);
+
+    return matchesSearch && matchesParty;
   });
 
   // Separate ministers from MLAs
@@ -65,6 +90,45 @@ export default function MinistersPage() {
         <p className="text-gray-500">
           16th Kerala Legislative Assembly — {ministers.length} members
         </p>
+      </div>
+
+      {/* Party Filters */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        {top5Parties.map((party) => (
+          <button
+            key={party}
+            onClick={() => setActiveParty(activeParty === party ? null : party)}
+            className={`p-3 rounded-lg border text-xs font-medium transition
+        ${
+          activeParty === party
+            ? "bg-green-600 text-white border-green-600"
+            : "bg-white hover:border-green-300 border-gray-200"
+        }`}
+          >
+            {party}
+            <div className="text-[10px] opacity-70">
+              {partyCounts[party]} members
+            </div>
+          </button>
+        ))}
+
+        <button
+          onClick={() =>
+            setActiveParty(activeParty === "Others" ? null : "Others")
+          }
+          className={`p-3 rounded-lg border text-xs font-medium transition
+      ${
+        activeParty === "Others"
+          ? "bg-green-600 text-white border-green-600"
+          : "bg-white hover:border-green-300 border-gray-200 text-gray-900"
+      }`}
+        >
+          Others
+          <div className="text-[10px] opacity-70">
+            {otherParties.reduce((sum, p) => sum + (partyCounts[p] || 0), 0)}{" "}
+            members
+          </div>
+        </button>
       </div>
 
       {/* Search */}
