@@ -152,10 +152,7 @@ export default function MinistersPage() {
 }
 
 function MinisterCard({ minister }: { minister: Minister }) {
-  const isMinister =
-    minister.portfolio &&
-    !minister.portfolio.startsWith("MLA") &&
-    minister.portfolio !== "";
+  const isMinister = minister.portfolio?.toLowerCase().includes("minister");
 
   const displayPortfolio = minister.portfolio
     ?.replace("MLA - ", "")
