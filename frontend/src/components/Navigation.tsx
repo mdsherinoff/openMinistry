@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { Search, Users, FileText, Shield } from "lucide-react";
+import { Search, Users, FileText, Shield, Info } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
-  { href: "/statements", label: "Statements", icon: FileText },
+  { href: "/", label: "Statements", icon: FileText },
   { href: "/ministers", label: "Ministers", icon: Users },
   { href: "/search", label: "Search", icon: Search },
+  { href: "/about", label: "About", icon: Info },
 ];
 
 export default function Navigation() {
@@ -53,7 +54,9 @@ export default function Navigation() {
                 className={cn(
                   "flex items-center gap-1.5 rounded-md px-3 py-2",
                   "text-sm font-medium transition-colors",
-                  pathname === href || pathname.startsWith(href + "/")
+                  pathname === href ||
+                    (href !== "/" && pathname.startsWith(href + "/")) ||
+                    (href === "/" && pathname.startsWith("/statements"))
                     ? "bg-green-50 text-green-700"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                 )}
