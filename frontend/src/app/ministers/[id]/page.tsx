@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
-import { getPartyFlagUrl } from "@/lib/partyFlags";
 import StatementCard from "@/components/StatementCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -77,7 +76,6 @@ export default function MinisterPage() {
   const isMinister = minister.portfolio?.toLowerCase().includes("minister");
 
   const cleanBio = minister.bio?.split("ALIASES:")[0].trim();
-  const partyFlagUrl = getPartyFlagUrl(minister.party);
 
   return (
     <div>
@@ -92,24 +90,8 @@ export default function MinisterPage() {
       </Link>
 
       {/* Profile header */}
-      <div className="relative overflow-hidden border border-gray-200 rounded-lg p-6 mb-6 bg-white">
-        {partyFlagUrl && (
-          <>
-            <Image
-              src={partyFlagUrl}
-              alt=""
-              fill
-              className="absolute inset-0 object-cover object-right opacity-30"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-r from-white from-[35%]
-              via-white/90 via-[70%] to-white/40"
-            />
-          </>
-        )}
-
-        <div className="relative flex items-start gap-4">
+      <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white">
+        <div className="flex items-start gap-4">
           {minister.image_url ? (
             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
               <Image
