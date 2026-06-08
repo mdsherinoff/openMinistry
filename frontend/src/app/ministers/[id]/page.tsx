@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
+import { getPartyFlagUrl } from "@/lib/partyFlags";
 import StatementCard from "@/components/StatementCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -74,8 +75,8 @@ export default function MinisterPage() {
   }
 
   const isMinister = minister.portfolio?.toLowerCase().includes("minister");
-
   const cleanBio = minister.bio?.split("ALIASES:")[0].trim();
+  const partyFlagUrl = getPartyFlagUrl(minister.party);
 
   return (
     <div>
