@@ -1,21 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const url = req.nextUrl.searchParams.get("url");
-  if (!url) return new NextResponse("Missing url", { status: 400 });
+  const raw = req.nextUrl.searchParams.get("url");
+  if (!raw) return new NextResponse("Missing url", { status: 400 });
 
-  const response = await fetch(url);
-  if (!response.ok)
-    return new NextResponse("Failed to fetch image", { status: 502 });
+  const url = decodeURIComponent(decodeURIComponent(raw));
 
-  const buffer = await response.arrayBuffer();
-  const contentType = response.headers.get("content-type") || "image/jpeg";
+  try {
+    const response = await fetch(url);
+    if (!response.ok)
+      return new NextResponse("Failed to fetch image", { status: 502 });
 
-  return new NextResponse(buffer, {
-    headers: {
-      "Content-Type": contentType,
-      "Access-Control-Allow-Origin": "*",
-      "Cache-Control": "public, max-age=86400",
-    },
-  });
+    const buffer = await response.arrayBuffer();
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+
+    return new NextResponse(buffer, {
+      headers: {
+        "Content-Type": contentType,
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=86400",
+      },
+    });
+  } catch {
+    return new NextResponse("Error fetching image", { status: 500 });
+  }
 }

@@ -416,7 +416,7 @@ export default function StatementDetailPage() {
               {statement.minister.image_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={`/api/image-proxy?url=${encodeURIComponent(statement.minister.image_url)}`}
+                  src={`/api/image-proxy?url=${encodeURIComponent(decodeURIComponent(statement.minister.image_url))}`}
                   alt={statement.minister.name}
                   style={{
                     width: "72px",
