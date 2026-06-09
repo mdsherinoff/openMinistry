@@ -14,8 +14,10 @@ import {
   CheckCircle,
   Copy,
   FileText,
+  Camera,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import html2canvas from "html2canvas";
 import { cn } from "@/lib/utils";
 
 interface StatementDetail {
@@ -46,6 +48,7 @@ export default function StatementDetailPage() {
   const params = useParams();
   const id = Number(params.id);
   const [copied, setCopied] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["statement-detail", id],
@@ -90,17 +93,52 @@ export default function StatementDetailPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (isLoading) {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-24" />
-          <div className="h-32 bg-gray-200 rounded" />
-          <div className="h-48 bg-gray-200 rounded" />
-        </div>
-      </div>
-    );
-  }
+  const handleScreenshot = async () => {
+    if (!shareCardRef.current || !statement) return;
+
+    const el = shareCardRef.current;
+
+    const labOverrides: Record<string, string> = {
+      "--color-green-50": "#f0fdf4",
+      "--color-green-100": "#dcfce7",
+      "--color-green-200": "#bbf7d0",
+      "--color-green-300": "#86efac",
+      "--color-green-600": "#16a34a",
+      "--color-green-700": "#15803d",
+      "--color-gray-200": "#e5e7eb",
+      "--color-gray-500": "#6b7280",
+      "--color-gray-900": "#111827",
+      "--color-white": "#ffffff",
+    };
+
+    const prev: Record<string, string> = {};
+    for (const [prop, val] of Object.entries(labOverrides)) {
+      prev[prop] = el.style.getPropertyValue(prop);
+      el.style.setProperty(prop, val);
+    }
+
+    try {
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+        windowWidth: el.offsetWidth,
+        windowHeight: el.offsetHeight,
+      });
+
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `statement-${statement.id}.png`;
+      link.click();
+    } finally {
+      for (const [prop, val] of Object.entries(prev)) {
+        if (val) el.style.setProperty(prop, val);
+        else el.style.removeProperty(prop);
+      }
+    }
+  };
 
   if (isError || !statement) {
     return (
@@ -134,6 +172,11 @@ export default function StatementDetailPage() {
       })
     : null;
   const relatedStatements = statement.related_statements ?? [];
+
+  const shareText =
+    statement.text.length > 220
+      ? statement.text.slice(0, 220) + "..."
+      : statement.text;
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -267,6 +310,16 @@ export default function StatementDetailPage() {
             </a>
           )}
           <button
+            onClick={handleScreenshot}
+            className="flex items-center gap-1.5 border border-gray-200
+              text-gray-600 px-3 py-2 rounded-lg text-sm
+              hover:bg-gray-50 transition-colors"
+          >
+            <Camera size={14} />
+            Screenshot
+          </button>
+
+          <button
             onClick={handleShare}
             className={cn(
               "flex items-center gap-1.5 px-3 py-2 rounded-lg",
@@ -319,6 +372,184 @@ export default function StatementDetailPage() {
           <span>More statements by {statement.minister.name}</span>
           <span>→</span>
         </Link>
+      </div>
+
+      {/* Screenshot Card */}
+      <div
+        className="fixed top-0 left-0 opacity-0 pointer-events-none"
+        aria-hidden
+      >
+        <div
+          ref={shareCardRef}
+          style={{
+            width: "1200px",
+            background: "#f0f7f2",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "48px",
+            fontFamily: "Inter, system-ui, sans-serif",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              background: "#e6f2eb",
+              borderRadius: "24px",
+              border: "1.5px solid #b6d9c3",
+              boxShadow: "0 8px 40px 0 rgba(30,80,50,0.13)",
+              padding: "52px 60px 44px 60px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0",
+            }}
+          >
+            {/* Minister info */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                marginBottom: "32px",
+              }}
+            >
+              {statement.minister.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`/api/image-proxy?url=${encodeURIComponent(statement.minister.image_url)}`}
+                  alt={statement.minister.name}
+                  style={{
+                    width: "72px",
+                    height: "72px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2.5px solid #4caf77",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: "72px",
+                    height: "72px",
+                    borderRadius: "50%",
+                    background: "#c6e6d2",
+                  }}
+                />
+              )}
+              <div>
+                <p
+                  style={{
+                    fontSize: "26px",
+                    fontWeight: 700,
+                    color: "#14532d",
+                    margin: 0,
+                  }}
+                >
+                  {statement.minister.name}
+                </p>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    color: "#4b7a5e",
+                    margin: "4px 0 0 0",
+                  }}
+                >
+                  {statement.minister.portfolio
+                    ?.split(",")[0]
+                    .replace("MLA - ", "") || ""}
+                  {statement.minister.constituency &&
+                    ` · ${statement.minister.constituency}`}
+                </p>
+              </div>
+            </div>
+
+            {/* Full statement — no truncation */}
+            <p
+              style={{
+                fontSize: "32px",
+                fontWeight: 700,
+                color: "#0f2d1a",
+                lineHeight: 1.45,
+                margin: "0 0 20px 0",
+              }}
+            >
+              {statement.text}
+            </p>
+
+            {/* Context */}
+            {statement.context_text && (
+              <p
+                style={{
+                  fontSize: "15px",
+                  color: "#5a7d68",
+                  fontStyle: "italic",
+                  lineHeight: 1.55,
+                  margin: "0 0 8px 0",
+                }}
+              >
+                {statement.context_text}
+              </p>
+            )}
+
+            {/* Source */}
+            {statement.source.publication && (
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#7aab90",
+                  margin: "0 0 20px 0",
+                }}
+              >
+                Source: {statement.source.publication}
+                {statement.source.title && ` · ${statement.source.title}`}
+              </p>
+            )}
+
+            {/* Footer */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+                borderTop: "1px solid #a8d4b8",
+                paddingTop: "24px",
+                marginTop: "12px",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 800,
+                    color: "#166534",
+                    margin: 0,
+                  }}
+                >
+                  Visit openministry.live
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#6aaa82",
+                    margin: "3px 0 0 0",
+                  }}
+                >
+                  Verified public statements
+                </p>
+              </div>
+              {statement.verified_at && (
+                <span style={{ fontSize: "18px", color: "#16A34A" }}>
+                  ✓ Verified{" "}
+                  {new Date(statement.verified_at).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
