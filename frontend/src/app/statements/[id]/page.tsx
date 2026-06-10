@@ -70,7 +70,7 @@ export default function StatementDetailPage() {
   useEffect(() => {
     if (!statement?.minister.image_url) return;
     fetch(
-      `/_next/image?url=${encodeURIComponent(decodeURIComponent(statement.minister.image_url))}&w=144&q=90`,
+      `/_next/image?url=${encodeURIComponent(decodeURIComponent(statement.minister.image_url))}&w=256&q=90`,
     )
       .then((res) => res.blob())
       .then(
