@@ -49,6 +49,7 @@ export default function StatementDetailPage() {
   const id = Number(params.id);
   const [copied, setCopied] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const [ministerImageSrc, setMinisterImageSrc] = useState<string | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["statement-detail", id],
@@ -65,6 +66,24 @@ export default function StatementDetailPage() {
       statement.topic || "Kerala Politics"
     } | openMinistry`;
   }, [statement]);
+
+  useEffect(() => {
+    if (!statement?.minister.image_url) return;
+    fetch(
+      `/_next/image?url=${encodeURIComponent(decodeURIComponent(statement.minister.image_url))}&w=144&q=90`,
+    )
+      .then((res) => res.blob())
+      .then(
+        (blob) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          }),
+      )
+      .then(setMinisterImageSrc)
+      .catch(() => setMinisterImageSrc(null));
+  }, [statement?.minister.image_url]);
 
   const shareUrl =
     typeof window !== "undefined"
@@ -413,10 +432,10 @@ export default function StatementDetailPage() {
                 marginBottom: "32px",
               }}
             >
-              {statement.minister.image_url ? (
+              {ministerImageSrc ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={`/_next/image?url=${encodeURIComponent(decodeURIComponent(statement.minister.image_url))}&w=144&q=90`}
+                  src={ministerImageSrc}
                   alt={statement.minister.name}
                   style={{
                     width: "72px",
