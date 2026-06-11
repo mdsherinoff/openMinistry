@@ -21,6 +21,21 @@ def list_ministers(
         query = query.filter(Minister.is_active == 1)
     return query.order_by(Minister.name).all()
 
+
+@router.get("/{minister_id}", response_model=MinisterResponse)
+def get_minister(
+    minister_id: int,
+    db: Session = Depends(get_db),
+):
+    """Public endpoint — get a single minister."""
+    minister = db.query(Minister).filter(
+        Minister.id == minister_id
+    ).first()
+    if not minister:
+        raise HTTPException(status_code=404, detail="Minister not found")
+    return minister
+
+
 @router.post("/", response_model=MinisterResponse)
 def create_minister(
     payload: MinisterCreate,
@@ -77,10 +92,8 @@ def get_minister_statements(
     status: str = "approved",
     limit: int = Query(default=20, le=100),
     offset: int = 0,
-    order: str = "desc",
     db: Session = Depends(get_db),
 ):
-    print(f"DEBUG order={order}")
     """Get all statements for a specific minister."""
     from database.models.statement import Statement
     from database.models.article import Article
@@ -98,11 +111,9 @@ def get_minister_statements(
     )
 
     total = query.count()
-    sort = (
-    Statement.statement_date.asc().nullslast()
-    if order == "asc"
-    else Statement.statement_date.desc().nullslast())
-    statements = query.order_by(sort).offset(offset).limit(limit).all()
+    statements = query.order_by(
+        Statement.statement_date.desc().nullslast()
+    ).offset(offset).limit(limit).all()
 
     results = []
     for stmt in statements:
@@ -117,10 +128,10 @@ def get_minister_statements(
 
         results.append({
             "id": stmt.id,
-            "text": stmt.statement_text,        # was "statement_text"
+            "statement_text": stmt.statement_text,
             "topic": stmt.topic,
             "confidence_score": stmt.confidence_score,
-            "date": stmt.statement_date.isoformat()  # was "statement_date"
+            "statement_date": stmt.statement_date.isoformat()
                 if stmt.statement_date else None,
             "status": stmt.status,
             "minister": {
@@ -195,16 +206,3 @@ def get_minister_stats(
             {"topic": t, "count": c} for t, c in topics
         ],
     }
-
-@router.get("/{minister_id}", response_model=MinisterResponse)
-def get_minister(
-    minister_id: int,
-    db: Session = Depends(get_db),
-):
-    """Public endpoint — get a single minister."""
-    minister = db.query(Minister).filter(
-        Minister.id == minister_id
-    ).first()
-    if not minister:
-        raise HTTPException(status_code=404, detail="Minister not found")
-    return minister

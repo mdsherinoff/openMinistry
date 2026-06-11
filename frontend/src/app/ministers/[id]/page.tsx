@@ -23,18 +23,15 @@ export default function MinisterPage() {
   const id = Number(params.id);
   const [offset, setOffset] = useState(0);
   const limit = 10;
-  const [sortOrder, setSortOrder] = useState<"latest" | "earliest">("latest");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["minister-statements", id, offset, sortOrder],
+    queryKey: ["minister-statements", id, offset],
     queryFn: () =>
       api.getMinisterStatements(id, {
         limit: String(limit),
         offset: String(offset),
-        order: sortOrder === "latest" ? "desc" : "asc",
       }),
     enabled: !!id,
-    staleTime: 0,
   });
 
   const { data: statsData } = useQuery({
@@ -194,11 +191,11 @@ export default function MinisterPage() {
       </div>
 
       {/* Statements */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+      <div>
+        <div className="flex items-center gap-2 mb-4">
           <FileText size={18} className="text-green-700" />
           <h2 className="font-semibold text-white-100">
-            Statement
+            Statements
             {total > 0 && (
               <span className="ml-2 text-sm font-normal text-gray-500">
                 ({total} verified)
@@ -206,79 +203,66 @@ export default function MinisterPage() {
             )}
           </h2>
         </div>
-        <select
-          value={sortOrder}
-          onChange={(e) => {
-            setSortOrder(e.target.value as "latest" | "earliest");
-            setOffset(0);
-          }}
-          className="text-sm px-3 py-1.5 rounded-lg border border-gray-200
-            text-gray-600 bg-white hover:border-green-400
-            focus:outline-none focus:border-green-700 transition-colors"
-        >
-          <option value="latest">Latest first</option>
-          <option value="earliest">Earliest first</option>
-        </select>
-      </div>
 
-      {statements.length === 0 ? (
-        <div
-          className="text-center py-16 border border-gray-200
+        {statements.length === 0 ? (
+          <div
+            className="text-center py-16 border border-gray-200
             rounded-lg bg-gray-50"
-        >
-          <FileText size={40} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-600 font-medium">
-            No verified statements yet
-          </p>
-          <p className="text-gray-500 text-sm mt-1">
-            Statements are being reviewed by moderators.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {statements.map((stmt: Record<string, unknown>) => (
-            <StatementCard
-              key={stmt.id as number}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              statement={stmt as any}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {total > limit && (
-        <div
-          className="flex items-center justify-between mt-8
-            pt-4 border-t border-gray-200"
-        >
-          <p className="text-sm text-gray-500">
-            Showing {offset + 1}–{Math.min(offset + limit, total)} of {total}
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setOffset(Math.max(0, offset - limit))}
-              disabled={offset === 0}
-              className="flex items-center gap-1 px-3 py-1.5
-                  text-sm border border-gray-200 rounded-lg
-                  disabled:opacity-50 hover:bg-gray-50"
-            >
-              <ChevronLeft size={14} />
-              Previous
-            </button>
-            <button
-              onClick={() => setOffset(offset + limit)}
-              disabled={offset + limit >= total}
-              className="flex items-center gap-1 px-3 py-1.5
-                  text-sm border border-gray-200 rounded-lg
-                  disabled:opacity-50 hover:bg-gray-50"
-            >
-              Next
-              <ChevronRight size={14} />
-            </button>
+          >
+            <FileText size={40} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-600 font-medium">
+              No verified statements yet
+            </p>
+            <p className="text-gray-500 text-sm mt-1">
+              Statements are being reviewed by moderators.
+            </p>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="space-y-4">
+            {statements.map((stmt: Record<string, unknown>) => (
+              <StatementCard
+                key={stmt.id as number}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                statement={stmt as any}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {total > limit && (
+          <div
+            className="flex items-center justify-between mt-8
+            pt-4 border-t border-gray-200"
+          >
+            <p className="text-sm text-gray-500">
+              Showing {offset + 1}–{Math.min(offset + limit, total)} of {total}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOffset(Math.max(0, offset - limit))}
+                disabled={offset === 0}
+                className="flex items-center gap-1 px-3 py-1.5
+                  text-sm border border-gray-200 rounded-lg
+                  disabled:opacity-50 hover:bg-gray-50"
+              >
+                <ChevronLeft size={14} />
+                Previous
+              </button>
+              <button
+                onClick={() => setOffset(offset + limit)}
+                disabled={offset + limit >= total}
+                className="flex items-center gap-1 px-3 py-1.5
+                  text-sm border border-gray-200 rounded-lg
+                  disabled:opacity-50 hover:bg-gray-50"
+              >
+                Next
+                <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

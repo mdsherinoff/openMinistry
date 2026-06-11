@@ -63,24 +63,39 @@ export default function VerifiedStatementsPage() {
 
       {/* Topic filters */}
       {topics.length > 0 && (
-        <div className="mb-6">
-          <select
-            value={selectedTopic}
-            onChange={(e) => {
-              setSelectedTopic(e.target.value);
+        <div className="flex flex-wrap gap-2 mb-6">
+          <button
+            onClick={() => {
+              setSelectedTopic("");
               setOffset(0);
             }}
-            className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 
-        text-gray-600 bg-white hover:border-green-400 
-        focus:outline-none focus:border-green-700 transition-colors"
+            className={`text-sm px-3 py-1.5 rounded-full border
+              transition-colors ${
+                !selectedTopic
+                  ? "bg-green-700 text-white border-green-700"
+                  : "border-gray-200 text-gray-600 hover:border-green-400"
+              }`}
           >
-            <option value="">All Topics</option>
-            {topics.map((t: { topic: string; count: number }) => (
-              <option key={t.topic} value={t.topic}>
-                {t.topic} ({t.count})
-              </option>
-            ))}
-          </select>
+            All
+          </button>
+          {topics.map((t: { topic: string; count: number }) => (
+            <button
+              key={t.topic}
+              onClick={() => {
+                setSelectedTopic(t.topic);
+                setOffset(0);
+              }}
+              className={`text-sm px-3 py-1.5 rounded-full border
+                transition-colors ${
+                  selectedTopic === t.topic
+                    ? "bg-green-700 text-white border-green-700"
+                    : "border-gray-200 text-gray-400 hover:border-green-400"
+                }`}
+            >
+              {t.topic}
+              <span className="ml-1 opacity-70">({t.count})</span>
+            </button>
+          ))}
         </div>
       )}
 
