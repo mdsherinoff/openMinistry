@@ -4,7 +4,15 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import QueryProvider from "@/providers/QueryProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
