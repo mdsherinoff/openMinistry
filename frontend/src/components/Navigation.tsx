@@ -133,6 +133,14 @@ export default function Navigation() {
               </Link>
             ))}
 
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md hover:bg-gray-100 text-gray-600"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+
             <Link
               href="/admin"
               onClick={() => setMobileOpen(false)}
