@@ -121,7 +121,7 @@ export default function SearchPage() {
                 <span
                   className={`text-xs px-1.5 py-0.5 rounded
                   ${
-                    s.type === "Minister"
+                    s.type === "MLA"
                       ? "bg-green-100 text-green-700"
                       : "bg-blue-100 text-blue-700"
                   }`}
