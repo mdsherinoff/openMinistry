@@ -155,7 +155,7 @@ def get_suggestions(
 
     for (name,) in ministers:
         suggestions.append({
-            "type": "minister",
+            "type": "MLA",
             "label": name,
             "value": name,
         })
@@ -170,7 +170,7 @@ def get_suggestions(
     for (topic,) in topics:
         if topic:
             suggestions.append({
-                "type": "topic",
+                "type": "Topic",
                 "label": topic,
                 "value": topic,
             })
