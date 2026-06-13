@@ -95,7 +95,7 @@ export default function StatementDetailPage() {
       try {
         await navigator.share({
           title: `Statement by ${statement?.minister?.name}`,
-          text: statement?.text,
+          text: shareText,
           url: shareUrl,
         });
       } catch {
@@ -158,6 +158,14 @@ export default function StatementDetailPage() {
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-16">
+        <p className="text-gray-600">Loading statement...</p>
+      </div>
+    );
+  }
 
   if (isError || !statement) {
     return (
