@@ -149,7 +149,7 @@ export default function StatementDetailPage() {
 
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
-      link.download = `${statement.minister}_${statement.id}.png`;
+      link.download = `statement_${statement.id}.png`;
       link.click();
     } finally {
       for (const [prop, val] of Object.entries(prev)) {

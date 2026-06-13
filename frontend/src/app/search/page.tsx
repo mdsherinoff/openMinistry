@@ -141,12 +141,12 @@ export default function SearchPage() {
           <p className="text-sm text-white-100 mb-3">Try searching for:</p>
           <div className="flex flex-wrap gap-2">
             {[
-              "health hospitals",
-              "education schools",
+              "hospital",
+              "school",
               "Satheesan",
               "Pinarayi",
-              "infrastructure roads",
-              "budget allocation",
+              "infrastructure",
+              "budget",
             ].map((example) => (
               <button
                 key={example}
