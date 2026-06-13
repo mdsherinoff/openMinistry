@@ -29,12 +29,17 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-
-  /* Better fallback font stack */
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-
   line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  transition-property: color, border-color, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
 }
 
 .line-clamp-2 {
@@ -51,4 +56,14 @@ body {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #15803d;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
 }
