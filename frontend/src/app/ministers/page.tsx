@@ -22,7 +22,6 @@ interface Minister {
 
 export default function MinistersPage() {
   const [activeParty, setActiveParty] = useState<string | null>(null);
-
   const [search, setSearch] = useState("");
 
   const { data, isLoading } = useQuery({
@@ -44,12 +43,10 @@ export default function MinistersPage() {
     .map(([party]) => party);
 
   const allParties = Object.keys(partyCounts);
-
   const otherParties = allParties.filter((p) => !top5Parties.includes(p));
 
   const filtered = ministers.filter((m) => {
     const s = search.toLowerCase();
-
     const matchesSearch =
       !search ||
       m.name.toLowerCase().includes(s) ||
@@ -83,11 +80,11 @@ export default function MinistersPage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <Users size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-white-100">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Ministers & MLAs
           </h1>
         </div>
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400">
           16th Kerala Legislative Assembly — {ministers.length} members
         </p>
       </div>
@@ -98,12 +95,11 @@ export default function MinistersPage() {
           <button
             key={party}
             onClick={() => setActiveParty(activeParty === party ? null : party)}
-            className={`p-3 rounded-lg border text-xs font-medium transition
-        ${
-          activeParty === party
-            ? "bg-green-600 text-white border-green-600"
-            : "bg-white hover:border-green-300 border-gray-200 text-gray-900"
-        }`}
+            className={`p-3 rounded-lg border text-xs font-medium transition-colors ${
+              activeParty === party
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-white dark:bg-gray-900 hover:border-green-300 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
+            }`}
           >
             {party}
             <div className="text-[10px] opacity-70">
@@ -116,12 +112,11 @@ export default function MinistersPage() {
           onClick={() =>
             setActiveParty(activeParty === "Others" ? null : "Others")
           }
-          className={`p-3 rounded-lg border text-xs font-medium transition
-      ${
-        activeParty === "Others"
-          ? "bg-green-600 text-white border-green-600"
-          : "bg-white hover:border-green-300 border-gray-200 text-gray-900"
-      }`}
+          className={`p-3 rounded-lg border text-xs font-medium transition-colors ${
+            activeParty === "Others"
+              ? "bg-green-600 text-white border-green-600"
+              : "bg-white dark:bg-gray-900 hover:border-green-300 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100"
+          }`}
         >
           Others
           <div className="text-[10px] opacity-70">
@@ -142,9 +137,10 @@ export default function MinistersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, portfolio, constituency..."
-          className="w-full pl-9 pr-4 py-2.5 border border-gray-300
-            rounded-lg text-sm focus:outline-none focus:border-green-500
-            focus:ring-1 focus:ring-green-500"
+          className="w-full pl-9 pr-4 py-2.5 border border-gray-300 dark:border-gray-700
+            rounded-lg text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
+            placeholder-gray-400 dark:placeholder-gray-500
+            focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
         />
       </div>
 
@@ -159,20 +155,14 @@ export default function MinistersPage() {
           {/* Cabinet Ministers */}
           {cabinetMinisters.length > 0 && (
             <div className="mb-8">
-              <h2
-                className="text-lg font-semibold text-white-10 mb-4
-                flex items-center gap-2"
-              >
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <Building size={18} className="text-green-700" />
                 Council of Ministers
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                   ({cabinetMinisters.length})
                 </span>
               </h2>
-              <div
-                className="grid grid-cols-1 md:grid-cols-2
-                lg:grid-cols-3 gap-4"
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {cabinetMinisters.map((minister) => (
                   <MinisterCard key={minister.id} minister={minister} />
                 ))}
@@ -183,20 +173,14 @@ export default function MinistersPage() {
           {/* MLAs */}
           {mlas.length > 0 && (
             <div>
-              <h2
-                className="text-lg font-semibold text-white-10 mb-4
-                flex items-center gap-2"
-              >
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <Users size={18} className="text-green-700" />
                 Members of Legislative Assembly
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
                   ({mlas.length})
                 </span>
               </h2>
-              <div
-                className="grid grid-cols-1 md:grid-cols-2
-                lg:grid-cols-3 gap-4"
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {mlas.map((minister) => (
                   <MinisterCard key={minister.id} minister={minister} />
                 ))}
@@ -205,7 +189,7 @@ export default function MinistersPage() {
           )}
 
           {filtered.length === 0 && (
-            <div className="text-center py-16 text-gray-500">
+            <div className="text-center py-16 text-gray-500 dark:text-gray-400">
               No members found matching &ldquo;{search}&rdquo;
             </div>
           )}
@@ -225,17 +209,10 @@ function MinisterCard({ minister }: { minister: Minister }) {
 
   return (
     <Link href={`/ministers/${minister.id}`}>
-      <div
-        className="border border-gray-200 rounded-lg p-4 bg-white
-        hover:border-green-300 hover:shadow-sm transition-all cursor-pointer"
-      >
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 hover:border-green-300 dark:hover:border-green-700 hover:shadow-sm transition-all cursor-pointer">
         <div className="flex items-start justify-between mb-2">
-          {/* Photo or initial */}
           {minister.image_url ? (
-            <div
-              className="w-10 h-10 rounded-full overflow-hidden
-      border border-gray-200 flex-shrink-0"
-            >
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0">
               <Image
                 src={minister.image_url}
                 alt={minister.name}
@@ -245,37 +222,35 @@ function MinisterCard({ minister }: { minister: Minister }) {
               />
             </div>
           ) : (
-            <div
-              className="w-10 h-10 rounded-full bg-green-100
-      flex items-center justify-center text-green-700
-      font-semibold text-sm flex-shrink-0"
-            >
+            <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-700 dark:text-green-400 font-semibold text-sm flex-shrink-0">
               {minister.name.charAt(0)}
             </div>
           )}
 
           {isMinister && (
-            <span
-              className="text-xs bg-green-50 text-green-700
-              px-2 py-0.5 rounded-full border border-green-200"
-            >
+            <span className="text-xs bg-green-50 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full border border-green-200 dark:border-green-800">
               Minister
             </span>
           )}
         </div>
-        <p className="font-semibold text-gray-900 text-sm mb-1">
+
+        <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-1">
           {minister.name}
         </p>
         {minister.name_malayalam && (
-          <p className="text-xs text-gray-500 mb-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
             {minister.name_malayalam}
           </p>
         )}
         {displayPortfolio && (
-          <p className="text-xs text-gray-600 mb-1">{displayPortfolio}</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+            {displayPortfolio}
+          </p>
         )}
         {minister.constituency && (
-          <p className="text-xs text-gray-400">{minister.party}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            {minister.party}
+          </p>
         )}
       </div>
     </Link>
