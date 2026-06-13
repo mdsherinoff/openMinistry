@@ -37,13 +37,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-50 min-h-screen`}>
+      <body
+        className={`${inter.className} bg-gray-50 min-h-screen flex flex-col`}
+      >
         <QueryProvider>
           <Navigation />
-          <main
-            className="mx-auto max-w-5xl px-4 py-8
-            sm:px-6 lg:px-8"
-          >
+          <main className="flex-1 mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
             {children}
           </main>
           <footer
