@@ -1,5 +1,3 @@
-"use client";
-
 import { ExternalLink, Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,14 +62,20 @@ export default function StatementCard({ statement }: { statement: Statement }) {
     : null;
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-5 bg-white dark:bg-gray-900 hover:border-green-300 dark:hover:border-green-700 transition-colors">
+    <div
+      className="border border-gray-200 rounded-lg p-5 bg-white
+      hover:border-green-300 transition-colors"
+    >
       {/* Minister */}
       <div className="flex items-start justify-between mb-3">
         <Link href={`/ministers/${statement.minister.id}`} className="group">
           <div className="flex items-center gap-2">
             {/* Avatar — photo or fallback */}
             {statement.minister.image_url ? (
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex-shrink-0">
+              <div
+                className="w-8 h-8 rounded-full overflow-hidden
+                border border-gray-200 flex-shrink-0"
+              >
                 <Image
                   src={statement.minister.image_url}
                   alt={statement.minister.name}
@@ -81,21 +85,24 @@ export default function StatementCard({ statement }: { statement: Statement }) {
                 />
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
-                <User
-                  size={14}
-                  className="text-green-700 dark:text-green-400"
-                />
+              <div
+                className="w-8 h-8 rounded-full bg-green-100
+                flex items-center justify-center flex-shrink-0"
+              >
+                <User size={14} className="text-green-700" />
               </div>
             )}
 
             {/* Name and portfolio */}
             <div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">
+              <p
+                className="font-semibold text-gray-900 text-sm
+                group-hover:text-green-700 transition-colors"
+              >
                 {statement.minister.name}
               </p>
               {statement.minister.portfolio && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500">
                   {statement.minister.portfolio
                     .split(",")[0]
                     .replace("MLA - ", "")}
@@ -106,7 +113,10 @@ export default function StatementCard({ statement }: { statement: Statement }) {
         </Link>
 
         {statement.topic && (
-          <span className="text-xs bg-green-50 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-1 rounded-full border border-green-200 dark:border-green-800">
+          <span
+            className="text-xs bg-green-50 text-green-700
+            px-2 py-1 rounded-full border border-green-200"
+          >
             {statement.topic}
           </span>
         )}
@@ -114,14 +124,17 @@ export default function StatementCard({ statement }: { statement: Statement }) {
 
       {/* Statement text */}
       <Link href={`/statements/${statement.id}`}>
-        <p className="text-gray-800 dark:text-gray-200 leading-relaxed mb-4 hover:text-green-700 dark:hover:text-green-400 transition-colors cursor-pointer">
+        <p
+          className="text-gray-800 leading-relaxed mb-4 hover:text-green-700
+    transition-colors cursor-pointer"
+        >
           {statement.statement_text}
         </p>
       </Link>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
-        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+        <div className="flex items-center gap-3 text-xs text-gray-500">
           {date && (
             <span className="flex items-center gap-1">
               <Calendar size={11} />
@@ -131,17 +144,22 @@ export default function StatementCard({ statement }: { statement: Statement }) {
           {statement.source.name && <span>{statement.source.name}</span>}
         </div>
 
-        <div className="flex items-center gap-4 text-xs">
+        <div className="flex items-center gap-4 text-xs ">
           <div className="relative group">
             <Link
               href={`/statements/${statement.id}`}
-              className="text-blue-500 dark:text-blue-400 hover:underline"
+              className="text-blue-500 hover:underline"
             >
               Context
             </Link>
 
             {statement.context_text && (
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-blue-500 dark:text-blue-400 text-xs rounded px-3 py-2 w-[340px] shadow-lg z-50">
+              <div
+                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2
+                hidden group-hover:block
+                bg-white text-blue-500 text-xs rounded px-3 py-2
+                w-[340px] shadow-lg z-50"
+              >
                 {statement.context_text}
               </div>
             )}
@@ -153,13 +171,18 @@ export default function StatementCard({ statement }: { statement: Statement }) {
                 href={statement.source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-green-700 dark:text-green-400 hover:underline"
+                className="flex items-center gap-1 text-xs text-green-700 hover:underline"
               >
                 Source <ExternalLink size={10} />
               </a>
 
               {statement.source.title && (
-                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-green-700 dark:text-green-400 text-xs rounded px-3 py-2 w-[340px] shadow-lg z-50">
+                <div
+                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2
+                  hidden group-hover:block
+                  bg-white text-green-700 text-xs rounded px-3 py-2
+                  w-[340px] shadow-lg z-50"
+                >
                   {statement.source.title}
                 </div>
               )}
@@ -170,9 +193,7 @@ export default function StatementCard({ statement }: { statement: Statement }) {
             onClick={handleShare}
             className={cn(
               "flex items-center gap-1 text-xs transition-colors",
-              copied
-                ? "text-green-700 dark:text-green-400"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200",
+              copied ? "text-green-700" : "text-gray-500 hover:text-gray-700",
             )}
           >
             {copied ? <Copy size={10} /> : <Share2 size={10} />}

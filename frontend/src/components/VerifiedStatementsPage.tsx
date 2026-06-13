@@ -49,13 +49,14 @@ export default function VerifiedStatementsPage() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
           <FileText size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-white-10">
             Verified Statements
           </h1>
         </div>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <p className="text-gray-500 text-sm">
           {total > 0
-            ? `${total} verified statement${total !== 1 ? "s" : ""}${selectedTopic ? ` tagged ${selectedTopic}` : ""}`
+            ? `${total} verified statement${total !== 1 ? "s" : ""}
+              ${selectedTopic ? `tagged ${selectedTopic}` : ""}`
             : "Human-verified statements from Kerala ministers and MLAs"}
         </p>
       </div>
@@ -69,10 +70,9 @@ export default function VerifiedStatementsPage() {
               setSelectedTopic(e.target.value);
               setOffset(0);
             }}
-            className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700
-              text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900
-              hover:border-green-400 focus:outline-none focus:border-green-700
-              transition-colors"
+            className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 
+        text-gray-600 bg-white hover:border-green-400 
+        focus:outline-none focus:border-green-700 transition-colors"
           >
             <option value="">All Topics</option>
             {topics.map((t: { topic: string; count: number }) => (
@@ -125,18 +125,20 @@ export default function VerifiedStatementsPage() {
 
       {/* Pagination */}
       {total > limit && !isLoading && !isError && (
-        <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Showing {offset + 1}–{Math.min(offset + limit, total)} of {total}
+        <div
+          className="flex items-center justify-between mt-8
+          pt-4 border-t border-gray-200"
+        >
+          <p className="text-sm text-gray-500">
+            Showing {offset + 1}-{Math.min(offset + limit, total)} of {total}
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setOffset(Math.max(0, offset - limit))}
               disabled={offset === 0}
               className="flex items-center gap-1 px-3 py-1.5 text-sm
-                border border-gray-200 dark:border-gray-700 rounded-lg
-                disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800
-                text-gray-700 dark:text-gray-300 transition-colors"
+                border border-gray-200 rounded-lg disabled:opacity-50
+                hover:bg-gray-50 transition-colors"
             >
               <ChevronLeft size={14} />
               Previous
@@ -145,9 +147,8 @@ export default function VerifiedStatementsPage() {
               onClick={() => setOffset(offset + limit)}
               disabled={offset + limit >= total}
               className="flex items-center gap-1 px-3 py-1.5 text-sm
-                border border-gray-200 dark:border-gray-700 rounded-lg
-                disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800
-                text-gray-700 dark:text-gray-300 transition-colors"
+                border border-gray-200 rounded-lg disabled:opacity-50
+                hover:bg-gray-50 transition-colors"
             >
               Next
               <ChevronRight size={14} />
