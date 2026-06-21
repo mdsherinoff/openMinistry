@@ -6,10 +6,17 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import {
-  ExternalLink, CheckCircle, XCircle,
-  Loader2, RefreshCw, Zap,
-  AlertCircle, FileText,
-  Trash2, ChevronLeft, ChevronRight,
+  ExternalLink,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  RefreshCw,
+  Zap,
+  AlertCircle,
+  FileText,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -53,6 +60,7 @@ export default function QueuePage() {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [pollingIds, setPollingIds] = useState<Set<number>>(new Set());
   const canLoadQueue = isLoaded && isLoggedIn && isModerator;
+  const pageInput = String(page + 1);
 
   useEffect(() => {
     if (isLoaded && !isLoggedIn) router.push("/login");
@@ -68,7 +76,11 @@ export default function QueuePage() {
   const stats = statsData?.data || {};
 
   // Queue items
-  const { data: queueData, isLoading, refetch } = useQuery({
+  const {
+    data: queueData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["queue", activeTab, page],
     queryFn: () =>
       api.getQueuePending({
@@ -229,9 +241,7 @@ export default function QueuePage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-white-100">
-            Article Queue
-          </h1>
+          <h1 className="text-xl font-bold text-white-100">Article Queue</h1>
           <p className="text-sm text-gray-400 mt-0.5">
             Review incoming articles and decide what gets mined
           </p>
@@ -333,7 +343,7 @@ export default function QueuePage() {
               "font-medium border-b-2 transition-colors -mb-px",
               activeTab === tab.key
                 ? "border-green-700 text-green-700"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                : "border-transparent text-gray-500 hover:text-gray-700",
             )}
           >
             {tab.label}
@@ -343,7 +353,7 @@ export default function QueuePage() {
                   "text-xs px-1.5 py-0.5 rounded-full",
                   activeTab === tab.key
                     ? "bg-green-100 text-green-700"
-                    : "bg-gray-100 text-gray-500"
+                    : "bg-gray-100 text-gray-500",
                 )}
               >
                 {tab.count}
@@ -388,12 +398,12 @@ export default function QueuePage() {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center py-16 border border-gray-200
-          rounded-lg bg-gray-50">
+        <div
+          className="text-center py-16 border border-gray-200
+          rounded-lg bg-gray-50"
+        >
           <FileText size={36} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-600 font-medium">
-            No items in this queue
-          </p>
+          <p className="text-gray-600 font-medium">No items in this queue</p>
           <p className="text-gray-500 text-sm mt-1">
             {activeTab === "pending_review"
               ? "URLs will appear here automatically every 30 minutes"
@@ -419,12 +429,10 @@ export default function QueuePage() {
                 if (shouldDelete) deleteMutation.mutate(item.id);
               }}
               isMineLoading={
-                mineMutation.isPending &&
-                mineMutation.variables === item.id
+                mineMutation.isPending && mineMutation.variables === item.id
               }
               isDeleteLoading={
-                deleteMutation.isPending &&
-                deleteMutation.variables === item.id
+                deleteMutation.isPending && deleteMutation.variables === item.id
               }
             />
           ))}
@@ -436,6 +444,48 @@ export default function QueuePage() {
           <p className="text-gray-500">
             Showing {firstItem}-{lastItem} of {total}
           </p>
+
+          <div className="flex items-center gap-2">
+            <span>Go to page</span>
+
+            <input
+              type="number"
+              min={1}
+              max={totalPages}
+              value={pageInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                const target = Number(val);
+
+                if (val === "") return;
+
+                if (!Number.isNaN(target)) {
+                  setPage(target - 1);
+                  setSelectedIds(new Set());
+                }
+              }}
+              className="w-20 border rounded px-2 py-1"
+            />
+
+            <button
+              onClick={() => {
+                const target = Number(pageInput.trim());
+                if (!pageInput.trim()) return;
+
+                if (
+                  Number.isInteger(target) &&
+                  target >= 1 &&
+                  target <= totalPages
+                ) {
+                  setPage(target - 1);
+                  setSelectedIds(new Set());
+                }
+              }}
+            >
+              Go
+            </button>
+          </div>
+
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
@@ -499,8 +549,7 @@ function QueueItemCard({
   isDeleteLoading,
 }: QueueItemCardProps) {
   const isPending = item.status === "pending_review";
-  const isMiningStatus =
-    item.status === "mining" || isMining;
+  const isMiningStatus = item.status === "mining" || isMining;
   const isMined = item.status === "mined";
   const isFailed = item.status === "mining_failed";
   const canDelete = item.status !== "mining" && !isMining;
