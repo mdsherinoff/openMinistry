@@ -155,7 +155,7 @@ export default function ReviewPage() {
     <div>
       {/* Back */}
       <Link
-        href="/admin/queue"
+        href={`/admin/queue${item?.status ? `?tab=${item.status}` : ""}`}
         className="flex items-center gap-1.5 text-sm text-white-100
           hover:text-gray-500 mb-4"
       >

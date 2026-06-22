@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition, Suspense } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ExternalLink,
   CheckCircle,
@@ -51,8 +51,10 @@ const STATUS_LABELS: Record<string, string> = {
   rejected: "Rejected",
 };
 
-export default function QueuePage() {
+function QueuePageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
   const { isLoaded, isLoggedIn, isModerator } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("pending_review");
@@ -67,6 +69,27 @@ export default function QueuePage() {
       router.replace("/login");
     }
   }, [isLoaded, isLoggedIn, router]);
+
+  // Read tab from URL params if provided
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (
+      tabParam &&
+      [
+        "pending_review",
+        "mining",
+        "mined",
+        "mining_failed",
+        "rejected",
+      ].includes(tabParam)
+    ) {
+      startTransition(() => {
+        setActiveTab(tabParam);
+        setPage(0);
+        setPageInput("1");
+      });
+    }
+  }, [searchParams, startTransition]);
 
   // Stats
   const { data: statsData, refetch: refetchStats } = useQuery({
@@ -563,6 +586,20 @@ export default function QueuePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function QueuePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="animate-spin text-gray-400" size={24} />
+        </div>
+      }
+    >
+      <QueuePageContent />
+    </Suspense>
   );
 }
 
