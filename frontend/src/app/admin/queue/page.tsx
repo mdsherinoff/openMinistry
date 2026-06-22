@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, Suspense } from "react";
+import { useState, useEffect, useTransition, Suspense, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
@@ -35,6 +35,14 @@ interface QueueItem {
 
 const PAGE_SIZE = 10;
 
+const VALID_TABS = [
+  "pending_review",
+  "mining",
+  "mined",
+  "mining_failed",
+  "rejected",
+] as const;
+
 const STATUS_COLORS: Record<string, string> = {
   pending_review: "bg-amber-50 text-amber-700 border-amber-200",
   mining: "bg-blue-50 text-blue-700 border-blue-200",
@@ -57,39 +65,39 @@ function QueuePageContent() {
   const [, startTransition] = useTransition();
   const { isLoaded, isLoggedIn, isModerator } = useAuth();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState("pending_review");
-  const [page, setPage] = useState(0);
-  const [pageInput, setPageInput] = useState("1");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [pollingIds, setPollingIds] = useState<Set<number>>(new Set());
   const canLoadQueue = isLoaded && isLoggedIn && isModerator;
+
+  // Derive tab and page from URL
+  const tabParam = searchParams.get("tab") ?? "pending_review";
+  const activeTab = VALID_TABS.includes(tabParam as (typeof VALID_TABS)[number])
+    ? tabParam
+    : "pending_review";
+
+  const pageParam = Number(searchParams.get("page") ?? "1");
+  const page =
+    Number.isInteger(pageParam) && pageParam >= 1 ? pageParam - 1 : 0;
+
+  // Helper: push tab and page into the URL
+  const navigate = useCallback(
+    (tab: string, p: number) => {
+      const params = new URLSearchParams();
+      params.set("tab", tab);
+      if (p > 0) params.set("page", String(p + 1)); // omit page=1 so that URLs are clean
+      startTransition(() => {
+        router.replace(`/admin/queue?${params.toString()}`, { scroll: false });
+      });
+      setSelectedIds(new Set());
+    },
+    [router, startTransition],
+  );
 
   useEffect(() => {
     if (isLoaded && !isLoggedIn) {
       router.replace("/login");
     }
   }, [isLoaded, isLoggedIn, router]);
-
-  // Read tab from URL params if provided
-  useEffect(() => {
-    const tabParam = searchParams.get("tab");
-    if (
-      tabParam &&
-      [
-        "pending_review",
-        "mining",
-        "mined",
-        "mining_failed",
-        "rejected",
-      ].includes(tabParam)
-    ) {
-      startTransition(() => {
-        setActiveTab(tabParam);
-        setPage(0);
-        setPageInput("1");
-      });
-    }
-  }, [searchParams, startTransition]);
 
   // Stats
   const { data: statsData, refetch: refetchStats } = useQuery({
@@ -116,13 +124,17 @@ function QueuePageContent() {
     enabled: canLoadQueue,
     refetchInterval: activeTab === "mining" ? 5000 : 30000,
   });
+
   const queuePayload = queueData?.data;
+
   const items: QueueItem[] = Array.isArray(queuePayload)
     ? queuePayload
     : queuePayload?.items || [];
-  const total = Array.isArray(queuePayload)
-    ? items.length
-    : queuePayload?.total || 0;
+
+  const total: number = Array.isArray(queuePayload)
+    ? queuePayload.length
+    : (queuePayload?.total ?? 0);
+
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const firstItem = total === 0 ? 0 : page * PAGE_SIZE + 1;
   const lastItem = Math.min(total, (page + 1) * PAGE_SIZE);
@@ -176,32 +188,27 @@ function QueuePageContent() {
     mutationFn: (id: number) => api.deleteQueueItem(id),
     onSuccess: () => {
       setSelectedIds(new Set());
+      // If we deleted the last item on a page > 0, go back one page
       if (items.length === 1 && page > 0) {
-        setPage((current) => {
-          const next = current - 1;
-          setPageInput(String(next + 1));
-          return next;
-        });
+        navigate(activeTab, page - 1);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["queue"] });
+        queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
       }
-      queryClient.invalidateQueries({ queryKey: ["queue"] });
-      queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
     },
   });
 
-  // Delete batch
   const deleteBatchMutation = useMutation({
     mutationFn: (ids: number[]) => api.deleteBatch(ids),
-    onSuccess: () => {
-      if (selectedIds.size >= items.length && page > 0) {
-        setPage((current) => {
-          const next = current - 1;
-          setPageInput(String(next + 1));
-          return next;
-        });
+    onSuccess: (_, ids) => {
+      // If we deleted everything on this page and it's not page 0, go back
+      if (ids.length >= items.length && page > 0) {
+        navigate(activeTab, page - 1);
+      } else {
+        setSelectedIds(new Set());
+        queryClient.invalidateQueries({ queryKey: ["queue"] });
+        queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
       }
-      setSelectedIds(new Set());
-      queryClient.invalidateQueries({ queryKey: ["queue"] });
-      queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
     },
   });
 
@@ -245,15 +252,7 @@ function QueuePageContent() {
     setSelectedIds(new Set(selectableItems.map((item) => item.id)));
   };
 
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="animate-spin text-gray-400" size={24} />
-      </div>
-    );
-  }
-
-  if (!isLoggedIn) {
+  if (!isLoaded || !isLoggedIn) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="animate-spin text-gray-400" size={24} />
@@ -280,11 +279,7 @@ function QueuePageContent() {
     },
     { key: "mining", label: "Mining", count: stats.mining || 0 },
     { key: "mined", label: "Mined", count: stats.mined || 0 },
-    {
-      key: "mining_failed",
-      label: "Failed",
-      count: stats.mining_failed || 0,
-    },
+    { key: "mining_failed", label: "Failed", count: stats.mining_failed || 0 },
     { key: "rejected", label: "Rejected", count: stats.rejected || 0 },
   ];
 
@@ -385,12 +380,7 @@ function QueuePageContent() {
         {tabs.map((tab) => (
           <button
             key={tab.key}
-            onClick={() => {
-              setActiveTab(tab.key);
-              setPage(0);
-              setPageInput("1");
-              setSelectedIds(new Set());
-            }}
+            onClick={() => navigate(tab.key, 0)}
             className={cn(
               "flex items-center gap-1.5 px-4 py-2 text-sm",
               "font-medium border-b-2 transition-colors -mb-px",
@@ -469,6 +459,8 @@ function QueuePageContent() {
             <QueueItemCard
               key={item.id}
               item={item}
+              activeTab={activeTab}
+              currentPage={page}
               isSelected={selectedIds.has(item.id)}
               isMining={pollingIds.has(item.id)}
               canSelect={item.status !== "mining"}
@@ -492,68 +484,23 @@ function QueuePageContent() {
         </div>
       )}
 
+      {/* Pagination */}
       {total > PAGE_SIZE && (
         <div className="flex items-center justify-between gap-3 mt-5 text-sm">
           <p className="text-gray-500">
             Showing {firstItem}-{lastItem} of {total}
           </p>
 
-          <div className="flex items-center gap-2">
-            <span>Go to page</span>
-
-            <input
-              type="number"
-              min={1}
-              max={totalPages}
-              value={pageInput}
-              onChange={(e) => setPageInput(e.target.value)}
-              onBlur={() => {
-                const target = Number(pageInput.trim());
-                if (
-                  pageInput.trim() &&
-                  Number.isInteger(target) &&
-                  target >= 1 &&
-                  target <= totalPages
-                ) {
-                  setPage(target - 1);
-                  setPageInput(String(target));
-                  setSelectedIds(new Set());
-                } else {
-                  setPageInput(String(page + 1));
-                }
-              }}
-              className="w-20 border rounded px-2 py-1"
-            />
-
-            <button
-              onClick={() => {
-                const target = Number(pageInput.trim());
-                if (
-                  pageInput.trim() &&
-                  Number.isInteger(target) &&
-                  target >= 1 &&
-                  target <= totalPages
-                ) {
-                  setPage(target - 1);
-                  setPageInput(String(target));
-                  setSelectedIds(new Set());
-                }
-              }}
-            >
-              Go
-            </button>
-          </div>
+          <GoToPageInput
+            key={page}
+            page={page}
+            totalPages={totalPages}
+            onNavigate={(target) => navigate(activeTab, target)}
+          />
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => {
-                setPage((current) => {
-                  const next = Math.max(0, current - 1);
-                  setPageInput(String(next + 1));
-                  return next;
-                });
-                setSelectedIds(new Set());
-              }}
+              onClick={() => navigate(activeTab, page - 1)}
               disabled={page === 0}
               className="flex items-center gap-1.5 border border-gray-200
                 text-gray-600 px-3 py-1.5 rounded-lg font-medium
@@ -566,14 +513,7 @@ function QueuePageContent() {
               Page {page + 1} of {totalPages}
             </span>
             <button
-              onClick={() => {
-                setPage((current) => {
-                  const next = Math.min(totalPages - 1, current + 1);
-                  setPageInput(String(next + 1));
-                  return next;
-                });
-                setSelectedIds(new Set());
-              }}
+              onClick={() => navigate(activeTab, page + 1)}
               disabled={page >= totalPages - 1}
               className="flex items-center gap-1.5 border border-gray-200
                 text-gray-600 px-3 py-1.5 rounded-lg font-medium
@@ -603,8 +543,51 @@ export default function QueuePage() {
   );
 }
 
+interface GoToPageInputProps {
+  page: number;
+  totalPages: number;
+  onNavigate: (targetPageIndex: number) => void;
+}
+
+function GoToPageInput({ page, totalPages, onNavigate }: GoToPageInputProps) {
+  const [pageInput, setPageInput] = useState(String(page + 1));
+
+  const commit = () => {
+    const target = Number(pageInput.trim());
+    if (Number.isInteger(target) && target >= 1 && target <= totalPages) {
+      onNavigate(target - 1);
+    } else {
+      // Invalid input go back to the current page.
+      setPageInput(String(page + 1));
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <span>Go to page</span>
+      <input
+        type="number"
+        min={1}
+        max={totalPages}
+        value={pageInput}
+        onChange={(e) => setPageInput(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") commit();
+        }}
+        className="w-20 border rounded px-2 py-1"
+      />
+      <button onClick={commit}>Go</button>
+    </div>
+  );
+}
+
+
+// Queue Item Card
 interface QueueItemCardProps {
   item: QueueItem;
+  activeTab: string;
+  currentPage: number;
   isSelected: boolean;
   isMining: boolean;
   canSelect: boolean;
@@ -618,6 +601,8 @@ interface QueueItemCardProps {
 
 function QueueItemCard({
   item,
+  activeTab,
+  currentPage,
   isSelected,
   isMining,
   canSelect,
@@ -633,6 +618,11 @@ function QueueItemCard({
   const isMined = item.status === "mined";
   const isFailed = item.status === "mining_failed";
   const canDelete = item.status !== "mining" && !isMining;
+
+  // Build review link so the back-button can restore the exact page
+  const reviewHref = `/admin/queue/${item.id}?from_tab=${activeTab}${
+    currentPage > 0 ? `&from_page=${currentPage + 1}` : ""
+  }`;
 
   return (
     <div
@@ -690,7 +680,6 @@ function QueueItemCard({
                 minute: "2-digit",
               })}
             </span>
-
             <a
               href={item.url}
               target="_blank"
@@ -734,7 +723,7 @@ function QueueItemCard({
 
             {isMined && (
               <Link
-                href={`/admin/queue/${item.id}`}
+                href={reviewHref}
                 className="flex items-center gap-1.5 bg-green-700
                   text-white px-3 py-1.5 rounded-lg text-xs
                   font-medium hover:bg-green-800"
@@ -747,10 +736,7 @@ function QueueItemCard({
 
             {isFailed && (
               <div className="flex items-center gap-2">
-                <span
-                  className="flex items-center gap-1 text-xs
-                  text-red-600"
-                >
+                <span className="flex items-center gap-1 text-xs text-red-600">
                   <AlertCircle size={12} />
                   {item.mining_error?.slice(0, 60) || "Mining failed"}
                 </span>
@@ -764,10 +750,7 @@ function QueueItemCard({
             )}
 
             {isMiningStatus && item.status === "mining" && (
-              <span
-                className="flex items-center gap-1.5 text-xs
-                text-blue-600"
-              >
+              <span className="flex items-center gap-1.5 text-xs text-blue-600">
                 <Loader2 size={12} className="animate-spin" />
                 Processing with LLM...
               </span>

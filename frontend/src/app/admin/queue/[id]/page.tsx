@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -91,9 +91,22 @@ const CONFIDENCE_COLORS: Record<number, string> = {
 export default function ReviewPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isLoaded, isLoggedIn, isModerator } = useAuth();
   const queryClient = useQueryClient();
   const itemId = Number(params.id);
+
+  // Read origin tab and page that the queue page embedded in the link
+  const fromTab = searchParams.get("from_tab") ?? "mined";
+  const fromPage = searchParams.get("from_page") ?? null;
+
+  // always restore the exact back tab
+  const backHref = (() => {
+    const p = new URLSearchParams();
+    p.set("tab", fromTab);
+    if (fromPage && Number(fromPage) > 1) p.set("page", fromPage);
+    return `/admin/queue?${p.toString()}`;
+  })();
 
   useEffect(() => {
     if (isLoaded && !isLoggedIn) router.replace("/login");
@@ -155,7 +168,7 @@ export default function ReviewPage() {
     <div>
       {/* Back */}
       <Link
-        href={`/admin/queue${item?.status ? `?tab=${item.status}` : ""}`}
+        href={backHref}
         className="flex items-center gap-1.5 text-sm text-white-100
           hover:text-gray-500 mb-4"
       >
