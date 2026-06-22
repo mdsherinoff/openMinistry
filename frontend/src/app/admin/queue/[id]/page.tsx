@@ -96,7 +96,7 @@ export default function ReviewPage() {
   const itemId = Number(params.id);
 
   useEffect(() => {
-    if (isLoaded && !isLoggedIn) router.push("/login");
+    if (isLoaded && !isLoggedIn) router.replace("/login");
   }, [isLoaded, isLoggedIn, router]);
 
   // Fetch queue item
@@ -270,6 +270,7 @@ function MinedResultCard({
 }: MinedResultCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showContext, setShowContext] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   // Edit state
   const [text, setText] = useState(
@@ -299,8 +300,15 @@ function MinedResultCard({
         minister_id: ministerId ? Number(ministerId) : null,
       }),
     onSuccess: () => {
+      setActionError("");
       setIsEditing(false);
       onUpdate();
+    },
+    onError: (error: unknown) => {
+      setActionError(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail || "Unable to save changes",
+      );
     },
   });
 
@@ -314,13 +322,31 @@ function MinedResultCard({
         topic: topic || null,
         context_text: result.context_description || null,
       }),
-    onSuccess: onUpdate,
+    onSuccess: () => {
+      setActionError("");
+      onUpdate();
+    },
+    onError: (error: unknown) => {
+      setActionError(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail || "Unable to approve statement",
+      );
+    },
   });
 
   // Reject
   const rejectMutation = useMutation({
     mutationFn: () => api.rejectMinedResult(itemId, result.id),
-    onSuccess: onUpdate,
+    onSuccess: () => {
+      setActionError("");
+      onUpdate();
+    },
+    onError: (error: unknown) => {
+      setActionError(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail || "Unable to reject statement",
+      );
+    },
   });
 
   const isLoading =
@@ -512,7 +538,10 @@ function MinedResultCard({
                 Save changes
               </button>
               <button
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  setIsEditing(false);
+                  setActionError("");
+                }}
                 className="px-3 py-1.5 rounded-lg text-sm
                   border border-gray-200 text-gray-600 hover:bg-gray-50"
               >
@@ -560,6 +589,15 @@ function MinedResultCard({
         </div>
       )}
 
+      {actionError && (
+        <div
+          className="mt-3 rounded-lg border border-red-200
+          bg-red-50 px-3 py-2 text-sm text-red-700"
+        >
+          {actionError}
+        </div>
+      )}
+
       {/* Approved statement link */}
       {isApproved && result.statement_id && (
         <div className="pt-3 border-t border-green-200">
@@ -596,6 +634,7 @@ function AddManualStatement({
   const [text, setText] = useState("");
   const [topic, setTopic] = useState("");
   const [context, setContext] = useState("");
+  const [formError, setFormError] = useState("");
 
   const addMutation = useMutation({
     mutationFn: () =>
@@ -606,12 +645,19 @@ function AddManualStatement({
         context_text: context || null,
       }),
     onSuccess: () => {
+      setFormError("");
       setIsOpen(false);
       setMinisterId("");
       setText("");
       setTopic("");
       setContext("");
       onAdd();
+    },
+    onError: (error: unknown) => {
+      setFormError(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail || "Unable to add statement",
+      );
     },
   });
 
@@ -713,9 +759,20 @@ function AddManualStatement({
           />
         </div>
 
+        {formError && (
+          <div
+            className="text-sm text-red-700 bg-red-50 rounded-lg
+            p-3 mb-2 border border-red-200"
+          >
+            {formError}
+          </div>
+        )}
         <div className="flex items-center gap-2 pt-1">
           <button
-            onClick={() => addMutation.mutate()}
+            onClick={() => {
+              setFormError("");
+              addMutation.mutate();
+            }}
             disabled={addMutation.isPending || !ministerId || !text.trim()}
             className="flex items-center gap-1.5 bg-green-700
               text-white px-4 py-2 rounded-lg text-sm font-medium
@@ -729,7 +786,10 @@ function AddManualStatement({
             Add & Publish
           </button>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              setFormError("");
+            }}
             className="px-4 py-2 rounded-lg text-sm border
               border-gray-200 text-gray-600 hover:bg-gray-50"
           >

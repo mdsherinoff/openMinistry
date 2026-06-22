@@ -57,13 +57,15 @@ export default function QueuePage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("pending_review");
   const [page, setPage] = useState(0);
+  const [pageInput, setPageInput] = useState("1");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [pollingIds, setPollingIds] = useState<Set<number>>(new Set());
   const canLoadQueue = isLoaded && isLoggedIn && isModerator;
-  const pageInput = String(page + 1);
 
   useEffect(() => {
-    if (isLoaded && !isLoggedIn) router.push("/login");
+    if (isLoaded && !isLoggedIn) {
+      router.replace("/login");
+    }
   }, [isLoaded, isLoggedIn, router]);
 
   // Stats
@@ -152,7 +154,11 @@ export default function QueuePage() {
     onSuccess: () => {
       setSelectedIds(new Set());
       if (items.length === 1 && page > 0) {
-        setPage((current) => current - 1);
+        setPage((current) => {
+          const next = current - 1;
+          setPageInput(String(next + 1));
+          return next;
+        });
       }
       queryClient.invalidateQueries({ queryKey: ["queue"] });
       queryClient.invalidateQueries({ queryKey: ["queue-stats"] });
@@ -164,7 +170,11 @@ export default function QueuePage() {
     mutationFn: (ids: number[]) => api.deleteBatch(ids),
     onSuccess: () => {
       if (selectedIds.size >= items.length && page > 0) {
-        setPage((current) => current - 1);
+        setPage((current) => {
+          const next = current - 1;
+          setPageInput(String(next + 1));
+          return next;
+        });
       }
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["queue"] });
@@ -212,10 +222,29 @@ export default function QueuePage() {
     setSelectedIds(new Set(selectableItems.map((item) => item.id)));
   };
 
-  if (!isLoaded || !isLoggedIn || !isModerator) {
+  if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="animate-spin text-gray-400" size={24} />
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="animate-spin text-gray-400" size={24} />
+      </div>
+    );
+  }
+
+  if (!isModerator) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-red-600 font-medium">Access denied.</p>
+        <p className="text-gray-500 text-sm mt-1">
+          You need moderator access to view the article queue.
+        </p>
       </div>
     );
   }
@@ -336,6 +365,7 @@ export default function QueuePage() {
             onClick={() => {
               setActiveTab(tab.key);
               setPage(0);
+              setPageInput("1");
               setSelectedIds(new Set());
             }}
             className={cn(
@@ -453,15 +483,20 @@ export default function QueuePage() {
               min={1}
               max={totalPages}
               value={pageInput}
-              onChange={(e) => {
-                const val = e.target.value;
-                const target = Number(val);
-
-                if (val === "") return;
-
-                if (!Number.isNaN(target)) {
+              onChange={(e) => setPageInput(e.target.value)}
+              onBlur={() => {
+                const target = Number(pageInput.trim());
+                if (
+                  pageInput.trim() &&
+                  Number.isInteger(target) &&
+                  target >= 1 &&
+                  target <= totalPages
+                ) {
                   setPage(target - 1);
+                  setPageInput(String(target));
                   setSelectedIds(new Set());
+                } else {
+                  setPageInput(String(page + 1));
                 }
               }}
               className="w-20 border rounded px-2 py-1"
@@ -470,14 +505,14 @@ export default function QueuePage() {
             <button
               onClick={() => {
                 const target = Number(pageInput.trim());
-                if (!pageInput.trim()) return;
-
                 if (
+                  pageInput.trim() &&
                   Number.isInteger(target) &&
                   target >= 1 &&
                   target <= totalPages
                 ) {
                   setPage(target - 1);
+                  setPageInput(String(target));
                   setSelectedIds(new Set());
                 }
               }}
@@ -489,7 +524,11 @@ export default function QueuePage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                setPage((current) => Math.max(0, current - 1));
+                setPage((current) => {
+                  const next = Math.max(0, current - 1);
+                  setPageInput(String(next + 1));
+                  return next;
+                });
                 setSelectedIds(new Set());
               }}
               disabled={page === 0}
@@ -505,7 +544,11 @@ export default function QueuePage() {
             </span>
             <button
               onClick={() => {
-                setPage((current) => Math.min(totalPages - 1, current + 1));
+                setPage((current) => {
+                  const next = Math.min(totalPages - 1, current + 1);
+                  setPageInput(String(next + 1));
+                  return next;
+                });
                 setSelectedIds(new Set());
               }}
               disabled={page >= totalPages - 1}

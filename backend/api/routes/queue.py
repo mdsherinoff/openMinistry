@@ -192,6 +192,10 @@ def approve_for_mining(
 
     # Update status
     item.status = "mining"
+    item.mining_started_at = datetime.now(timezone.utc)
+    item.mining_completed_at = None
+    item.mining_error = None
+    item.statements_found = 0
     item.reviewed_by = current_user.id
     item.reviewed_at = datetime.now(timezone.utc)
     db.commit()
@@ -226,6 +230,10 @@ def mine_batch(
             continue
 
         item.status = "mining"
+        item.mining_started_at = datetime.now(timezone.utc)
+        item.mining_completed_at = None
+        item.mining_error = None
+        item.statements_found = 0
         item.reviewed_by = current_user.id
         item.reviewed_at = datetime.now(timezone.utc)
         db.commit()
@@ -571,6 +579,12 @@ def add_manual_statement(
             reviewed_by=current_user.id,
             reviewed_at=datetime.now(timezone.utc),
         )
+        if queue_item.status in ("pending_review", "mining_failed"):
+            queue_item.status = "mined"
+            queue_item.reviewed_by = current_user.id
+            queue_item.reviewed_at = datetime.now(timezone.utc)
+            queue_item.mining_error = None
+            queue_item.mining_completed_at = datetime.now(timezone.utc)
         db.add(statement)
         db.commit()
         db.refresh(statement)

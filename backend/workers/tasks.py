@@ -146,6 +146,7 @@ def mine_queue_item(self, queue_item_id: int):
             if item:
                 item.status = "mining_failed"
                 item.mining_error = str(e)[:500]
+                item.mining_completed_at = datetime.now(timezone.utc)
                 db.commit()
         except Exception:
             pass
