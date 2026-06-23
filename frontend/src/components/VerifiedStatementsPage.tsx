@@ -58,11 +58,12 @@ export default function VerifiedStatementsPage() {
           collected from newspapers, reviewed by human moderators, and published
           in an open public archive.
         </p>
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-400 text-xs mt-1">
           {total > 0
-            ? `${total} verified statement${total !== 1 ? "s" : ""}
-              ${selectedTopic ? `tagged ${selectedTopic}` : ""}`
-            : "Human-verified statements from Kerala ministers and MLAs"}
+            ? `${total} verified statement${total !== 1 ? "s" : ""}${
+                selectedTopic ? ` tagged ${selectedTopic}` : ""
+              }`
+            : "No verified statements yet"}
         </p>
       </div>
 
