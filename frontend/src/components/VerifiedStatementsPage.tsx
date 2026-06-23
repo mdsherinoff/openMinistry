@@ -53,7 +53,7 @@ export default function VerifiedStatementsPage() {
             Verified Statements
           </h1>
         </div>
-        <p className="text-gray-500 text-sm max-w-3xl">
+        <p className="text-white-100 text-base max-w-3xl">
           Browse verified statements made by Kerala ministers and MLAs,
           collected from newspapers, reviewed by human moderators, and published
           in an open public archive.
