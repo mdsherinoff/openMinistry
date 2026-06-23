@@ -53,6 +53,11 @@ export default function VerifiedStatementsPage() {
             Verified Statements
           </h1>
         </div>
+        <p className="text-gray-500 text-sm max-w-3xl">
+          Browse verified statements made by Kerala ministers and MLAs,
+          collected from newspapers, reviewed by human moderators, and published
+          in an open public archive.
+        </p>
         <p className="text-gray-500 text-sm">
           {total > 0
             ? `${total} verified statement${total !== 1 ? "s" : ""}
