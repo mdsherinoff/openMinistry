@@ -54,7 +54,7 @@ export default function Navigation() {
       : pathname.startsWith(href);
 
   return (
-    <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-gray-900/80">
+    <nav className="border-b border-border bg-surface/80 sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-surface/70">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between gap-2">
           {/* Logo */}
@@ -63,11 +63,9 @@ export default function Navigation() {
             className="flex items-center whitespace-nowrap"
             onClick={() => setMobileOpen(false)}
           >
-            <span className="text-lg font-bold text-green-700">open</span>
-            <span className="text-lg font-bold text-gray-900 dark:text-white">
-              Ministry
-            </span>
-            <span className="ml-2 text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded border border-green-200 font-medium">
+            <span className="text-lg font-bold text-accent">open</span>
+            <span className="text-lg font-bold text-foreground">Ministry</span>
+            <span className="ml-2 text-xs bg-accent-soft text-accent-soft-fg px-1.5 py-0.5 rounded border border-accent-border font-medium">
               Kerala
             </span>
           </Link>
@@ -81,8 +79,8 @@ export default function Navigation() {
                 className={cn(
                   "flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive(href)
-                    ? "bg-green-50 text-green-700"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100",
+                    ? "bg-accent-soft text-accent-soft-fg"
+                    : "text-muted hover:bg-surface-2 hover:text-foreground",
                 )}
               >
                 <Icon size={14} className="shrink-0" />
@@ -103,7 +101,7 @@ export default function Navigation() {
                   ? "Switch to light mode"
                   : "Switch to dark mode"
               }
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
+              className="p-2 rounded-md hover:bg-surface-2 text-muted hover:text-foreground"
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -114,8 +112,8 @@ export default function Navigation() {
               className={cn(
                 "relative flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ml-1",
                 pathname.startsWith("/admin") || pathname === "/login"
-                  ? "bg-green-700 text-white"
-                  : "border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800",
+                  ? "bg-accent text-accent-contrast"
+                  : "border border-border text-muted hover:bg-surface-2 hover:text-foreground",
               )}
             >
               <Shield size={14} className="shrink-0" />
@@ -131,7 +129,7 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="sm:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
+            className="sm:hidden p-2 rounded-md hover:bg-surface-2 text-muted hover:text-foreground"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -141,7 +139,7 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="sm:hidden mt-2 pb-3 border-t border-gray-100 dark:border-gray-800 pt-2 space-y-1">
+          <div className="sm:hidden mt-2 pb-3 border-t border-border pt-2 space-y-1">
             {navLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
@@ -150,8 +148,8 @@ export default function Navigation() {
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
                   isActive(href)
-                    ? "bg-green-50 text-green-700"
-                    : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800",
+                    ? "bg-accent-soft text-accent-soft-fg"
+                    : "text-muted hover:bg-surface-2 hover:text-foreground",
                 )}
               >
                 <Icon size={16} />
@@ -162,11 +160,11 @@ export default function Navigation() {
             {/* Dark/Light Mode for mobile */}
             <button
               onClick={toggleTheme}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted hover:bg-surface-2 hover:text-foreground"
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
               <span>Appearance</span>
-              <span className="ml-auto text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 dark:text-gray-500 rounded-full px-2 py-0.5 font-normal">
+              <span className="ml-auto text-xs text-muted-2 bg-surface-2 rounded-full px-2 py-0.5 font-normal">
                 {theme === "dark" ? "Dark" : "Light"}
               </span>
             </button>
@@ -177,8 +175,8 @@ export default function Navigation() {
               className={cn(
                 "relative flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
                 pathname.startsWith("/admin") || pathname === "/login"
-                  ? "bg-green-700 text-white"
-                  : "border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800",
+                  ? "bg-accent text-accent-contrast"
+                  : "border border-border text-muted hover:bg-surface-2 hover:text-foreground",
               )}
             >
               <Shield size={16} />

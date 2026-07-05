@@ -19,18 +19,20 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className="text-center py-16 border border-gray-200
-      rounded-lg bg-gray-50"
+      className="text-center py-16 border border-dashed border-border
+      rounded-xl bg-surface-2/50"
     >
-      <Icon size={40} className="text-gray-300 mx-auto mb-3" />
-      <p className="text-gray-700 font-medium mb-1">{title}</p>
-      <p className="text-gray-500 text-sm mb-4">{description}</p>
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-surface-2">
+        <Icon size={26} className="text-muted-2" />
+      </div>
+      <p className="text-foreground font-medium mb-1">{title}</p>
+      <p className="text-muted text-sm mb-4">{description}</p>
       {action && (
         <Link
           href={action.href}
-          className="inline-flex items-center gap-1.5 text-sm
-            bg-green-700 text-white px-4 py-2 rounded-lg
-            hover:bg-green-800 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm font-medium
+            bg-accent text-accent-contrast px-4 py-2 rounded-lg
+            hover:bg-accent-hover transition-colors"
         >
           {action.label}
         </Link>

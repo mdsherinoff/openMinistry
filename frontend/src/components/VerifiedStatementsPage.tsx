@@ -46,26 +46,26 @@ export default function VerifiedStatementsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <FileText size={20} className="text-green-700" />
-          <h1 className="text-2xl font-bold text-white-10">
-            Verified Statements
-          </h1>
-        </div>
-        <p className="text-white-100 text-base max-w-3xl">
-          Browse verified statements made by Kerala ministers and MLAs,
-          collected from newspapers, reviewed by human moderators, and published
-          in an open public archive.
+      <header
+        className="mb-6 overflow-hidden rounded-2xl border border-border
+        bg-surface p-6 sm:p-8"
+      >
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+          Verified Statements
+        </h1>
+        <p className="text-muted text-base leading-relaxed max-w-2xl mt-2">
+          Statements made by Kerala ministers and MLAs, collected from
+          newspapers, reviewed by human moderators, and published in an open
+          public archive.
         </p>
-        <p className="text-gray-400 text-xs mt-1">
+        <p className="text-muted-2 text-xs mt-3">
           {total > 0
-            ? `${total} verified statement${total !== 1 ? "s" : ""}${
-                selectedTopic ? ` tagged ${selectedTopic}` : ""
-              }`
+            ? `${total.toLocaleString("en-IN")} verified statement${
+                total !== 1 ? "s" : ""
+              }${selectedTopic ? ` tagged ${selectedTopic}` : ""}`
             : "No verified statements yet"}
         </p>
-      </div>
+      </header>
 
       {/* Topic filters */}
       {topics.length > 0 && (
@@ -76,9 +76,10 @@ export default function VerifiedStatementsPage() {
               setSelectedTopic(e.target.value);
               setOffset(0);
             }}
-            className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 
-        text-gray-600 bg-white hover:border-green-400 
-        focus:outline-none focus:border-green-700 transition-colors"
+            className="text-sm px-3 py-2 rounded-lg border border-border
+        text-foreground bg-surface hover:border-accent-border
+        focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent
+        transition-colors cursor-pointer"
           >
             <option value="">All Topics</option>
             {topics.map((t: { topic: string; count: number }) => (
@@ -133,18 +134,19 @@ export default function VerifiedStatementsPage() {
       {total > limit && !isLoading && !isError && (
         <div
           className="flex items-center justify-between mt-8
-          pt-4 border-t border-gray-200"
+          pt-4 border-t border-border"
         >
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             Showing {offset + 1}-{Math.min(offset + limit, total)} of {total}
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setOffset(Math.max(0, offset - limit))}
               disabled={offset === 0}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm
-                border border-gray-200 rounded-lg disabled:opacity-50
-                hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium
+                text-foreground border border-border rounded-lg disabled:opacity-40
+                disabled:cursor-not-allowed hover:bg-surface-2 hover:border-accent-border
+                transition-colors"
             >
               <ChevronLeft size={14} />
               Previous
@@ -152,9 +154,10 @@ export default function VerifiedStatementsPage() {
             <button
               onClick={() => setOffset(offset + limit)}
               disabled={offset + limit >= total}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm
-                border border-gray-200 rounded-lg disabled:opacity-50
-                hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium
+                text-foreground border border-border rounded-lg disabled:opacity-40
+                disabled:cursor-not-allowed hover:bg-surface-2 hover:border-accent-border
+                transition-colors"
             >
               Next
               <ChevronRight size={14} />

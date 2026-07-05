@@ -1,18 +1,74 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Design tokens — semantic colors that flip between light/dark.
+   Use the Tailwind utilities generated from these (bg-surface,
+   text-muted, border-border, text-accent, etc.) instead of raw
+   gray or white so every page adapts to the theme automatically.
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f8f6;
+  --surface: #ffffff;
+  --surface-2: #eef2f0;
+  --surface-hover: #f3f7f4;
+  --border: #e3e8e5;
+  --border-strong: #d3dbd6;
+  --foreground: #101613;
+  --muted: #56655d;
+  --muted-2: #8a978f;
+  --accent: #15803d; /* green-700 */
+  --accent-hover: #166534; /* green-800 */
+  --accent-contrast: #ffffff;
+  --accent-soft: #e7f3ec;
+  --accent-soft-fg: #15803d;
+  --accent-border: #bfe0cb;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --danger-border: #fecaca;
+  --ring: #15803d;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #0a0f0c;
+  --surface: #141a17;
+  --surface-2: #1b2320;
+  --surface-hover: #1e2723;
+  --border: #26302b;
+  --border-strong: #35423b;
+  --foreground: #e8ece9;
+  --muted: #9aa8a0;
+  --muted-2: #6b7a72;
+  --accent: #35d07f; /* brighter green reads better on dark */
+  --accent-hover: #4ade80;
+  --accent-contrast: #07110b;
+  --accent-soft: #15271d;
+  --accent-soft-fg: #4ade80;
+  --accent-border: #24402f;
+  --danger: #f87171;
+  --danger-soft: #2a1516;
+  --danger-border: #47262a;
+  --ring: #35d07f;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-fg: var(--accent-soft-fg);
+  --color-accent-border: var(--accent-border);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-border: var(--danger-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -29,15 +85,15 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   line-height: 1.5;
 }
 
 *,
 *::before,
 *::after {
-  transition-property: color, border-color, fill, stroke;
+  transition-property: color, background-color, border-color, fill, stroke;
   transition-duration: 150ms;
   transition-timing-function: ease;
 }
@@ -59,7 +115,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid #15803d;
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
   border-radius: 4px;
 }

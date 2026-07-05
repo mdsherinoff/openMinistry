@@ -52,10 +52,8 @@ export default function RootLayout({
       <body
         className={`
           ${inter.className}
-          bg-gray-50
-          dark:bg-gray-950
-          text-gray-900
-          dark:text-gray-100
+          bg-background
+          text-foreground
           min-h-dvh
           flex
           flex-col
@@ -87,15 +85,15 @@ export default function RootLayout({
             </main>
 
             {/* Footer */}
-            <footer className="mt-12 sm:mt-16 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-8">
+            <footer className="mt-12 sm:mt-16 border-t border-border bg-surface py-8">
               <div className="mx-auto max-w-5xl px-3 sm:px-4 lg:px-8">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 text-xs text-muted">
                   {/* Brand */}
                   <div className="text-center sm:text-left">
-                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                    <p className="font-semibold text-foreground text-sm">
                       openMinistry
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    <p className="text-xs text-muted mt-0.5">
                       Promoting transparency in Kerala governance
                     </p>
                   </div>
@@ -106,7 +104,7 @@ export default function RootLayout({
                       href="https://openministry.live/docs"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-green-700 transition-colors"
+                      className="hover:text-accent transition-colors"
                     >
                       API Docs
                     </a>
@@ -114,11 +112,11 @@ export default function RootLayout({
                       href="https://github.com/mdsherinoff/openMinistry"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-green-700 transition-colors"
+                      className="hover:text-accent transition-colors"
                     >
                       GitHub
                     </a>
-                    <span className="text-gray-400">
+                    <span className="text-muted-2">
                       AGPL-3.0 © {new Date().getFullYear()} openMinistry
                     </span>
                   </div>
