@@ -22,3 +22,7 @@ class StatementUpdate(BaseModel):
     statement_summary: Optional[str] = None
     topic: Optional[str] = None
     status: Optional[str] = None
+
+
+class StatementFlagRequest(BaseModel):
+    reason: Optional[str] = None

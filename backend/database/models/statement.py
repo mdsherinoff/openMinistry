@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Float
+from sqlalchemy import (
+    Column, Integer, String, Text, DateTime, ForeignKey, Float, Boolean
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database.config import Base
@@ -22,6 +24,12 @@ class Statement(Base):
     statement_date = Column(DateTime(timezone=True), nullable=True)
     status = Column(String(50), default="pending")
     # pending | approved | rejected | needs_review
+    # Public flagging — a flagged statement stays published but is
+    # surfaced to moderators for re-evaluation.
+    flagged = Column(Boolean, default=False, nullable=False)
+    flag_count = Column(Integer, default=0, nullable=False)
+    flag_reason = Column(Text, nullable=True)  # most recent reason given
+    flagged_at = Column(DateTime(timezone=True), nullable=True)
     reviewed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     reviewed_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

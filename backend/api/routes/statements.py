@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -9,7 +11,11 @@ from database.models.statement import Statement
 from database.models.minister import Minister
 from database.models.user import User
 from api.auth import require_moderator
-from api.schemas.statement import StatementResponse, StatementUpdate
+from api.schemas.statement import (
+    StatementResponse,
+    StatementUpdate,
+    StatementFlagRequest,
+)
 
 router = APIRouter(prefix="/api/statements", tags=["statements"])
 limiter = Limiter(key_func=get_remote_address)
@@ -130,6 +136,49 @@ def tag_all_statements(
     from nlp.tagging_service import tag_pending_statements
     result = tag_pending_statements(db)
     return result
+
+@router.post("/{statement_id}/flag")
+@limiter.limit("10/hour")
+def flag_statement(
+    request: Request,
+    statement_id: int,
+    payload: StatementFlagRequest | None = None,
+    db: Session = Depends(get_db),
+):
+    """
+    Public endpoint — flag a published statement for moderator
+    re-evaluation. The statement stays visible; it is only marked so a
+    moderator can review it. Rate limited to curb abuse.
+    """
+    statement = db.query(Statement).filter(
+        Statement.id == statement_id
+    ).first()
+    if not statement:
+        raise HTTPException(status_code=404, detail="Statement not found")
+
+    # Only published statements can be flagged by the public.
+    if statement.status != "approved":
+        raise HTTPException(
+            status_code=400,
+            detail="Only published statements can be flagged",
+        )
+
+    reason = (payload.reason if payload else None) or None
+    if reason:
+        reason = reason.strip()[:300] or None
+
+    statement.flagged = True
+    statement.flag_count = (statement.flag_count or 0) + 1
+    statement.flagged_at = datetime.now(timezone.utc)
+    if reason:
+        statement.flag_reason = reason
+    db.commit()
+
+    return {
+        "message": "Statement flagged for review",
+        "statement_id": statement_id,
+    }
+
 
 @router.get("/pending", response_model=list[StatementResponse])
 def list_pending(

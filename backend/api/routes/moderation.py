@@ -47,6 +47,11 @@ def get_statement_with_context(
         "statement_date": statement.statement_date,
         "status": statement.status,
         "created_at": statement.created_at,
+        # Public flagging
+        "flagged": statement.flagged,
+        "flag_count": statement.flag_count,
+        "flag_reason": statement.flag_reason,
+        "flagged_at": statement.flagged_at,
         # Minister
         "minister_id": minister.id if minister else None,
         "minister_name": minister.name if minister else "Unknown",
@@ -99,6 +104,73 @@ def get_review_queue(
             get_statement_with_context(s, db) for s in statements
         ],
     }
+
+
+@router.get("/flagged")
+def get_flagged_statements(
+    limit: int = Query(default=20, le=100),
+    offset: int = 0,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_moderator),
+):
+    """
+    Get published statements that the public flagged for re-evaluation.
+    Most-flagged and most-recently-flagged first.
+    """
+    query = db.query(Statement).filter(
+        Statement.status == "approved",
+        Statement.flagged.is_(True),
+    )
+
+    total = query.count()
+    statements = query.order_by(
+        Statement.flag_count.desc(),
+        Statement.flagged_at.desc(),
+    ).offset(offset).limit(limit).all()
+
+    return {
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "statements": [
+            get_statement_with_context(s, db) for s in statements
+        ],
+    }
+
+
+@router.post("/{statement_id}/dismiss-flag")
+def dismiss_flag(
+    statement_id: int,
+    notes: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_moderator),
+):
+    """
+    Dismiss the flag(s) on a statement — the moderator reviewed it and
+    decided to keep it published. Clears the flag markers.
+    """
+    statement = db.query(Statement).filter(
+        Statement.id == statement_id
+    ).first()
+    if not statement:
+        raise HTTPException(status_code=404, detail="Statement not found")
+
+    statement.flagged = False
+    statement.flag_count = 0
+    statement.flag_reason = None
+    statement.flagged_at = None
+
+    log = ModerationLog(
+        statement_id=statement_id,
+        reviewer_id=current_user.id,
+        action="flag_dismissed",
+        notes=notes,
+        timestamp=datetime.now(timezone.utc),
+    )
+    db.add(log)
+    db.commit()
+
+    return {"message": "Flag dismissed", "statement_id": statement_id}
 
 
 @router.post("/{statement_id}/review")
@@ -212,6 +284,11 @@ def reject_statement(
     statement.status = "rejected"
     statement.reviewed_by = current_user.id
     statement.reviewed_at = datetime.now(timezone.utc)
+    # Clear any flags — a rejected statement no longer needs re-evaluation.
+    statement.flagged = False
+    statement.flag_count = 0
+    statement.flag_reason = None
+    statement.flagged_at = None
 
     log = ModerationLog(
         statement_id=statement_id,
@@ -285,6 +362,10 @@ def get_moderation_stats(
     needs_review = db.query(Statement).filter(
         Statement.status == "needs_review"
     ).count()
+    flagged = db.query(Statement).filter(
+        Statement.status == "approved",
+        Statement.flagged.is_(True),
+    ).count()
 
     # Top ministers by pending statements
     from sqlalchemy import func
@@ -313,6 +394,7 @@ def get_moderation_stats(
             "approved": approved,
             "rejected": rejected,
             "needs_review": needs_review,
+            "flagged": flagged,
             "approval_rate": round(
                 approved / total * 100, 1
             ) if total > 0 else 0,
