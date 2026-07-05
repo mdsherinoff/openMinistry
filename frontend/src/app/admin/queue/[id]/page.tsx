@@ -81,11 +81,11 @@ const CONFIDENCE_LABELS: Record<number, string> = {
 };
 
 const CONFIDENCE_COLORS: Record<number, string> = {
-  1: "text-red-600 bg-red-50",
-  2: "text-orange-600 bg-orange-50",
-  3: "text-amber-600 bg-amber-50",
-  4: "text-blue-600 bg-blue-50",
-  5: "text-green-600 bg-green-50",
+  1: "text-red-600 dark:text-red-400 bg-red-500/10",
+  2: "text-orange-600 dark:text-orange-400 bg-orange-500/10",
+  3: "text-amber-600 dark:text-amber-400 bg-amber-500/10",
+  4: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
+  5: "text-accent bg-accent-soft",
 };
 
 export default function ReviewPage() {
@@ -142,7 +142,7 @@ export default function ReviewPage() {
   if (!isLoaded || !isLoggedIn || !isModerator) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="animate-spin text-gray-400" size={24} />
+        <Loader2 className="animate-spin text-muted-2" size={24} />
       </div>
     );
   }
@@ -150,14 +150,14 @@ export default function ReviewPage() {
   if (itemLoading || resultsLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 bg-gray-200 rounded w-48 animate-pulse" />
+        <div className="h-8 bg-surface-2 rounded w-48 animate-pulse" />
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="border border-gray-200 rounded-lg p-5 animate-pulse"
+            className="border border-border bg-surface rounded-xl p-5 shadow-sm animate-pulse"
           >
-            <div className="h-4 bg-gray-200 rounded w-32 mb-3" />
-            <div className="h-16 bg-gray-200 rounded" />
+            <div className="h-4 bg-surface-2 rounded w-32 mb-3" />
+            <div className="h-16 bg-surface-2 rounded" />
           </div>
         ))}
       </div>
@@ -169,8 +169,8 @@ export default function ReviewPage() {
       {/* Back */}
       <Link
         href={backHref}
-        className="flex items-center gap-1.5 text-sm text-white-100
-          hover:text-gray-500 mb-4"
+        className="flex items-center gap-1.5 text-sm text-muted
+          hover:text-foreground mb-4"
       >
         <ArrowLeft size={14} />
         Back to queue
@@ -178,13 +178,13 @@ export default function ReviewPage() {
 
       {/* Article header */}
       {item && (
-        <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white">
+        <div className="border border-border rounded-xl p-4 mb-6 bg-surface shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="font-bold text-gray-900 mb-1">
+              <h1 className="font-bold text-foreground mb-1">
                 {item.title || "Untitled article"}
               </h1>
-              <div className="flex items-center gap-3 text-sm text-gray-500">
+              <div className="flex items-center gap-3 text-sm text-muted">
                 <span>{item.source_name}</span>
                 <span>•</span>
                 <span>
@@ -194,22 +194,22 @@ export default function ReviewPage() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-green-700 hover:underline"
+                  className="flex items-center gap-1 text-accent hover:underline"
                 >
                   Read original <ExternalLink size={12} />
                 </a>
               </div>
             </div>
             <div className="flex items-center gap-2 text-sm flex-shrink-0">
-              <span className="text-green-600 font-medium">
+              <span className="text-accent font-medium">
                 {approved.length} approved
               </span>
-              <span className="text-gray-400">·</span>
-              <span className="text-amber-600 font-medium">
+              <span className="text-muted-2">·</span>
+              <span className="text-amber-600 dark:text-amber-400 font-medium">
                 {pending.length} pending
               </span>
-              <span className="text-gray-400">·</span>
-              <span className="text-red-500 font-medium">
+              <span className="text-muted-2">·</span>
+              <span className="text-red-500 dark:text-red-400 font-medium">
                 {rejected.length} rejected
               </span>
             </div>
@@ -220,12 +220,12 @@ export default function ReviewPage() {
       {/* Results */}
       {results.length === 0 ? (
         <div
-          className="text-center py-12 border border-gray-200
-          rounded-lg bg-gray-50"
+          className="text-center py-12 border border-dashed border-border
+          rounded-xl bg-surface-2/50"
         >
-          <AlertCircle size={36} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-600 font-medium">No statements found</p>
-          <p className="text-gray-500 text-sm mt-1">
+          <AlertCircle size={36} className="text-muted-2 mx-auto mb-3" />
+          <p className="text-foreground font-medium">No statements found</p>
+          <p className="text-muted text-sm mt-1">
             The miner did not find any political statements in this article.
           </p>
         </div>
@@ -370,35 +370,35 @@ function MinedResultCard({
   return (
     <div
       className={cn(
-        "border rounded-lg p-5 bg-white transition-all",
-        isApproved && "border-green-300 bg-green-50/30",
-        isRejected && "border-gray-200 opacity-60",
-        !isDone && "border-gray-200",
+        "border rounded-xl p-5 bg-surface shadow-sm transition-all",
+        isApproved && "border-accent-border bg-accent-soft/30",
+        isRejected && "border-border opacity-60",
+        !isDone && "border-border",
       )}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <User size={14} className="text-gray-400 flex-shrink-0 mt-0.5" />
+          <User size={14} className="text-muted-2 flex-shrink-0 mt-0.5" />
           <div>
             {isEditing ? (
               <input
                 value={speakerName}
                 onChange={(e) => setSpeakerName(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1
+                className="border border-border bg-surface text-foreground rounded px-2 py-1
                   text-sm font-medium focus:outline-none
-                  focus:border-green-500"
+                  focus:border-accent"
                 placeholder="Speaker name"
               />
             ) : (
-              <span className="font-medium text-gray-900 text-sm">
+              <span className="font-medium text-foreground text-sm">
                 {result.edited_speaker_name ||
                   result.speaker_name ||
                   "Unknown speaker"}
               </span>
             )}
             {result.speaker_role && (
-              <span className="text-xs text-gray-500 ml-2">
+              <span className="text-xs text-muted ml-2">
                 {result.speaker_role}
               </span>
             )}
@@ -410,7 +410,7 @@ function MinedResultCard({
             className={cn(
               "text-xs px-2 py-0.5 rounded-full font-medium",
               CONFIDENCE_COLORS[result.confidence_stars] ||
-                "text-gray-600 bg-gray-100",
+                "text-muted bg-surface-2",
             )}
           >
             {CONFIDENCE_LABELS[result.confidence_stars] || "Unknown"} confidence
@@ -418,7 +418,7 @@ function MinedResultCard({
           {isApproved && (
             <span
               className="text-xs px-2 py-0.5 rounded-full
-              bg-green-100 text-green-700 font-medium"
+              bg-accent-soft text-accent-soft-fg font-medium"
             >
               ✓ Approved
             </span>
@@ -426,7 +426,7 @@ function MinedResultCard({
           {isRejected && (
             <span
               className="text-xs px-2 py-0.5 rounded-full
-              bg-gray-100 text-gray-500 font-medium"
+              bg-surface-2 text-muted font-medium"
             >
               Rejected
             </span>
@@ -436,16 +436,16 @@ function MinedResultCard({
 
       {/* Minister assignment */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
+        <label className="block text-xs font-medium text-muted mb-1">
           Assigned minister
         </label>
         <select
           value={ministerId}
           onChange={(e) => setMinisterId(e.target.value)}
           disabled={isDone && !isEditing}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2
-            text-sm focus:outline-none focus:border-green-500
-            disabled:bg-gray-50 text-gray-600"
+          className="w-full border border-border bg-surface rounded-lg px-3 py-2
+            text-sm focus:outline-none focus:border-accent
+            disabled:bg-surface-2 text-foreground"
         >
           <option value="">— Not assigned —</option>
           {ministers.map((m) => (
@@ -458,7 +458,7 @@ function MinedResultCard({
           ))}
         </select>
         {!ministerId && !isDone && (
-          <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
             <AlertCircle size={10} />
             Minister must be assigned before approving
           </p>
@@ -467,7 +467,7 @@ function MinedResultCard({
 
       {/* Statement text */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
+        <label className="block text-xs font-medium text-muted mb-1">
           Statement
         </label>
         {isEditing ? (
@@ -475,13 +475,13 @@ function MinedResultCard({
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
-            className="w-full border border-gray-300 rounded-lg p-3
-              text-sm text-gray-600 focus:outline-none focus:border-green-500"
+            className="w-full border border-border bg-surface rounded-lg p-3
+              text-sm text-foreground focus:outline-none focus:border-accent"
           />
         ) : (
           <p
-            className="text-gray-800 text-sm leading-relaxed bg-gray-50
-            rounded-lg p-3 border border-gray-100"
+            className="text-foreground/90 text-sm leading-relaxed bg-surface-2
+            rounded-lg p-3 border border-border"
           >
             {result.edited_statement_text || result.statement_text}
           </p>
@@ -490,16 +490,16 @@ function MinedResultCard({
 
       {/* Topic */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
+        <label className="block text-xs font-medium text-muted mb-1">
           Topic
         </label>
         <select
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           disabled={isDone && !isEditing}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2
-            text-sm text-gray-600 focus:outline-none focus:border-green-500
-            disabled:bg-gray-50"
+          className="w-full border border-border bg-surface rounded-lg px-3 py-2
+            text-sm text-foreground focus:outline-none focus:border-accent
+            disabled:bg-surface-2"
         >
           <option value="">— No topic —</option>
           {TOPICS.map((t) => (
@@ -515,16 +515,16 @@ function MinedResultCard({
         <div className="mb-3">
           <button
             onClick={() => setShowContext(!showContext)}
-            className="flex items-center gap-1 text-xs text-gray-500
-              hover:text-gray-700"
+            className="flex items-center gap-1 text-xs text-muted
+              hover:text-foreground"
           >
             {showContext ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
             {showContext ? "Hide" : "Show"} context from article
           </button>
           {showContext && (
             <div
-              className="mt-2 bg-blue-50 border border-blue-100
-              rounded-lg p-3 text-xs text-blue-800 leading-relaxed"
+              className="mt-2 bg-blue-500/10 border border-blue-500/20
+              rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300 leading-relaxed"
             >
               {result.context_description}
             </div>
@@ -536,7 +536,7 @@ function MinedResultCard({
       {!isDone && (
         <div
           className="flex items-center gap-2 pt-3
-          border-t border-gray-100"
+          border-t border-border"
         >
           {isEditing ? (
             <>
@@ -556,7 +556,7 @@ function MinedResultCard({
                   setActionError("");
                 }}
                 className="px-3 py-1.5 rounded-lg text-sm
-                  border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  border border-border text-muted hover:bg-surface-2 hover:text-foreground"
               >
                 Cancel
               </button>
@@ -566,9 +566,9 @@ function MinedResultCard({
               <button
                 onClick={() => approveMutation.mutate()}
                 disabled={isLoading || !ministerId}
-                className="flex items-center gap-1.5 bg-green-700
-                  text-white px-3 py-1.5 rounded-lg text-sm
-                  font-medium hover:bg-green-800 disabled:opacity-50"
+                className="flex items-center gap-1.5 bg-accent
+                  text-accent-contrast px-3 py-1.5 rounded-lg text-sm
+                  font-medium hover:bg-accent-hover disabled:opacity-50"
               >
                 {approveMutation.isPending ? (
                   <Loader2 size={13} className="animate-spin" />
@@ -580,8 +580,8 @@ function MinedResultCard({
               <button
                 onClick={() => setIsEditing(true)}
                 className="flex items-center gap-1.5 border
-                  border-gray-300 text-gray-700 px-3 py-1.5
-                  rounded-lg text-sm font-medium hover:bg-gray-50"
+                  border-border text-foreground px-3 py-1.5
+                  rounded-lg text-sm font-medium hover:bg-surface-2"
               >
                 <Edit size={13} />
                 Edit
@@ -590,8 +590,8 @@ function MinedResultCard({
                 onClick={() => rejectMutation.mutate()}
                 disabled={isLoading}
                 className="flex items-center gap-1.5 border
-                  border-red-200 text-red-600 px-3 py-1.5
-                  rounded-lg text-sm font-medium hover:bg-red-50
+                  border-danger-border text-danger px-3 py-1.5
+                  rounded-lg text-sm font-medium hover:bg-danger/10
                   disabled:opacity-50"
               >
                 <XCircle size={13} />
@@ -604,8 +604,8 @@ function MinedResultCard({
 
       {actionError && (
         <div
-          className="mt-3 rounded-lg border border-red-200
-          bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="mt-3 rounded-lg border border-danger-border
+          bg-danger-soft px-3 py-2 text-sm text-danger"
         >
           {actionError}
         </div>
@@ -613,10 +613,10 @@ function MinedResultCard({
 
       {/* Approved statement link */}
       {isApproved && result.statement_id && (
-        <div className="pt-3 border-t border-green-200">
+        <div className="pt-3 border-t border-accent-border">
           <Link
             href={`/statements/${result.statement_id}`}
-            className="text-xs text-green-700 hover:underline
+            className="text-xs text-accent hover:underline
               flex items-center gap-1"
           >
             View published statement →
@@ -679,8 +679,8 @@ function AddManualStatement({
       <button
         onClick={() => setIsOpen(true)}
         className="mt-4 flex items-center gap-2 w-full border-2
-          border-dashed border-gray-300 rounded-lg p-4 text-sm
-          text-gray-500 hover:border-green-400 hover:text-green-700
+          border-dashed border-border rounded-xl p-4 text-sm
+          text-muted hover:border-accent-border hover:text-accent
           transition-colors"
       >
         <Plus size={16} />
@@ -691,27 +691,27 @@ function AddManualStatement({
 
   return (
     <div
-      className="mt-4 border-2 border-dashed border-green-400
-      rounded-lg p-5 bg-green-50/30"
+      className="mt-4 border-2 border-dashed border-accent-border
+      rounded-xl p-5 bg-accent-soft/30"
     >
       <h3
-        className="font-semibold text-gray-900 text-sm mb-4 flex
+        className="font-semibold text-foreground text-sm mb-4 flex
         items-center gap-2"
       >
-        <Plus size={14} className="text-green-700" />
+        <Plus size={14} className="text-accent" />
         Add manual statement
       </h3>
 
       <div className="space-y-3">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-xs font-medium text-muted mb-1">
             Minister *
           </label>
           <select
             value={ministerId}
             onChange={(e) => setMinisterId(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3
-              py-2 text-sm focus:outline-none focus:border-green-500"
+            className="w-full border border-border bg-surface text-foreground rounded-lg px-3
+              py-2 text-sm focus:outline-none focus:border-accent"
           >
             <option value="">— Select minister —</option>
             {ministers.map((m) => (
@@ -726,7 +726,7 @@ function AddManualStatement({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-xs font-medium text-muted mb-1">
             Statement text *
           </label>
           <textarea
@@ -734,20 +734,20 @@ function AddManualStatement({
             onChange={(e) => setText(e.target.value)}
             rows={3}
             placeholder="Enter the statement..."
-            className="w-full border border-gray-300 rounded-lg p-3
-              text-sm focus:outline-none focus:border-green-500"
+            className="w-full border border-border bg-surface text-foreground rounded-lg p-3
+              text-sm focus:outline-none focus:border-accent"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-xs font-medium text-muted mb-1">
             Topic
           </label>
           <select
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3
-              py-2 text-sm focus:outline-none focus:border-green-500"
+            className="w-full border border-border bg-surface text-foreground rounded-lg px-3
+              py-2 text-sm focus:outline-none focus:border-accent"
           >
             <option value="">— No topic —</option>
             {TOPICS.map((t) => (
@@ -759,7 +759,7 @@ function AddManualStatement({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
+          <label className="block text-xs font-medium text-muted mb-1">
             Context (optional)
           </label>
           <textarea
@@ -767,15 +767,15 @@ function AddManualStatement({
             onChange={(e) => setContext(e.target.value)}
             rows={2}
             placeholder="Surrounding context from the article..."
-            className="w-full border border-gray-300 rounded-lg p-3
-              text-sm focus:outline-none focus:border-green-500"
+            className="w-full border border-border bg-surface text-foreground rounded-lg p-3
+              text-sm focus:outline-none focus:border-accent"
           />
         </div>
 
         {formError && (
           <div
-            className="text-sm text-red-700 bg-red-50 rounded-lg
-            p-3 mb-2 border border-red-200"
+            className="text-sm text-danger bg-danger-soft rounded-lg
+            p-3 mb-2 border border-danger-border"
           >
             {formError}
           </div>
@@ -787,9 +787,9 @@ function AddManualStatement({
               addMutation.mutate();
             }}
             disabled={addMutation.isPending || !ministerId || !text.trim()}
-            className="flex items-center gap-1.5 bg-green-700
-              text-white px-4 py-2 rounded-lg text-sm font-medium
-              hover:bg-green-800 disabled:opacity-50"
+            className="flex items-center gap-1.5 bg-accent
+              text-accent-contrast px-4 py-2 rounded-lg text-sm font-medium
+              hover:bg-accent-hover disabled:opacity-50"
           >
             {addMutation.isPending ? (
               <Loader2 size={13} className="animate-spin" />
@@ -804,7 +804,7 @@ function AddManualStatement({
               setFormError("");
             }}
             className="px-4 py-2 rounded-lg text-sm border
-              border-gray-200 text-gray-600 hover:bg-gray-50"
+              border-border text-muted hover:bg-surface-2 hover:text-foreground"
           >
             Cancel
           </button>

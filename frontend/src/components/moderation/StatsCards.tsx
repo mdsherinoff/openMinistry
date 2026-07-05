@@ -17,10 +17,10 @@ export default function StatsCards() {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="border border-gray-200 rounded-lg p-4 animate-pulse"
+            className="border border-border bg-surface rounded-xl p-4 shadow-sm animate-pulse"
           >
-            <div className="h-4 bg-gray-200 rounded mb-2 w-20" />
-            <div className="h-8 bg-gray-200 rounded w-12" />
+            <div className="h-4 bg-surface-2 rounded mb-2 w-20" />
+            <div className="h-8 bg-surface-2 rounded w-12" />
           </div>
         ))}
       </div>
@@ -35,41 +35,44 @@ export default function StatsCards() {
       label: "Pending Review",
       value: stats.pending,
       icon: Clock,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      color: "text-amber-600 dark:text-amber-400",
+      bg: "bg-amber-500/10",
     },
     {
       label: "Approved",
       value: stats.approved,
       icon: CheckCircle,
-      color: "text-green-600",
-      bg: "bg-green-50",
+      color: "text-accent",
+      bg: "bg-accent-soft",
     },
     {
       label: "Rejected",
       value: stats.rejected,
       icon: XCircle,
-      color: "text-red-600",
-      bg: "bg-red-50",
+      color: "text-red-600 dark:text-red-400",
+      bg: "bg-red-500/10",
     },
     {
       label: "Needs Review",
       value: stats.needs_review,
       icon: AlertCircle,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: "text-blue-600 dark:text-blue-400",
+      bg: "bg-blue-500/10",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       {cards.map(({ label, value, icon: Icon, color, bg }) => (
-        <div key={label} className="border border-gray-200 rounded-lg p-4">
+        <div
+          key={label}
+          className="border border-border bg-surface rounded-xl p-4 shadow-sm"
+        >
           <div className={`inline-flex p-2 rounded-lg ${bg} mb-2`}>
             <Icon size={18} className={color} />
           </div>
-          <p className="text-2xl font-bold text-gray-500">{value}</p>
-          <p className="text-sm text-gray-100">{label}</p>
+          <p className="text-2xl font-bold text-foreground">{value}</p>
+          <p className="text-sm text-muted">{label}</p>
         </div>
       ))}
     </div>

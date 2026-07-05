@@ -52,6 +52,8 @@ export const api = {
     apiClient.get("/api/statements/count", { params }),
   getTopics: () => apiClient.get("/api/statements/topics"),
   getStatementDetail: (id: number) => apiClient.get(`/api/v1/statements/${id}`),
+  flagStatement: (id: number, reason?: string) =>
+    apiClient.post(`/api/statements/${id}/flag`, { reason: reason || null }),
 
   // Ministers
   getMinisters: (activeOnly: boolean = true) =>
@@ -64,6 +66,12 @@ export const api = {
   getModerationQueue: (params?: Record<string, string>) =>
     apiClient.get("/api/moderation/queue", { params }),
   getModerationStats: () => apiClient.get("/api/moderation/stats/overview"),
+  getFlaggedStatements: (params?: Record<string, string>) =>
+    apiClient.get("/api/moderation/flagged", { params }),
+  dismissFlag: (id: number, notes?: string) =>
+    apiClient.post(`/api/moderation/${id}/dismiss-flag`, null, {
+      params: notes ? { notes } : undefined,
+    }),
   getStatementContext: (id: number) =>
     apiClient.get(`/api/moderation/${id}/context`),
   approveStatement: (id: number, notes?: string) =>

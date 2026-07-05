@@ -101,10 +101,10 @@ export default function StatementCard({ statement }: StatementCardProps) {
   const confidence = statement.confidence_score || 0;
   const confidenceColor =
     confidence >= 0.8
-      ? "text-green-600 bg-green-50"
+      ? "text-accent bg-accent-soft"
       : confidence >= 0.6
-      ? "text-amber-600 bg-amber-50"
-      : "text-red-600 bg-red-50";
+      ? "text-amber-600 dark:text-amber-400 bg-amber-500/10"
+      : "text-red-600 dark:text-red-400 bg-red-500/10";
 
   const isLoading =
     approveMutation.isPending ||
@@ -113,15 +113,15 @@ export default function StatementCard({ statement }: StatementCardProps) {
     flagMutation.isPending;
 
   return (
-    <div className="border border-gray-200 rounded-lg p-5 bg-white">
+    <div className="border border-border rounded-xl p-5 bg-surface shadow-sm">
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div>
-          <span className="font-semibold text-gray-900">
+          <span className="font-semibold text-foreground">
             {statement.minister_name}
           </span>
           {statement.minister_portfolio && (
-            <span className="ml-2 text-sm text-gray-500">
+            <span className="ml-2 text-sm text-muted">
               {statement.minister_portfolio.split(",")[0].replace("MLA - ", "")}
             </span>
           )}
@@ -141,29 +141,29 @@ export default function StatementCard({ statement }: StatementCardProps) {
         <div className="space-y-3 mb-3">
           {/* Edit text */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-xs font-medium text-muted mb-1">
               Statement text
             </label>
             <textarea
               value={editedText}
               onChange={(e) => setEditedText(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-3
-                text-sm text-gray-800 focus:outline-none
-                focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              className="w-full border border-border bg-surface text-foreground rounded-lg p-3
+                text-sm focus:outline-none
+                focus:border-accent focus:ring-1 focus:ring-accent"
               rows={4}
             />
           </div>
 
           {/* Edit topic */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-xs font-medium text-muted mb-1">
               Topic
             </label>
             <select
               value={editedTopic}
               onChange={(e) => setEditedTopic(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3
-                py-2 text-sm focus:outline-none focus:border-green-500"
+              className="w-full border border-border bg-surface text-foreground rounded-lg px-3
+                py-2 text-sm focus:outline-none focus:border-accent"
             >
               <option value="">No topic</option>
               {TOPICS.map((t) => (
@@ -176,7 +176,7 @@ export default function StatementCard({ statement }: StatementCardProps) {
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-xs font-medium text-muted mb-1">
               Edit notes
             </label>
             <input
@@ -184,14 +184,14 @@ export default function StatementCard({ statement }: StatementCardProps) {
               placeholder="Reason for edit..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3
-                py-2 text-xs text-gray-700 focus:outline-none
-                focus:border-green-500"
+              className="w-full border border-border bg-surface text-foreground rounded-lg px-3
+                py-2 text-xs focus:outline-none
+                focus:border-accent"
             />
           </div>
         </div>
       ) : (
-        <p className="text-gray-800 text-sm leading-relaxed mb-3">
+        <p className="text-foreground/90 text-sm leading-relaxed mb-3">
           {statement.statement_text}
         </p>
       )}
@@ -199,15 +199,15 @@ export default function StatementCard({ statement }: StatementCardProps) {
       {/* Topic badge */}
       {!showEdit && statement.topic && (
         <span
-          className="inline-block text-xs bg-blue-50 text-blue-700
-          px-2 py-0.5 rounded-full border border-blue-200 mb-3"
+          className="inline-block text-xs bg-accent-soft text-accent-soft-fg
+          px-2 py-0.5 rounded-full border border-accent-border mb-3"
         >
           {statement.topic}
         </span>
       )}
 
       {/* Source */}
-      <div className="flex items-center gap-3 mb-3 text-xs text-gray-500">
+      <div className="flex items-center gap-3 mb-3 text-xs text-muted">
         <span>{statement.article_source || "Unknown source"}</span>
         <span>•</span>
         <span>
@@ -224,7 +224,7 @@ export default function StatementCard({ statement }: StatementCardProps) {
               href={statement.article_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-green-700 hover:underline"
+              className="flex items-center gap-1 text-accent hover:underline"
             >
               Source <ExternalLink size={10} />
             </a>
@@ -235,8 +235,8 @@ export default function StatementCard({ statement }: StatementCardProps) {
       {/* Article context toggle */}
       <button
         onClick={loadContext}
-        className="flex items-center gap-1 text-xs text-gray-500
-          hover:text-gray-700 mb-3"
+        className="flex items-center gap-1 text-xs text-muted
+          hover:text-foreground mb-3"
       >
         {showContext ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         {showContext ? "Hide" : "Show"} original article
@@ -244,9 +244,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
 
       {showContext && context && (
         <div
-          className="bg-gray-50 rounded-lg p-3 mb-3 text-xs
-          text-gray-600 max-h-48 overflow-y-auto leading-relaxed
-          border border-gray-200"
+          className="bg-surface-2 rounded-lg p-3 mb-3 text-xs
+          text-muted max-h-48 overflow-y-auto leading-relaxed
+          border border-border"
         >
           {context}
         </div>
@@ -259,9 +259,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
           placeholder="Optional notes..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2
-            text-xs text-gray-700 focus:outline-none
-            focus:border-green-500 mb-3"
+          className="w-full border border-border bg-surface text-foreground rounded-lg px-3 py-2
+            text-xs focus:outline-none
+            focus:border-accent mb-3"
         />
       )}
 
@@ -272,9 +272,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => editMutation.mutate()}
               disabled={isLoading || editedText.length < 10}
-              className="flex items-center gap-1.5 bg-green-700
-                text-white px-3 py-1.5 rounded-lg text-sm font-medium
-                hover:bg-green-800 disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-accent
+                text-accent-contrast px-3 py-1.5 rounded-lg text-sm font-medium
+                hover:bg-accent-hover disabled:opacity-50"
             >
               <CheckCircle size={14} />
               Save & Approve
@@ -286,8 +286,8 @@ export default function StatementCard({ statement }: StatementCardProps) {
                 setEditedTopic(statement.topic || "");
                 setNotes("");
               }}
-              className="px-3 py-1.5 rounded-lg text-sm text-gray-600
-                border border-gray-200 hover:bg-gray-50"
+              className="px-3 py-1.5 rounded-lg text-sm text-muted
+                border border-border hover:bg-surface-2 hover:text-foreground"
             >
               Cancel
             </button>
@@ -297,9 +297,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => approveMutation.mutate()}
               disabled={isLoading}
-              className="flex items-center gap-1.5 bg-green-700
-                text-white px-3 py-1.5 rounded-lg text-sm font-medium
-                hover:bg-green-800 disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-accent
+                text-accent-contrast px-3 py-1.5 rounded-lg text-sm font-medium
+                hover:bg-accent-hover disabled:opacity-50"
             >
               <CheckCircle size={14} />
               Approve
@@ -317,9 +317,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => setShowEdit(true)}
               disabled={isLoading}
-              className="flex items-center gap-1.5 border border-gray-300
-                text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium
-                hover:bg-gray-50 disabled:opacity-50"
+              className="flex items-center gap-1.5 border border-border
+                text-foreground px-3 py-1.5 rounded-lg text-sm font-medium
+                hover:bg-surface-2 disabled:opacity-50"
             >
               <Edit size={14} />
               Edit
@@ -327,9 +327,9 @@ export default function StatementCard({ statement }: StatementCardProps) {
             <button
               onClick={() => flagMutation.mutate()}
               disabled={isLoading}
-              className="flex items-center gap-1.5 border border-amber-300
-                text-amber-700 px-3 py-1.5 rounded-lg text-sm font-medium
-                hover:bg-amber-50 disabled:opacity-50"
+              className="flex items-center gap-1.5 border border-amber-500/40
+                text-amber-600 dark:text-amber-400 px-3 py-1.5 rounded-lg text-sm font-medium
+                hover:bg-amber-500/10 disabled:opacity-50"
             >
               <Flag size={14} />
               Flag
