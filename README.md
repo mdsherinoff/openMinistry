@@ -10,7 +10,8 @@ statements from newspapers, interviews, press conferences, and public media.
 
 ## Status
 
-Live at [openministry.live](https://openministry.live)
+Was live at [openministry.live](https://openministry.live)
+Now taken down due to low resources to keep afloat. Contact me if you would like to talk more about it. Thanks.
 
 ## Stack
 
