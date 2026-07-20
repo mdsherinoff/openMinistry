@@ -2,21 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import {
-  Search,
-  Users,
-  FileText,
-  Shield,
-  Info,
-  Menu,
-  X,
-  Sun,
-  Moon,
-} from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { Search, Users, FileText, Info, Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/providers/ThemeProvider";
 
@@ -29,7 +16,6 @@ const navLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
-  const { isLoaded, isModerator } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
@@ -37,16 +23,6 @@ export default function Navigation() {
     const id = setTimeout(() => setMobileOpen(false), 0);
     return () => clearTimeout(id);
   }, [pathname]);
-
-  const { data: statsData } = useQuery({
-    queryKey: ["queue-stats-nav"],
-    queryFn: () => api.getQueueStats(),
-    enabled: isLoaded && isModerator,
-    refetchInterval: 60000,
-    retry: false,
-  });
-
-  const pendingCount = statsData?.data?.pending_review || 0;
 
   const isActive = (href: string) =>
     href === "/"
@@ -67,6 +43,9 @@ export default function Navigation() {
             <span className="text-lg font-bold text-foreground">Ministry</span>
             <span className="ml-2 text-xs bg-accent-soft text-accent-soft-fg px-1.5 py-0.5 rounded border border-accent-border font-medium">
               Kerala
+            </span>
+            <span className="ml-1.5 text-xs bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-300 font-medium dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800">
+              Demo
             </span>
           </Link>
 
@@ -105,26 +84,6 @@ export default function Navigation() {
             >
               {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-
-            {/* Admin */}
-            <Link
-              href="/admin"
-              className={cn(
-                "relative flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ml-1",
-                pathname.startsWith("/admin") || pathname === "/login"
-                  ? "bg-accent text-accent-contrast"
-                  : "border border-border text-muted hover:bg-surface-2 hover:text-foreground",
-              )}
-            >
-              <Shield size={14} className="shrink-0" />
-              <span>Admin</span>
-
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 text-[10px] bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
-                  {pendingCount > 9 ? "9+" : pendingCount}
-                </span>
-              )}
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -168,25 +127,6 @@ export default function Navigation() {
                 {theme === "dark" ? "Dark" : "Light"}
               </span>
             </button>
-
-            <Link
-              href="/admin"
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                "relative flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
-                pathname.startsWith("/admin") || pathname === "/login"
-                  ? "bg-accent text-accent-contrast"
-                  : "border border-border text-muted hover:bg-surface-2 hover:text-foreground",
-              )}
-            >
-              <Shield size={16} />
-              Admin
-              {pendingCount > 0 && (
-                <span className="ml-auto min-w-5 h-5 px-1 text-[10px] bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
-                  {pendingCount > 9 ? "9+" : pendingCount}
-                </span>
-              )}
-            </Link>
           </div>
         )}
       </div>

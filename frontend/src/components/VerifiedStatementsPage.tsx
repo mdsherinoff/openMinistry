@@ -58,6 +58,10 @@ export default function VerifiedStatementsPage() {
           newspapers, reviewed by human moderators, and published in an open
           public archive.
         </p>
+        <p className="text-muted text-sm mt-2">
+          This demo shows a sample of statements from the archive, not the
+          full set.
+        </p>
         <p className="text-muted-2 text-xs mt-3">
           {total > 0
             ? `${total.toLocaleString("en-IN")} verified statement${

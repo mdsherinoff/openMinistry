@@ -1,17 +1,9 @@
 import { ExternalLink, Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Share2, Copy, Flag, Check } from "lucide-react";
+import { Share2, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { api } from "@/lib/api";
-
-const FLAG_REASONS = [
-  "Inaccurate",
-  "Misattributed",
-  "Out of context",
-  "Other",
-];
 
 interface Statement {
   id: number;
@@ -36,25 +28,6 @@ interface Statement {
 
 export default function StatementCard({ statement }: { statement: Statement }) {
   const [copied, setCopied] = useState(false);
-  const [flagOpen, setFlagOpen] = useState(false);
-  const [flagReason, setFlagReason] = useState("");
-  const [flagState, setFlagState] = useState<
-    "idle" | "submitting" | "done" | "error"
-  >("idle");
-
-  const submitFlag = async () => {
-    setFlagState("submitting");
-    try {
-      await api.flagStatement(statement.id, flagReason || undefined);
-      setFlagState("done");
-      setTimeout(() => {
-        setFlagOpen(false);
-        setFlagReason("");
-      }, 1400);
-    } catch {
-      setFlagState("error");
-    }
-  };
 
   const handleShare = async () => {
     try {
@@ -227,87 +200,6 @@ export default function StatementCard({ statement }: { statement: Statement }) {
             {copied ? <Copy size={10} /> : <Share2 size={10} />}
             {copied ? "Copied!" : "Share"}
           </button>
-
-          {/* Flag for re-evaluation */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setFlagOpen((v) => !v);
-                if (flagState !== "submitting") setFlagState("idle");
-              }}
-              className="flex items-center gap-1 text-xs text-muted hover:text-foreground transition-colors"
-              aria-haspopup="dialog"
-              aria-expanded={flagOpen}
-            >
-              <Flag size={10} />
-              Flag
-            </button>
-
-            {flagOpen && (
-              <>
-                {/* click-away backdrop */}
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setFlagOpen(false)}
-                />
-                <div
-                  className="absolute bottom-full right-0 mb-2 w-64 z-50
-                  rounded-lg border border-border bg-surface p-3 shadow-lg"
-                  role="dialog"
-                >
-                  {flagState === "done" ? (
-                    <div className="flex items-center gap-2 text-sm text-accent py-2">
-                      <Check size={15} />
-                      Thanks — flagged for review.
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-xs font-medium text-foreground mb-2">
-                        Flag this statement for a moderator to re-check.
-                      </p>
-                      <div className="flex flex-wrap gap-1.5 mb-2">
-                        {FLAG_REASONS.map((r) => (
-                          <button
-                            key={r}
-                            onClick={() => setFlagReason(r)}
-                            className={cn(
-                              "text-xs px-2 py-1 rounded-full border transition-colors",
-                              flagReason === r
-                                ? "bg-accent-soft text-accent-soft-fg border-accent-border"
-                                : "border-border text-muted hover:border-accent-border",
-                            )}
-                          >
-                            {r}
-                          </button>
-                        ))}
-                      </div>
-                      {flagState === "error" && (
-                        <p className="text-xs text-danger mb-2">
-                          Couldn&apos;t submit. Please try again.
-                        </p>
-                      )}
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => setFlagOpen(false)}
-                          className="text-xs text-muted hover:text-foreground px-2 py-1"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={submitFlag}
-                          disabled={flagState === "submitting"}
-                          className="text-xs font-medium bg-accent text-accent-contrast
-                          px-3 py-1 rounded-md hover:bg-accent-hover disabled:opacity-50"
-                        >
-                          {flagState === "submitting" ? "Sending…" : "Report"}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
         </div>
       </div>
     </div>

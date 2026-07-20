@@ -552,7 +552,7 @@ export default function StatementDetailPage() {
                     margin: 0,
                   }}
                 >
-                  Visit openministry.live
+                  Visit openministry.vercel.app
                 </p>
                 <p
                   style={{

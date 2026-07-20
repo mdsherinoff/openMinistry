@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import QueryProvider from "@/providers/QueryProvider";
@@ -19,11 +18,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "openMinistry — Kerala Government Statement Tracker",
-    template: "%s | openMinistry",
+    default: "openMinistry (Demo) — Kerala Government Statement Tracker",
+    template: "%s | openMinistry (Demo)",
   },
   description:
-    "A searchable public archive of verified statements made by Kerala ministers and MLAs. Human-verified, open source.",
+    "A demo archive showing how openMinistry worked: a searchable public record of verified statements made by Kerala ministers and MLAs. The live site is no longer running; this is a static sample.",
   keywords: [
     "Kerala",
     "ministers",
@@ -35,9 +34,9 @@ export const metadata: Metadata = {
     "politics",
   ],
   openGraph: {
-    title: "openMinistry — Kerala Government Statement Tracker",
-    description: "Verified statements from Kerala ministers and MLAs",
-    url: "https://openministry.live",
+    title: "openMinistry (Demo) — Kerala Government Statement Tracker",
+    description: "Demo archive — verified statements from Kerala ministers and MLAs",
+    url: "https://openministry.vercel.app",
     type: "website",
   },
 };
@@ -61,22 +60,15 @@ export default function RootLayout({
           overflow-x-hidden
         `}
       >
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-VF0WRFHDZT"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-VF0WRFHDZT');
-          `}
-        </Script>
-
         <QueryProvider>
           <ThemeProvider>
+            {/* Demo notice — persistent, not dismissible */}
+            <div className="bg-amber-50 border-b border-amber-200 text-amber-900 text-xs sm:text-sm text-center px-3 py-2 dark:bg-amber-950/40 dark:border-amber-900 dark:text-amber-200">
+              This is a static <strong>demo</strong> of openMinistry — a sample
+              of statements from the archive. The live site is no longer
+              running and this data is frozen, not updated.
+            </div>
+
             <Navigation />
 
             {/* Main content */}
@@ -100,14 +92,6 @@ export default function RootLayout({
 
                   {/* Links */}
                   <div className="flex flex-wrap items-center justify-center sm:justify-end gap-4">
-                    <a
-                      href="https://openministry.live/docs"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-accent transition-colors"
-                    >
-                      API Docs
-                    </a>
                     <a
                       href="https://github.com/mdsherinoff/openMinistry"
                       target="_blank"

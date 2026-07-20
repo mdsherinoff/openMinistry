@@ -1,0 +1,1452 @@
+[
+  {
+    "id": 277,
+    "minister_id": 1393,
+    "article_id": 98,
+    "queue_item_id": null,
+    "statement_text": "Disease patterns might vary from time to time, but several viruses seem to follow seasonal patterns",
+    "statement_summary": null,
+    "topic": "Health",
+    "confidence_score": 1.0,
+    "context_text": "Seasonal patterns of disease outbreaks",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-16T11:53:09.167563+00",
+    "reviewed_at": "2026-06-16T11:53:09.202523+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-plans-outbreak-calendar-to-boost-disease-prediction-and-response/article71108313.ece",
+      "title": "Kerala plans ‘outbreak calendar’ to boost disease prediction and response",
+      "published_at": null
+    }
+  },
+  {
+    "id": 263,
+    "minister_id": 1393,
+    "article_id": 94,
+    "queue_item_id": null,
+    "statement_text": "Modern facilities would be introduced to transform Guruvayur, Sabarimala, and Kottiyoor into world-class pilgrimage centres.",
+    "statement_summary": null,
+    "topic": "Culture",
+    "confidence_score": 1.0,
+    "context_text": "comprehensive development plan for the temples",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-15T15:19:32.714078+00",
+    "reviewed_at": "2026-06-15T15:19:32.786111+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/virtual-queue-system-to-be-launched-at-guruvayur-temple-in-kerala-to-ease-rush/article71104966.ece",
+      "title": "Virtual queue system to be launched at Guruvayur temple in Kerala to ease rushThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 250,
+    "minister_id": 1338,
+    "article_id": 91,
+    "queue_item_id": null,
+    "statement_text": "The scheme would not only make KSRTC more people-friendly but also mark the beginning of a major transformation in the corporation.",
+    "statement_summary": null,
+    "topic": "Social Welfare",
+    "confidence_score": 1.0,
+    "context_text": "On the impact of Priyadarshini scheme",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T20:57:59.001671+00",
+    "reviewed_at": "2026-06-14T20:57:59.02053+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/ksrtc-to-become-more-professional-says-chief-minister-vd-satheesan/article71101805.ece",
+      "title": "KSRTC to become more professional, says Chief Minister V.D. SatheesanThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 234,
+    "minister_id": 1393,
+    "article_id": 87,
+    "queue_item_id": null,
+    "statement_text": "There is no need for me to be present in the city as I could coordinate with senior Health officials sitting in Thiruvananthapuram as well.",
+    "statement_summary": null,
+    "topic": "Politics",
+    "confidence_score": 1.0,
+    "context_text": "On his absence in Kozhikode",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T15:44:29.913528+00",
+    "reviewed_at": "2026-06-14T15:44:29.940958+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/k-muraleedharan-refutes-opposition-allegations-on-nipah-situation/article71101185.ece",
+      "title": "K. Muraleedharan refutes Opposition allegations on Nipah situationThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 232,
+    "minister_id": 1393,
+    "article_id": 85,
+    "queue_item_id": null,
+    "statement_text": "The infected person, who continued to be in the intensive care unit of the Government Medical College Hospital here, was administered the first dose of the antiviral drug remdesivir on Sunday (June 14, 2026) morning. He had already been given one dose of monoclonal antibody on June 12. Ribavirin, another antiviral drug, is also being administered to him. All this was based on the protocol of the State government and the Indian Council of Medical Research (ICMR).",
+    "statement_summary": null,
+    "topic": "Health",
+    "confidence_score": 1.0,
+    "context_text": "Updating on treatment of infected person",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T15:41:46.939819+00",
+    "reviewed_at": "2026-06-14T15:41:46.961479+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/no-fresh-nipah-cases-in-keralas-kozhikode-more-contacts-turn-negative-for-virus/article71101239.ece",
+      "title": "No fresh Nipah cases in Kerala; more contacts turn negative for virusThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 227,
+    "minister_id": 1338,
+    "article_id": 84,
+    "queue_item_id": null,
+    "statement_text": "Any act that promotes communalism is unacceptable and will not be condoned regardless of who commits it.",
+    "statement_summary": null,
+    "topic": "law_order",
+    "confidence_score": 1.0,
+    "context_text": "The Chief Minister's statement on the Vice-Chancellors' attendance at the RSS event.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T15:36:54.991562+00",
+    "reviewed_at": "2026-06-14T15:36:55.025172+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/vice-chancellors-participation-at-rss-event-draws-sharp-criticism-in-kerala/article71100921.ece",
+      "title": "Vice-Chancellors’ participation at RSS event draws sharp criticism in KeralaThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 219,
+    "minister_id": 1335,
+    "article_id": 82,
+    "queue_item_id": null,
+    "statement_text": "Many of today’s jobs might not exist tomorrow and that the nation and society were looking to students who could bring innovation and fresh ideas.",
+    "statement_summary": null,
+    "topic": "education",
+    "confidence_score": 1.0,
+    "context_text": "In his inaugural address at the TiE Young Entrepreneurs Global Summit.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T07:01:39.719421+00",
+    "reviewed_at": "2026-06-14T07:01:39.755273+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/ai-to-openup-greater-opportunities-higher-education-minister/article71098093.ece",
+      "title": "AI to openup greater opportunities: Higher Education MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 218,
+    "minister_id": 1335,
+    "article_id": 82,
+    "queue_item_id": null,
+    "statement_text": "The transformation brought about by AI will be comparable to the changes that tractors and computers introduced to society.",
+    "statement_summary": null,
+    "topic": "innovation",
+    "confidence_score": 1.0,
+    "context_text": "In his inaugural address at the TiE Young Entrepreneurs Global Summit.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T07:01:37.819432+00",
+    "reviewed_at": "2026-06-14T07:01:37.851804+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/ai-to-openup-greater-opportunities-higher-education-minister/article71098093.ece",
+      "title": "AI to openup greater opportunities: Higher Education MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 214,
+    "minister_id": 1335,
+    "article_id": 81,
+    "queue_item_id": null,
+    "statement_text": "An agreement will be prepared and signed by both parties and submitted before the High Court on June 16. The Muvattupuzha Revenue Divisional Officer and a police officer of the rank of Deputy Superintendent of Police would be deputed to ensure that the agreement was implemented without fail. A panchayat road would be built within the property for the residents.",
+    "statement_summary": null,
+    "topic": "Law & Order",
+    "confidence_score": 1.0,
+    "context_text": "Part of the terms and agreements at the Pariyathukavu Land dipute",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-14T06:56:51.241624+00",
+    "reviewed_at": "2026-06-14T06:56:51.259079+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/pariyathukavu-land-dispute-resolved-dalit-families-to-get-land-within-disputed-property/article71098762.ece",
+      "title": "Pariyathukavu land dispute resolved; Dalit families to get land within disputed propertyThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 198,
+    "minister_id": 1368,
+    "article_id": 75,
+    "queue_item_id": null,
+    "statement_text": "The Excise department at present functions on three pillars — enforcement, awareness, and de-addiction. We are now adding a fourth: rehabilitation",
+    "statement_summary": null,
+    "topic": "Social Welfare",
+    "confidence_score": 1.0,
+    "context_text": "Expansion of anti-drug measures",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-12T22:15:22.380124+00",
+    "reviewed_at": "2026-06-12T22:15:22.401109+00",
+    "minister": {
+      "id": 1368,
+      "name": "M. Liju",
+      "portfolio": "Minister for Co-operation and Excise",
+      "party": "INC",
+      "constituency": "Kayamkulam",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/108%20M%20LIJU.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/new-liquor-policy-after-budget-liju/article71094768.ece",
+      "title": "New liquor policy after Budget: LijuPTI",
+      "published_at": null
+    }
+  },
+  {
+    "id": 192,
+    "minister_id": 1335,
+    "article_id": 74,
+    "queue_item_id": null,
+    "statement_text": "The Higher Education department is planning to constitute an expert committee to study the FYUGP comprehensively and recommend structural revisions.",
+    "statement_summary": null,
+    "topic": "Education",
+    "confidence_score": 1.0,
+    "context_text": "On plans to conduct revisions in the FYUGP",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-12T22:08:50.199653+00",
+    "reviewed_at": "2026-06-12T22:08:50.238426+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/govt-non-committal-on-ldfs-free-ug-promise-fyugp-review-on-the-cards/article71094190.ece",
+      "title": "Govt. non-committal on LDF’s free UG promise; FYUGP review on the cardsThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 191,
+    "minister_id": 1335,
+    "article_id": 74,
+    "queue_item_id": null,
+    "statement_text": "The reform was rushed into implementation without adequate preparation, and universities, teachers and students are all suffering from its structural flaws.",
+    "statement_summary": null,
+    "topic": "Education",
+    "confidence_score": 1.0,
+    "context_text": "Commenting on the Four-Year Undergraduate Programme (FYUGP) introduced by the previous LDF government",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-12T22:07:20.983054+00",
+    "reviewed_at": "2026-06-12T22:07:20.999469+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/govt-non-committal-on-ldfs-free-ug-promise-fyugp-review-on-the-cards/article71094190.ece",
+      "title": "Govt. non-committal on LDF’s free UG promise; FYUGP review on the cardsThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 188,
+    "minister_id": 1394,
+    "article_id": 73,
+    "queue_item_id": null,
+    "statement_text": "KSRTC is also planning to have depot-level development committees modelled on hospital development committees.",
+    "statement_summary": null,
+    "topic": "Transport",
+    "confidence_score": 1.0,
+    "context_text": "Discussion on depot-level development committees for KSRTC",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-12T22:01:49.877447+00",
+    "reviewed_at": "2026-06-12T22:01:49.917667+00",
+    "minister": {
+      "id": 1394,
+      "name": "C.P. John",
+      "portfolio": "Minister for Road Transport",
+      "party": "CMPKSC",
+      "constituency": "Thiruvananthapuram",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/134%20C%20P%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/chief-minister-vd-satheesan-to-launch-priyadarshini-free-travel-scheme-in-ksrtc-buses-on-june-15/article71094214.ece",
+      "title": "Chief Minister V.D. Satheesan to launch ‘Priyadarshini’ free travel scheme in KSRTC buses on June 15The Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 171,
+    "minister_id": 1338,
+    "article_id": 68,
+    "queue_item_id": null,
+    "statement_text": "If promised, it will be delivered. That is what we are here for; to fulfil promises.",
+    "statement_summary": null,
+    "topic": "Transport",
+    "confidence_score": 1.0,
+    "context_text": "V.D. Satheesan's response to a YouTuber's question about honouring his promise on vehicle modifications",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-12T02:50:26.613508+00",
+    "reviewed_at": "2026-06-12T02:50:26.639013+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/cms-promise-on-vehicle-modification-in-kerala-raises-many-doubts/article71086039.ece",
+      "title": "CM’s promise on vehicle modification in Kerala raises many doubtsM.P. Praveen",
+      "published_at": null
+    }
+  },
+  {
+    "id": 143,
+    "minister_id": 1393,
+    "article_id": 58,
+    "queue_item_id": null,
+    "statement_text": "Steps would be taken to inspect the condition of government hospital buildings in Kozhikode district.",
+    "statement_summary": null,
+    "topic": "Health",
+    "confidence_score": 1.0,
+    "context_text": "Improvement of healthcare infrastructure in Kozhikode district.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T16:46:09.298595+00",
+    "reviewed_at": "2026-06-11T16:46:09.314698+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kayakalpam-initiative-to-be-rolled-out-in-other-districts-from-july/article71085668.ece",
+      "title": "Kayakalpam initiative to be rolled out in other districts from JulyThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 141,
+    "minister_id": 1314,
+    "article_id": 57,
+    "queue_item_id": null,
+    "statement_text": "Withdrawal from an agreement between two governments would not be easy and would involve technical difficulties.",
+    "statement_summary": null,
+    "topic": "Politics",
+    "confidence_score": 1.0,
+    "context_text": "The uncertainties over PM SHRI continue amid conflicting claims over education funding and the status of the agreement.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T16:44:51.583793+00",
+    "reviewed_at": "2026-06-11T16:44:51.595559+00",
+    "minister": {
+      "id": 1314,
+      "name": "N. Samsudheen",
+      "portfolio": "Minister for General Education & Minority Welfare",
+      "party": "IUML",
+      "constituency": "Mannarkad",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/54%20Samsudheen%20Mannarkkad.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/ssk-schemes-hit-as-impasse-over-pm-shri-continues/article71085808.ece",
+      "title": "SSK schemes hit as impasse over PM SHRI continuesThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 129,
+    "minister_id": 1338,
+    "article_id": 52,
+    "queue_item_id": null,
+    "statement_text": "The State Plan would be short of ₹20,500 crore due to a higher anticipation in the 2026-27 Budget estimates than the provision for Kerala ultimately made by the 16th Finance Commission.",
+    "statement_summary": null,
+    "topic": "Economy",
+    "confidence_score": 1.0,
+    "context_text": "Expressing concern about the State Plan shortfall",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T13:23:48.500146+00",
+    "reviewed_at": "2026-06-11T13:23:48.533085+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/balagopal-disclosed-cash-balance-first-says-satheesan/article71084832.ece",
+      "title": "Balagopal disclosed cash balance first, says  SatheesanThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 126,
+    "minister_id": 1333,
+    "article_id": 51,
+    "queue_item_id": null,
+    "statement_text": "Archives hold the key to understanding how societies evolve, and preserving them is essential for future generations.",
+    "statement_summary": null,
+    "topic": "archives",
+    "confidence_score": 1.0,
+    "context_text": "Importance of archives in understanding societal evolution",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T11:29:55.354297+00",
+    "reviewed_at": "2026-06-11T11:29:55.394728+00",
+    "minister": {
+      "id": 1333,
+      "name": "O.J. Janeesh",
+      "portfolio": "Minister for Sports, Youth Affairs, Registration, Museum, Archaeology and Archives",
+      "party": "INC",
+      "constituency": "Kodungallur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/73%20O%20J%20JANEESH.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/minister-stresses-the-importance-of-archives-for-deciphering-the-past-and-understanding-the-future/article71084222.ece",
+      "title": "Minister stresses the importance of archives for deciphering the past and understanding the futureThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 125,
+    "minister_id": 1333,
+    "article_id": 51,
+    "queue_item_id": null,
+    "statement_text": "Understanding the origin and evolution of communication helps people appreciate cultural and societal changes over time.",
+    "statement_summary": null,
+    "topic": "education",
+    "confidence_score": 1.0,
+    "context_text": "Importance of language in understanding cultural and societal changes",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T11:29:53.191727+00",
+    "reviewed_at": "2026-06-11T11:29:53.207776+00",
+    "minister": {
+      "id": 1333,
+      "name": "O.J. Janeesh",
+      "portfolio": "Minister for Sports, Youth Affairs, Registration, Museum, Archaeology and Archives",
+      "party": "INC",
+      "constituency": "Kodungallur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/73%20O%20J%20JANEESH.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/minister-stresses-the-importance-of-archives-for-deciphering-the-past-and-understanding-the-future/article71084222.ece",
+      "title": "Minister stresses the importance of archives for deciphering the past and understanding the futureThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 124,
+    "minister_id": 1333,
+    "article_id": 51,
+    "queue_item_id": null,
+    "statement_text": "Archives offer invaluable insights into the development of governance, education and social systems across different periods of history.",
+    "statement_summary": null,
+    "topic": "governance",
+    "confidence_score": 1.0,
+    "context_text": "Role of archives in understanding governance and social systems",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T11:29:51.874074+00",
+    "reviewed_at": "2026-06-11T11:29:51.902344+00",
+    "minister": {
+      "id": 1333,
+      "name": "O.J. Janeesh",
+      "portfolio": "Minister for Sports, Youth Affairs, Registration, Museum, Archaeology and Archives",
+      "party": "INC",
+      "constituency": "Kodungallur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/73%20O%20J%20JANEESH.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/minister-stresses-the-importance-of-archives-for-deciphering-the-past-and-understanding-the-future/article71084222.ece",
+      "title": "Minister stresses the importance of archives for deciphering the past and understanding the futureThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 122,
+    "minister_id": 1383,
+    "article_id": 50,
+    "queue_item_id": null,
+    "statement_text": "International-standard entertainment facilities will be developed centering around Ashtamudi Lake.",
+    "statement_summary": null,
+    "topic": "Tourism",
+    "confidence_score": 1.0,
+    "context_text": "Kollam tourism transformation",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T11:28:09.126483+00",
+    "reviewed_at": "2026-06-11T11:28:09.15274+00",
+    "minister": {
+      "id": 1383,
+      "name": "P.C. Vishnunadh",
+      "portfolio": "Minister for Tourism, Culture",
+      "party": "INC",
+      "constituency": "Kundara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/123%20PC%20Vishnunadh%20Kundara.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kollam-tourism-set-for-a-mega-makeover/article71084822.ece",
+      "title": "Kollam tourism set for a mega makeoverThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 116,
+    "minister_id": 1338,
+    "article_id": 48,
+    "queue_item_id": null,
+    "statement_text": "The State government will provide the additional amount required for the KSRTC to implement the scheme, in addition to the ₹1,500 crore being provided annually now. We have asked the KSRTC to take the necessary steps to increase its revenue in the coming six months. More vehicles, more schedules and more advertisements will be put out as part of measures to increase revenue.",
+    "statement_summary": null,
+    "topic": "Transport",
+    "confidence_score": 1.0,
+    "context_text": "Funding for free bus travel scheme",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-11T11:18:48.624305+00",
+    "reviewed_at": "2026-06-11T11:18:48.641458+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-cabinet-decides-to-implement-free-travel-concession-for-women-on-ksrtcs-ordinary-services-from-june-15/article71083844.ece",
+      "title": "Cabinet decides to implement free travel concession for women on KSRTC’s ordinary services from June 15",
+      "published_at": null
+    }
+  },
+  {
+    "id": 108,
+    "minister_id": 1367,
+    "article_id": 46,
+    "queue_item_id": null,
+    "statement_text": "Prisoners would not be granted or allowed extended parole on political grounds.",
+    "statement_summary": null,
+    "topic": "Law & Order",
+    "confidence_score": 1.0,
+    "context_text": "Kerala government's policy on prisoner parole",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T18:32:53.469243+00",
+    "reviewed_at": "2026-06-09T18:32:53.500859+00",
+    "minister": {
+      "id": 1367,
+      "name": "Ramesh Chennithala",
+      "portfolio": "Minister for Home",
+      "party": "INC",
+      "constituency": "Haripad",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/107%20Ramesh%20Chennithala%20Harippad.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-government-considering-comprehensive-prison-reforms-ramesh-chennithala/article71081237.ece",
+      "title": "Kerala government considering comprehensive prison reforms: Ramesh ChennithalaThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 104,
+    "minister_id": 1367,
+    "article_id": 46,
+    "queue_item_id": null,
+    "statement_text": "The State government is considering a comprehensive overhaul of Kerala’s prison system.",
+    "statement_summary": null,
+    "topic": "Law & Order",
+    "confidence_score": 1.0,
+    "context_text": "Kerala government's plan for comprehensive prison reforms",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T18:31:31.215464+00",
+    "reviewed_at": "2026-06-09T18:31:31.240137+00",
+    "minister": {
+      "id": 1367,
+      "name": "Ramesh Chennithala",
+      "portfolio": "Minister for Home",
+      "party": "INC",
+      "constituency": "Haripad",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/107%20Ramesh%20Chennithala%20Harippad.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-government-considering-comprehensive-prison-reforms-ramesh-chennithala/article71081237.ece",
+      "title": "Kerala government considering comprehensive prison reforms: Ramesh ChennithalaThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 103,
+    "minister_id": 1293,
+    "article_id": 45,
+    "queue_item_id": null,
+    "statement_text": "We have seen the success of fan parks in cricket. The MLA Box follows a similar model to give fans a shared viewing experience and further strengthen football enthusiasm in Kondotty.",
+    "statement_summary": null,
+    "topic": "Sports",
+    "confidence_score": 1.0,
+    "context_text": "Speaking at the inauguration of the MLA Box",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T18:19:43.286744+00",
+    "reviewed_at": "2026-06-09T18:19:43.310129+00",
+    "minister": {
+      "id": 1293,
+      "name": "T.P. Ashrafali",
+      "portfolio": "MLA - Kondotty",
+      "party": "IUML",
+      "constituency": "Kondotty",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/33%20Asharaf%20ali.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/mla-box-to-provide-stadium-feel-for-kondotty-football-fans/article71081571.ece",
+      "title": "MLA Box to provide stadium feel for Kondotty football fansThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 97,
+    "minister_id": 1335,
+    "article_id": 42,
+    "queue_item_id": null,
+    "statement_text": "Those who criticise us should reflect on their tenure. Even reporters of Janmabhoomi were nominated to the Senate and Syndicate during the LDF regime. What were those who are protesting today doing then?",
+    "statement_summary": null,
+    "topic": "Education",
+    "confidence_score": 1.0,
+    "context_text": "The Minister's statement was made in response to criticism from the opposition.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T17:55:05.848121+00",
+    "reviewed_at": "2026-06-09T17:55:05.872514+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/no-saffronisation-of-higher-education-will-be-permitted-minister/article71080901.ece",
+      "title": "No saffronisation of higher education will be permitted: MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 95,
+    "minister_id": 1377,
+    "article_id": 41,
+    "queue_item_id": null,
+    "statement_text": "The State government is preparing a comprehensive project proposal aimed at mitigating human-wildlife conflicts.",
+    "statement_summary": null,
+    "topic": "Environment",
+    "confidence_score": 1.0,
+    "context_text": "Kerala government's efforts to mitigate human-wildlife conflicts",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T17:50:13.859984+00",
+    "reviewed_at": "2026-06-09T17:50:13.885074+00",
+    "minister": {
+      "id": 1377,
+      "name": "Shibu Baby John",
+      "portfolio": "Minister for Forests, Wild Life & Skill Development",
+      "party": "RSP",
+      "constituency": "Chavara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/117%20SHIBU%20BABY%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-wild-elephant-attack-forest-department-takes-responsibility-for-victims-children/article71081002.ece",
+      "title": "Kerala wild elephant attack: forest department takes responsibility for  victim’s childrenThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 94,
+    "minister_id": 1377,
+    "article_id": 41,
+    "queue_item_id": null,
+    "statement_text": "While such measures will not completely solve their woes, they represent a new step forward in the Forest department’s commitment towards those affected by wildlife attacks",
+    "statement_summary": null,
+    "topic": "Social Welfare",
+    "confidence_score": 1.0,
+    "context_text": "Forest department's commitment to supporting victims of wildlife attacks",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T17:49:10.405476+00",
+    "reviewed_at": "2026-06-09T17:49:10.424299+00",
+    "minister": {
+      "id": 1377,
+      "name": "Shibu Baby John",
+      "portfolio": "Minister for Forests, Wild Life & Skill Development",
+      "party": "RSP",
+      "constituency": "Chavara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/117%20SHIBU%20BABY%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-wild-elephant-attack-forest-department-takes-responsibility-for-victims-children/article71081002.ece",
+      "title": "Kerala wild elephant attack: forest department takes responsibility for  victim’s childrenThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 89,
+    "minister_id": 1393,
+    "article_id": 40,
+    "queue_item_id": null,
+    "statement_text": "Because of this situation, many private hospitals had either stopped accepting claims under insurance schemes such as KASP or Medisep or were discouraging such admission.",
+    "statement_summary": null,
+    "topic": "Health",
+    "confidence_score": 1.0,
+    "context_text": "Affects of previous government's dues on the insurance schemes",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-09T17:22:04.665283+00",
+    "reviewed_at": "2026-06-09T17:22:04.685824+00",
+    "minister": {
+      "id": 1393,
+      "name": "K. Muraleedharan",
+      "portfolio": "Minister for Health & Devaswoms",
+      "party": "INC",
+      "constituency": "Vattiyoorkavu",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/133%20K%20MURALEEDHARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-govt-seeks-centres-permission-to-use-forest-land-for-wayanad-mch-expansion/article71079653.ece",
+      "title": "Kerala govt seeks Centre’s permission to use forest land for Wayanad MCH expansion",
+      "published_at": null
+    }
+  },
+  {
+    "id": 85,
+    "minister_id": 1377,
+    "article_id": 39,
+    "queue_item_id": null,
+    "statement_text": "We need to ensure that the family receives proper care. Based on the department’s proposal, the government will take further steps.",
+    "statement_summary": null,
+    "topic": "welfare",
+    "confidence_score": 1.0,
+    "context_text": "Forest Minister's statement on providing care to the affected family",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-08T19:11:06.258631+00",
+    "reviewed_at": "2026-06-08T19:11:06.284916+00",
+    "minister": {
+      "id": 1377,
+      "name": "Shibu Baby John",
+      "portfolio": "Minister for Forests, Wild Life & Skill Development",
+      "party": "RSP",
+      "constituency": "Chavara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/117%20SHIBU%20BABY%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/wild-elephant-tramples-woman-to-death-injures-11-year-old-son-in-idukki/article71077382.ece",
+      "title": "Wild elephant tramples woman to death, injures 11-year-old son in IdukkiThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 77,
+    "minister_id": 1365,
+    "article_id": 35,
+    "queue_item_id": null,
+    "statement_text": "Shouldn’t there be at least one person who knows how to respond? There is no one to point out what is wrong. The picture of the Opposition in the Assembly is pathetic.",
+    "statement_summary": null,
+    "topic": "Politics",
+    "confidence_score": 1.0,
+    "context_text": "G. Sudhakaran criticized the Opposition's performance in the Assembly.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-08T18:58:21.484338+00",
+    "reviewed_at": "2026-06-08T18:58:21.514055+00",
+    "minister": {
+      "id": 1365,
+      "name": "G Sudhakaran",
+      "portfolio": "MLA - Ambalapuzha",
+      "party": "IND",
+      "constituency": "Ambalapuzha",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/105%20G%20SUDHAKARAN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/political-tensions-escalate-in-keralas-ambalappuzha-as-g-sudhakaran-targets-cpim-pinarayi-vijayan-in-provocative-speech/article71075439.ece",
+      "title": "KeralaPolitical tensions escalate in Ambalappuzha as G. Sudhakaran targets CPI(M), Pinarayi in provocative speechThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 75,
+    "minister_id": 1377,
+    "article_id": 34,
+    "queue_item_id": null,
+    "statement_text": "The government would approach the Wildlife Institute of India (WII), Dehradun, to study the carrying capacity of Kerala’s forests and evaluate their ability to support wildlife populations, particularly elephants and tigers, with a focus on regions such as Wayanad, where the issue is especially acute.",
+    "statement_summary": null,
+    "topic": "Environment",
+    "confidence_score": 1.0,
+    "context_text": "100-day action plan to tackle human-wildlife conflict",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-08T18:55:23.747918+00",
+    "reviewed_at": "2026-06-08T18:55:23.775583+00",
+    "minister": {
+      "id": 1377,
+      "name": "Shibu Baby John",
+      "portfolio": "Minister for Forests, Wild Life & Skill Development",
+      "party": "RSP",
+      "constituency": "Chavara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/117%20SHIBU%20BABY%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/experts-question-keralas-move-to-assess-carrying-capacity-of-forests-and-conduct-wildlife-census-to-mitigate-conflicts/article71073256.ece",
+      "title": "Experts question Kerala’s move to assess carrying capacity of forests and conduct wildlife census to mitigate conflictsSam Paul A.",
+      "published_at": null
+    }
+  },
+  {
+    "id": 74,
+    "minister_id": 1276,
+    "article_id": 33,
+    "queue_item_id": null,
+    "statement_text": "Mr. Thomas was chosen because of his ability, loyalty, credibility, and close connection with the public. \\nHe was appointed because he was capable of helping me effectively.",
+    "statement_summary": null,
+    "topic": "Politics",
+    "confidence_score": 1.0,
+    "context_text": "Explaining the reason for appointing Benny Thomas as Additional Private Secretary",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-08T18:52:09.75538+00",
+    "reviewed_at": "2026-06-08T18:52:09.771184+00",
+    "minister": {
+      "id": 1276,
+      "name": "Sunny Joseph",
+      "portfolio": "Minister for Electricity , Environment  & Parliamentary Affairs",
+      "party": "INC",
+      "constituency": "Peravoor",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/16%20sunny%20%20joseph%20peravoor.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/resigned-to-avoid-controversy-sunny-joseph-defends-benny-thomas-appointment-says-no-legal-issues/article71075351.ece",
+      "title": "‘Resigned to avoid controversy’: Sunny Joseph defends Benny Thomas appointment, says no legal issues",
+      "published_at": null
+    }
+  },
+  {
+    "id": 69,
+    "minister_id": 1338,
+    "article_id": 32,
+    "queue_item_id": null,
+    "statement_text": "Kerala’s 600-km coastline and the sea offers unlimited opportunities for the State’s economy. World Oceans Day 2026 is an important day for the United Democratic Front (UDF) government in Kerala, as one of its “dream projects\". As Kerala transforms into a ‘port city,’ it will generate lakhs of new employment opportunities. It should be kept in mind that the port sector accounts for 28% of Dubai’s gross domestic product. In that sense, our sea and coastline offers unlimited opportunities.",
+    "statement_summary": null,
+    "topic": "Economy",
+    "confidence_score": 1.0,
+    "context_text": "Kerala's economic potential through its coastline",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T17:04:23.964193+00",
+    "reviewed_at": "2026-06-07T17:04:23.983186+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/blue-economy-offers-unlimited-opportunities-for-puthuyuga-keralam-chief-minister-vd-satheesan/article71073818.ece",
+      "title": "Blue economy offers unlimited opportunities for ‘Puthuyuga Keralam’: Chief Minister V.D. SatheesanThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 62,
+    "minister_id": 1395,
+    "article_id": 28,
+    "queue_item_id": null,
+    "statement_text": "Beyond humour, he excelled in his acting skills by playing strong characters that touched many a heart.",
+    "statement_summary": null,
+    "topic": "cinema",
+    "confidence_score": 1.0,
+    "context_text": "Praising Salim Kumar's acting skills.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:35:33.474887+00",
+    "reviewed_at": "2026-06-07T14:35:33.497007+00",
+    "minister": {
+      "id": 1395,
+      "name": "Rajeev Chandrasekhar",
+      "portfolio": "MLA - Nemom",
+      "party": "BJP",
+      "constituency": "Nemom",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/135%20RAJEEV%20CHANDRASEKHAR.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/cm-satheesan-remembers-salim-kumar-as-a-brother-as-condolences-pour-in-for-actor/article71072364.ece",
+      "title": "CM Satheesan remembers Salim Kumar as a brother as condolences pour in for actor",
+      "published_at": null
+    }
+  },
+  {
+    "id": 61,
+    "minister_id": 1272,
+    "article_id": 28,
+    "queue_item_id": null,
+    "statement_text": "His voyage from being a mimicry artiste to an actor par excellence who won the national award will keep inspiring budding talents.",
+    "statement_summary": null,
+    "topic": "cinema",
+    "confidence_score": 1.0,
+    "context_text": "Praising Salim Kumar's career.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:35:30.917862+00",
+    "reviewed_at": "2026-06-07T14:35:30.938529+00",
+    "minister": {
+      "id": 1272,
+      "name": "Pinarayi Vijayan",
+      "portfolio": "Leader of Opposition",
+      "party": "CPI(M)",
+      "constituency": "Dharmadam",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/12%20Pinarayi%20Vijayan%20Dharmadam.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/cm-satheesan-remembers-salim-kumar-as-a-brother-as-condolences-pour-in-for-actor/article71072364.ece",
+      "title": "CM Satheesan remembers Salim Kumar as a brother as condolences pour in for actor",
+      "published_at": null
+    }
+  },
+  {
+    "id": 60,
+    "minister_id": 1338,
+    "article_id": 28,
+    "queue_item_id": null,
+    "statement_text": "Even when many in the film fraternity were reluctant to make their political stands clear, Salim Kumar came out in the open as a Congress supporter without eyeing any positions or gains.",
+    "statement_summary": null,
+    "topic": "politics",
+    "confidence_score": 1.0,
+    "context_text": "Describing Salim Kumar's political stance.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:35:27.131996+00",
+    "reviewed_at": "2026-06-07T14:35:27.151402+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/cm-satheesan-remembers-salim-kumar-as-a-brother-as-condolences-pour-in-for-actor/article71072364.ece",
+      "title": "CM Satheesan remembers Salim Kumar as a brother as condolences pour in for actor",
+      "published_at": null
+    }
+  },
+  {
+    "id": 59,
+    "minister_id": 1338,
+    "article_id": 28,
+    "queue_item_id": null,
+    "statement_text": "The last public function attended by Salim Kumar was a civic reception accorded to me by the people of Paravur. He was all smiles that day though he was frail. Salim Kumar was a proud son of North Paravur.",
+    "statement_summary": null,
+    "topic": "cinema",
+    "confidence_score": 1.0,
+    "context_text": "Remembering Salim Kumar's last public appearance.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:35:23.478907+00",
+    "reviewed_at": "2026-06-07T14:35:23.526543+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/cm-satheesan-remembers-salim-kumar-as-a-brother-as-condolences-pour-in-for-actor/article71072364.ece",
+      "title": "CM Satheesan remembers Salim Kumar as a brother as condolences pour in for actor",
+      "published_at": null
+    }
+  },
+  {
+    "id": 58,
+    "minister_id": 1337,
+    "article_id": 27,
+    "queue_item_id": null,
+    "statement_text": "The Government is committed to harnessing the full potential of the Blue Economy for the benefit of the State. The Kufos should be developed into a premier centre of excellence capable of providing leadership in education, research, innovation, policy support, and skill development for the fisheries and ocean sectors.",
+    "statement_summary": null,
+    "topic": "Economy",
+    "confidence_score": 1.0,
+    "context_text": "The State Government’s commitment to Blue Economy growth",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:32:00.925062+00",
+    "reviewed_at": "2026-06-07T14:32:00.949031+00",
+    "minister": {
+      "id": 1337,
+      "name": "V.E Abdul Gafoor",
+      "portfolio": "Minister for Fisheries & Social Justice",
+      "party": "IUML",
+      "constituency": "Kalamassery",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/77%20V%20E%20ABDUL%20GAFOOR.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kufos-proposes-kerala-blue-economy-council/article71070016.ece",
+      "title": "Kufos proposes Kerala Blue Economy CouncilThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 54,
+    "minister_id": 1313,
+    "article_id": 26,
+    "queue_item_id": null,
+    "statement_text": "A 100-day action plan will be formulated to strengthen the functioning of Palakkad Medical College. The decision was taken at a high-level meeting convened in Palakkad the other day, against the backdrop of the poor management of affairs at the institution of late.",
+    "statement_summary": null,
+    "topic": "Infrastructure",
+    "confidence_score": 1.0,
+    "context_text": "Improving the functioning of Palakkad Medical College",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:26:26.44927+00",
+    "reviewed_at": "2026-06-07T14:26:26.471058+00",
+    "minister": {
+      "id": 1313,
+      "name": "Thulasi Teacher",
+      "portfolio": "Minister for Development of Scheduled Castes, Scheduled Tribes and Backward Classes",
+      "party": "INC",
+      "constituency": "Kongad(SC)",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/53THULASI%20TEACHER_.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/100-day-action-plan-to-strengthen-functioning-of-palakkad-medical-college/article71070206.ece",
+      "title": "100-day action plan to strengthen functioning of Palakkad medical collegeThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 49,
+    "minister_id": 1279,
+    "article_id": 24,
+    "queue_item_id": null,
+    "statement_text": "The government had not been able to release the amount since 2021.",
+    "statement_summary": null,
+    "topic": "Agriculture",
+    "confidence_score": 1.0,
+    "context_text": "Crop loss compensation",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:20:04.464772+00",
+    "reviewed_at": "2026-06-07T14:20:04.48785+00",
+    "minister": {
+      "id": 1279,
+      "name": "T. Siddique",
+      "portfolio": "Minister for Agriculture",
+      "party": "INC",
+      "constituency": "Kalpetta",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/19%20t%20siddique%20kalpetta.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/paddy-procurement-deal-with-public-sector-banks-renewed-says-kerala-agriculture-minister/article71068975.ece",
+      "title": "Paddy procurement deal with public sector banks renewed, says Kerala Agriculture MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 46,
+    "minister_id": 1335,
+    "article_id": 23,
+    "queue_item_id": null,
+    "statement_text": "The UDF government would initiate fresh steps to secure the necessary approvals from the Centre and move the project forward. GIFT City could become a major driver of economic growth and investment in the district, just like Infopark.",
+    "statement_summary": null,
+    "topic": "Infrastructure",
+    "confidence_score": 1.0,
+    "context_text": "The Minister discussed the potential of GIFT City to drive economic growth in the district.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:14:48.584223+00",
+    "reviewed_at": "2026-06-07T14:14:48.611882+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/metro-extension-gift-city-among-govts-top-priorities-for-ernakulam-says-minister/article71069978.ece",
+      "title": "Metro extension, GIFT City among govt.’s top priorities for Ernakulam, says MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 45,
+    "minister_id": 1335,
+    "article_id": 23,
+    "queue_item_id": null,
+    "statement_text": "The government had already initiated preliminary procedures to take the Angamaly-Kundannoor Bypass project forward.",
+    "statement_summary": null,
+    "topic": "Infrastructure",
+    "confidence_score": 1.0,
+    "context_text": "The Minister mentioned the progress on the Angamaly-Kundannoor Bypass project.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T14:14:46.48098+00",
+    "reviewed_at": "2026-06-07T14:14:46.498977+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/metro-extension-gift-city-among-govts-top-priorities-for-ernakulam-says-minister/article71069978.ece",
+      "title": "Metro extension, GIFT City among govt.’s top priorities for Ernakulam, says MinisterThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 39,
+    "minister_id": 1279,
+    "article_id": 19,
+    "queue_item_id": null,
+    "statement_text": "Efforts are underway to reverse the declining interest of the younger generation in agriculture. As part of this, the Kathir project has been launched to connect students with farming. Farm clubs will be set up in schools across the State in collaboration with the Education department. A coordinated committee involving teachers, local bodies, agriculture officials and farmers will oversee the initiative.",
+    "statement_summary": null,
+    "topic": "Agriculture",
+    "confidence_score": 1.0,
+    "context_text": "Kathir project to connect students with farming",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T13:25:25.866676+00",
+    "reviewed_at": "2026-06-07T13:25:25.915924+00",
+    "minister": {
+      "id": 1279,
+      "name": "T. Siddique",
+      "portfolio": "Minister for Agriculture",
+      "party": "INC",
+      "constituency": "Kalpetta",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/19%20t%20siddique%20kalpetta.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-to-expand-farming-to-every-available-space-including-fallow-lands-minister-t-siddique/article71068796.ece",
+      "title": "Kerala to expand farming to ‘every available space’, including fallow lands: Minister T. SiddiqueThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 37,
+    "minister_id": 1279,
+    "article_id": 19,
+    "queue_item_id": null,
+    "statement_text": "The government is working towards expanding farming activities to “every available space” in the State, including backyards, terraces, small plots and fallow lands.",
+    "statement_summary": null,
+    "topic": "Agriculture",
+    "confidence_score": 1.0,
+    "context_text": "Expanding farming activities",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T13:25:21.358238+00",
+    "reviewed_at": "2026-06-07T13:25:21.392587+00",
+    "minister": {
+      "id": 1279,
+      "name": "T. Siddique",
+      "portfolio": "Minister for Agriculture",
+      "party": "INC",
+      "constituency": "Kalpetta",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/19%20t%20siddique%20kalpetta.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-to-expand-farming-to-every-available-space-including-fallow-lands-minister-t-siddique/article71068796.ece",
+      "title": "Kerala to expand farming to ‘every available space’, including fallow lands: Minister T. SiddiqueThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 27,
+    "minister_id": 1335,
+    "article_id": 14,
+    "queue_item_id": null,
+    "statement_text": "We hope we can settle the matter out of court. Multiple options were proposed at the meeting and both the parties have expressed their concerns and demands.",
+    "statement_summary": null,
+    "topic": "Law & Order",
+    "confidence_score": 1.0,
+    "context_text": "Government efforts to resolve land dispute",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T13:08:41.460297+00",
+    "reviewed_at": "2026-06-07T13:08:41.479805+00",
+    "minister": {
+      "id": 1335,
+      "name": "Roji M. John",
+      "portfolio": "Minister for Higher Education",
+      "party": "INC",
+      "constituency": "Angamaly",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/75%20Roji%20M%20John%20Angamaly.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/malayidamthuruth-row-govt-urges-claimant-to-give-away-portion-of-disputed-land-to-dalit-residents/article71065618.ece",
+      "title": "Malayidamthuruth row: govt. urges claimant to give away portion of disputed land to Dalit residentsThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 18,
+    "minister_id": 1383,
+    "article_id": 11,
+    "queue_item_id": null,
+    "statement_text": "Kerala's natural beauty is the major asset of State's tourism sector, and preserving our environment and nature is indispensable for the sustained growth of the sector.",
+    "statement_summary": null,
+    "topic": "Tourism",
+    "confidence_score": 1.0,
+    "context_text": "Importance of environmental conservation for tourism",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T10:28:40.842384+00",
+    "reviewed_at": "2026-06-07T10:28:40.863854+00",
+    "minister": {
+      "id": 1383,
+      "name": "P.C. Vishnunadh",
+      "portfolio": "Minister for Tourism, Culture",
+      "party": "INC",
+      "constituency": "Kundara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/123%20PC%20Vishnunadh%20Kundara.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/environmental-conservation-and-tourism-need-to-go-together-says-tourism-minister-pc-vishnunadh/article71065993.ece",
+      "title": "Environmental conservation and tourism need to go together, says Tourism Minister P.C. VishnunadhThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 14,
+    "minister_id": 1377,
+    "article_id": 10,
+    "queue_item_id": null,
+    "statement_text": "A three-month campaign involving local self-government institutions to intensify “the elimination of wild boars” that enter human habitations and threaten life and property.",
+    "statement_summary": null,
+    "topic": "Environment",
+    "confidence_score": 1.0,
+    "context_text": "Announcement of a three-month campaign to eliminate wild boars that enter human habitations.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-07T10:25:07.902465+00",
+    "reviewed_at": "2026-06-07T10:25:07.936998+00",
+    "minister": {
+      "id": 1377,
+      "name": "Shibu Baby John",
+      "portfolio": "Minister for Forests, Wild Life & Skill Development",
+      "party": "RSP",
+      "constituency": "Chavara",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/117%20SHIBU%20BABY%20JOHN.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-forest-minister-unveils-100-day-action-plan-to-tackle-rising-human-wildlife-conflict/article71066380.ece",
+      "title": "Kerala Forest Minister unveils 100-day action plan to tackle rising human-wildlife conflictThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 9,
+    "minister_id": 1333,
+    "article_id": 5,
+    "queue_item_id": null,
+    "statement_text": "Instead of spending crores to host a single event, we should invest that money in creating many ‘Messis’ in Kerala. Whether Messi comes or not, our focus will remain on developing local talent. Our first priority is to create more playing spaces, starting from villages, and bring children and youth back to sports. Sports can play a key role in addressing issues like mobile addiction among children.",
+    "statement_summary": null,
+    "topic": "Sports",
+    "confidence_score": 1.0,
+    "context_text": "Minister O.J. Janeesh on prioritizing local sports talent over hosting global icons.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-05T17:32:57.952474+00",
+    "reviewed_at": "2026-06-05T17:32:57.988533+00",
+    "minister": {
+      "id": 1333,
+      "name": "O.J. Janeesh",
+      "portfolio": "Minister for Sports, Youth Affairs, Registration, Museum, Archaeology and Archives",
+      "party": "INC",
+      "constituency": "Kodungallur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/73%20O%20J%20JANEESH.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/focus-on-creating-messis-in-kerala-not-just-bringing-messi-oj-janeesh/article71066571.ece",
+      "title": "Focus on creating ‘Messis’ in Kerala, not just bringing Messi: O.J. JaneeshThe Hindu Bureau",
+      "published_at": null
+    }
+  },
+  {
+    "id": 7,
+    "minister_id": 1338,
+    "article_id": 4,
+    "queue_item_id": null,
+    "statement_text": "Kerala should be the destination point for the world when it comes to health and education.",
+    "statement_summary": null,
+    "topic": "Tourism",
+    "confidence_score": 1.0,
+    "context_text": "V.D. Satheesan talks about Kerala's development goals.",
+    "statement_date": null,
+    "status": "approved",
+    "created_at": "2026-06-05T00:37:53.590582+00",
+    "reviewed_at": "2026-06-05T00:37:53.609308+00",
+    "minister": {
+      "id": 1338,
+      "name": "V.D. Satheesan",
+      "portfolio": "Chief Minister",
+      "party": "INC",
+      "constituency": "Paravur",
+      "image_url": "http://www.niyamasabha.org/pics/members-16kla/78%20VD%20Satheesan%20Paravur.jpg"
+    },
+    "source": {
+      "name": "The Hindu - Kerala",
+      "url": "https://www.thehindu.com/news/national/kerala/kerala-governors-policy-address-devoid-of-criticism-of-union-government-pinarayi/article71062354.ece",
+      "title": "Kerala Governor's policy address devoid of criticism of Union government: Pinarayi",
+      "published_at": null
+    }
+  }
+]
